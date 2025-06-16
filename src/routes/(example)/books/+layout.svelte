@@ -9,7 +9,10 @@
 <Book base="/books2" books={data.bookList}>
   <div class="book-layout">
     <div class="book-sidebar">
-      <a href="/">Back to Docs</a>
+      <div class="brand-header">
+        <a href="/">📚 Go Back</a>
+        <div>Your Brand Here</div>
+      </div>
       <div class="book-header">
         <h4>Stories</h4>
       </div>
@@ -37,5 +40,12 @@
     padding: 1rem;
     border-bottom: 1px solid #ccc;
     margin: 0;
+  }
+
+  .brand-header {
+    display: block;
+    text-decoration: none;
+    padding: 1rem;
+    text-align: center;
   }
 </style>
