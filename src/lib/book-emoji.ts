@@ -10,6 +10,7 @@ export type StoryDefinition = {
 
 export type BookDefinition = {
   name: string;
+  slug: string;
   path: string;
   route: string;
 };
@@ -23,16 +24,12 @@ export const nameToId = (name: string): string => {
 };
 
 export const loadStories = async (path: string = "/books"): Promise<BookDefinition[]> => {
-  //   const req = getRequestEvent();
-
   const response = await fetch(path);
   if (!response.ok) {
     throw new Error(`Failed to load stories from ${path}`);
   }
 
   const data = await response.json();
-
-  console.log("loadStories:", data);
 
   return data;
 };
@@ -46,22 +43,17 @@ export const findStoryFiles = async (
     }
   >,
 ) => {
-  //   const books = import.meta.glob<{ default: Component }>("./stories/**/*.book.svelte", {
-  //     eager: true,
-  //   });
-
   const bookList: BookDefinition[] = Object.entries(books).map(([localPath, mod]) => {
-    console.log(mod.default);
-
     const name = basename(localPath).replace(".book.svelte", "");
-    const path = localPath; //.replace("./stories/", "");
-    const route = `${base}/${name.toLowerCase()}`;
+    const path = localPath;
+    const slug = nameToId(name.toLowerCase());
+    const route = `${base}/${slug}`;
 
     return {
       path,
       name,
       route,
-      // component: mod.default,
+      slug,
     } satisfies BookDefinition;
   });
 
