@@ -11,11 +11,13 @@
     {#if $stories.length === 0}
       <li>No stories available</li>
     {/if}
-    {#each $stories as story}
-      <li>
-        <a class="story-list-item" href={`${story.route}`}>{story.name}</a>
-      </li>
-    {/each}
+    <slot stories={$stories}>
+      {#each $stories as story}
+        <li>
+          <a class="story-list-item" href={`${story.route}`}>{story.name}</a>
+        </li>
+      {/each}
+    </slot>
   </ul>
 </div>
 
