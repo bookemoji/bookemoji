@@ -1,9 +1,10 @@
 <script lang="ts">
-  import type { StoryDefinition } from "$lib/book.js";
+  import type { BookDefinition, StoryDefinition } from "$lib/book-emoji.js";
   import { getContext } from "svelte";
   import { writable, type Readable } from "svelte/store";
 
-  const stories: Readable<StoryDefinition[]> = getContext("bookemoji.stories") ?? writable([]);
+  const stories = getContext<Readable<BookDefinition[]>>("bookemoji.stories") ?? writable([]);
+  const base = getContext<string>("bookemoji.base");
 </script>
 
 <div class="story-list">
@@ -13,7 +14,7 @@
     {/if}
     {#each $stories as story}
       <li>
-        <a class="story-list-item" href={`#${story.name}`}>{story.name}</a>
+        <a class="story-list-item" href={`${story.route}`}>{story.name}</a>
       </li>
     {/each}
   </ul>

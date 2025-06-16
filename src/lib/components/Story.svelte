@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { nameToId } from "$lib/book-emoji.js";
   import type { SvelteComponent, Component } from "svelte";
 
   interface Props {
@@ -13,9 +14,11 @@
   let MyComponent: Component = $state(of);
 
   let root: HTMLDivElement;
+
+  let id = $derived(nameToId(name));
 </script>
 
-<div class="story">
+<div class="story" {id}>
   {#if children}
     {@render children({ args })}
   {:else}
