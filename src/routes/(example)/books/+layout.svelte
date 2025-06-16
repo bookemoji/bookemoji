@@ -9,6 +9,7 @@
 <Book base="/books2" books={data.bookList}>
   <div class="book-layout">
     <div class="book-sidebar">
+      <a href="/">Back to Docs</a>
       <div class="book-header">
         <h4>Stories</h4>
       </div>
@@ -34,7 +35,6 @@
 
   .book-header {
     padding: 1rem;
-    background-color: #f8f8f8;
     border-bottom: 1px solid #ccc;
     margin: 0;
   }

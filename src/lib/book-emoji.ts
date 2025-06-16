@@ -1,5 +1,3 @@
-import { getRequestEvent } from "$app/server";
-import { encode } from "punycode";
 import type { Component } from "svelte";
 
 export type StoryDefinition = {
