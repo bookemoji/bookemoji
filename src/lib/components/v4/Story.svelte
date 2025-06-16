@@ -1,31 +1,15 @@
 <script lang="ts">
-  import type { StoryDefinition } from "$lib/book.js";
-  import { getContext, onMount, type Component } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+  import { nameToId } from "$lib/book-emoji.js";
+  import { type Component } from "svelte";
 
   export let name: string;
   export let of: Component;
   export let args: Record<string, any> = {};
 
-  const stories = getContext<Writable<StoryDefinition[]>>("bookemoji.stories") ?? _throw();
-
-  onMount(() => {
-    let _comp = of;
-
-    const story: StoryDefinition = { name, component: _comp, args, argTypes: {} };
-
-    stories.update((currentStories) => [...currentStories, story]);
-    return () => {
-      stories.update((currentStories) => currentStories.filter((s) => s.name !== name));
-    };
-  });
-
-  function _throw(): Writable<StoryDefinition[]> {
-    throw new Error("No stories context found");
-  }
+  let id = nameToId(name);
 </script>
 
-<div class="story-root">
+<div class="story-root" {id}>
   <h5 class="story-name">{name}</h5>
   <div class="story" data-name={name}>
     <slot {args}>

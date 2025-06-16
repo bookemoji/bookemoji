@@ -1,11 +1,24 @@
 <script lang="ts">
-  import type { StoryDefinition } from "$lib/book.js";
-  import { setContext } from "svelte";
+  import { loadStories, type BookDefinition, type StoryDefinition } from "$lib/book-emoji.js";
+
+  import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
 
-  const stories = writable<StoryDefinition[]>([]);
+  export let base: string = "/books";
+  export let books: BookDefinition[] = [];
+
+  const stories = writable<BookDefinition[]>(books);
 
   setContext("bookemoji.stories", stories);
+  setContext("bookemoji.base", base);
+
+  onMount(() => {
+    if (books.length === 0) {
+      loadStories(base).then((loadedStories) => {
+        stories.set(loadedStories ?? []);
+      });
+    }
+  });
 </script>
 
 <svelte:head>

@@ -1,9 +1,12 @@
 <script lang="ts">
+  import type { LayoutData } from "./$types.js";
   import Book from "$lib/components/v4/Book.svelte";
   import StoryList from "$lib/components/v4/StoryList.svelte";
+
+  export let data: LayoutData;
 </script>
 
-<Book>
+<Book base="/books2" books={data.bookList}>
   <div class="book-layout">
     <div class="book-sidebar">
       <div class="book-header">
