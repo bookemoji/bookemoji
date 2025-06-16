@@ -4,7 +4,6 @@
   import { writable, type Readable } from "svelte/store";
 
   const stories = getContext<Readable<BookDefinition[]>>("bookemoji.stories") ?? writable([]);
-  const base = getContext<string>("bookemoji.base");
 </script>
 
 <div class="story-list">
