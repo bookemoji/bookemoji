@@ -1,18 +1,40 @@
 <script lang="ts">
   import Story from "$lib/components/v4/Story.svelte";
+  import Controls from "$lib/components/v4/Controls.svelte";
   import Button from "./Button.svelte";
+  import { defineMeta } from "$lib/book-emoji.js";
+
+  defineMeta<typeof Button>({
+    component: Button,
+    args: {
+      variant: "primary",
+    },
+    argTypes: {
+      variant: { type: "select", options: ["primary", "secondary", "tertiary"] },
+      size: { type: "select", options: ["small", "medium", "large"] },
+      disabled: { type: "boolean" },
+      loading: { type: "boolean" },
+      classes: { type: "text" },
+      type: { type: "select", options: ["button", "submit", "reset"] },
+      ariaLabel: { type: "text" },
+      text: { type: "text" },
+    },
+  });
 </script>
 
-<!-- controls can override args -->
 <Story of={Button} name="Basic" args={{ variant: "primary", size: "medium" }} let:args>
   <Button {...args}>Primary Button</Button>
 </Story>
+
+<Controls of={Button} />
 
 <Story
   of={Button}
   name="Secondary"
   args={{ variant: "secondary", size: "medium", text: "Secondary Button" }}
 />
+<Controls of={Button} />
+
 <Story
   of={Button}
   name="Tertiary"

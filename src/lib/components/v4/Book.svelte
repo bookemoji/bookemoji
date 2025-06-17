@@ -3,6 +3,7 @@
 
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
+  import { variants } from "./stores.js";
 
   export let base: string = "/books";
   export let books: BookDefinition[] = [];
@@ -10,7 +11,9 @@
   const stories = writable<BookDefinition[]>(books);
 
   setContext("bookemoji.stories", stories);
+  setContext("bookemoji.storyStates", writable<Record<string, StoryDefinition>>({}));
   setContext("bookemoji.base", base);
+  setContext("bookemoji.metas", new Map());
 
   onMount(() => {
     if (books.length === 0) {
