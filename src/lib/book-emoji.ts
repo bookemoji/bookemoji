@@ -1,6 +1,6 @@
 import { browser } from "$app/environment";
-import { getContext, mount, setContext, type Component, type ComponentProps } from "svelte";
-import { render } from "svelte/server";
+import { getContext, type Component, type ComponentProps } from "svelte";
+import { base as siteBase} from "$app/paths";
 import { writable, type Writable } from "svelte/store";
 
 export type StoryDefinition = {
@@ -50,7 +50,7 @@ export const findStoryFiles = async (
     const name = basename(localPath).replace(".book.svelte", "");
     const path = localPath;
     const slug = nameToId(name.toLowerCase());
-    const route = `${base}/${slug}`;
+    const route = `${siteBase}${base}/${slug}`;
 
     return {
       path,
