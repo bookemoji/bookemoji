@@ -2,7 +2,7 @@
   import type { LayoutData } from "./$types.js";
   import Book from "$lib/components/v4/Book.svelte";
   import StoryList from "$lib/components/v4/StoryList.svelte";
-
+  import { base } from "$app/paths";
   export let data: LayoutData;
 </script>
 
@@ -10,7 +10,7 @@
   <div class="book-layout">
     <div class="book-sidebar">
       <div class="brand-header">
-        <a href="/">📚 Go Back</a>
+        <a href={base}>📚 Go Back</a>
         <div>Your Brand Here</div>
       </div>
       <div class="book-header">
