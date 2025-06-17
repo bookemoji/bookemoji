@@ -52,12 +52,6 @@ export const findStoryFiles = async (
     const slug = nameToId(name.toLowerCase());
     const route = `${base}/${slug}`;
 
-    const variants = render(mod.default, {
-      props: {},
-    });
-
-    console.log(`Rendering book component: ${name}`, variants);
-
     return {
       path,
       name,
