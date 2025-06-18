@@ -1,13 +1,11 @@
 <script lang="ts">
-    import { defineMeta } from "$lib/book-emoji.js";
+  import { defineMeta } from "$lib/book-emoji.js";
   import Story from "$lib/components/v4/Story.svelte";
   import Select from "./Select.svelte";
 
-
   defineMeta({
     component: Select,
-  })
-
+  });
 </script>
 
 <Story of={Select} name="Basic" args={{ variant: "primary", size: "medium" }} let:args>
