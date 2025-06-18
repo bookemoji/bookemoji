@@ -4,6 +4,7 @@
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { variants } from "./stores.js";
+    import { createKeyKeyMap } from "$lib/utils.js";
 
   export let base: string = "/books";
   export let books: BookDefinition[] = [];
@@ -13,7 +14,8 @@
   setContext("bookemoji.stories", stories);
   setContext("bookemoji.storyStates", writable<Record<string, StoryDefinition>>({}));
   setContext("bookemoji.base", base);
-  setContext("bookemoji.metas", new Map());
+  setContext("bookemoji.meta", new Map());
+  setContext("bookemoji.argTypes", createKeyKeyMap());
 
   onMount(() => {
     if (books.length === 0) {

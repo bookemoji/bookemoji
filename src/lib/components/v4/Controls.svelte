@@ -3,15 +3,17 @@
   import type { Component, ComponentProps, ComponentType } from "svelte";
 
   export let of: Component;
+  export let story: string;
 
-  const meta = getMeta<typeof of>(of);
+  const meta = getMeta<typeof of>(of, story);
 
   $: argTypes = Object.entries($meta.argTypes).filter(
     (kvp): kvp is [string, ArgTypeControl] => kvp[1] !== undefined,
   );
 </script>
 
-<div class="controls">
+<fieldset class="controls">
+  <legend class="controls-title">Controls</legend>
   {#each argTypes as [key, control]}
     <div class="control">
       <label for={key}>{key}</label>
@@ -30,13 +32,26 @@
       {/if}
     </div>
   {/each}
-</div>
+</fieldset>
 
 <style>
   .controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 2rem;
+    margin-top: 0rem;
+    padding: 1rem;
+    background-color: #eee;
+  }
+
+  .control {
+    display: inline-flex;
+    gap: 0.75rem;
+    padding: 0.5rem;
+  }
+
+
+  .controls-title {
+    font-size: 1rem;
   }
 </style>

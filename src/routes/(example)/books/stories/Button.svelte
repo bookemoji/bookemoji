@@ -8,9 +8,68 @@
   export let ariaLabel: string = "";
   export let text: string = "";
 
-  $: _class = `${variant} ${size} ${loading ? "loading" : ""} ${classes}`;
+  $: _class = `btn ${variant} ${size} ${loading ? "loading" : ""} ${disabled ? "disabled" : ""} ${classes}`;
 </script>
 
-<button {type} aria-label={ariaLabel} {disabled} class={_class}>
-  <slot>{text}</slot>
+<button
+  {type}
+  aria-label={ariaLabel}
+  {disabled}
+  class={_class}
+>
+  <slot>{loading ? "Loading..." : text}</slot>
 </button>
+
+<style>
+  .btn {
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-size: 1rem;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  /* Size styles */
+  .small {
+    padding: 0.25rem 1rem;
+    font-size: 0.85rem;
+  }
+  .medium {
+    padding: 0.5rem 1.8rem;
+    font-size: 1rem;
+  }
+  .large {
+    padding: 0.75rem 2.5rem;
+    font-size: 1.15rem;
+  }
+
+  /* Variant styles */
+  .primary {
+    background: #aad;
+    color: #000;
+  }
+  .secondary {
+    background: #77a;
+    color: #fff;
+  }
+  .tertiary {
+    background: #7aa;
+    color: #fff;
+  }
+
+  /* Disabled styles */
+  .btn.disabled,
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Loading styles */
+  .loading {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+</style>

@@ -2,6 +2,7 @@ import { browser } from "$app/environment";
 import { getContext, type Component, type ComponentProps } from "svelte";
 import { base as siteBase} from "$app/paths";
 import { writable, type Writable } from "svelte/store";
+import type { KeyKeyMap } from "./utils.js";
 
 export type StoryDefinition = {
   name: string;
@@ -103,9 +104,10 @@ export function defineMeta<T extends Component>(definition: MetaOptions<T>) {
   if (!browser) {
     return;
   }
-  const metas = getContext<Map<Component, ComponentArgStore>>("bookemoji.metas");
+  const meta = getContext<Map<Component, Required<ComponentArgTypes>>>("bookemoji.meta");
+  
 
-  if (!metas) {
+  if (!meta) {
     throw new Error(
       `No "bookemoji.metas" context found. Make sure to set the context in your book component at the top level.`,
     );
@@ -113,15 +115,16 @@ export function defineMeta<T extends Component>(definition: MetaOptions<T>) {
 
   const { component, ...componentArgs } = definition;
 
-  const initialArgStore: Required<ComponentArgTypes> = {
+  const argData: Required<ComponentArgTypes> = {
     args: componentArgs.args ?? {},
     argTypes: componentArgs.argTypes ?? {},
   };
 
-  metas.set(component, writable(initialArgStore));
+  meta.set(component, argData);
 }
 
-export function getMeta<T extends Component>(component: T): ComponentArgStore {
+export function getMeta<T extends Component>(component: T, variant: string): ComponentArgStore {
+  
   if (!browser) {
     return writable({
       args: {},
@@ -129,12 +132,27 @@ export function getMeta<T extends Component>(component: T): ComponentArgStore {
     }) as ComponentArgStore;
   }
 
-  const metas = getContext<Map<Component, ComponentArgStore>>("bookemoji.metas");
-  const argData = metas.get(component);
-  if (!argData) {
+  const meta = getContext<Map<Component, Required<ComponentArgTypes>>>("bookemoji.meta");
+  const argData = getContext<KeyKeyMap<Component, string, ComponentArgStore>>("bookemoji.argTypes");
+
+  if (!argData || !meta) {
     throw new Error(
       `No "bookemoji.metas" context found. Make sure your Story, Control, etc is within a <Book>`,
     );
   }
-  return argData;
+
+  let argTypes = argData.get(component, variant);
+  
+  if (!argTypes) {
+    const defaultArgData = meta.get(component);
+    if (!defaultArgData) {
+      throw new Error(`defineMeta not called for component <Story name="${variant}" ... />`)
+    }
+
+    // populate initial value
+    argTypes =  writable(structuredClone(defaultArgData));
+    argData.set(component, variant, argTypes);
+  }
+
+  return argTypes;
 }
