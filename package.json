@@ -33,7 +33,8 @@
     }
   },
   "dependencies": {
-    "@sveltejs/kit": "^2.16.0"
+    "@sveltejs/kit": "^2.16.0",
+    "node-html-parser": "^7.0.1"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"

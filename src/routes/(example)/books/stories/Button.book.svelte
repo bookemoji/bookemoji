@@ -6,10 +6,7 @@
 
   defineMeta<typeof Button>({
     component: Button,
-    args: {
-      // variant: "primary",
-      text: "Do Thing"
-    },
+
     argTypes: {
       variant: { type: "select", options: ["primary", "secondary", "tertiary"] },
       size: { type: "select", options: ["small", "medium", "large"] },
@@ -23,7 +20,11 @@
   });
 </script>
 
-<Story of={Button} name="Basic" args={{ variant: "primary", size: "medium" }} />
+<Story
+  of={Button}
+  name="Basic"
+  args={{ variant: "primary", size: "medium", text: "Primary Button" }}
+/>
 
 <Controls of={Button} story="Basic" />
 

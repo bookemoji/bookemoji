@@ -1,6 +1,6 @@
 <script lang="ts">
   import { nameToId } from "$lib/book-emoji.js";
-  import type { SvelteComponent, Component } from "svelte";
+  import { type SvelteComponent, type Component, getContext } from "svelte";
 
   interface Props {
     name: string;

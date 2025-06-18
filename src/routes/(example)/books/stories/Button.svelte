@@ -11,12 +11,7 @@
   $: _class = `btn ${variant} ${size} ${loading ? "loading" : ""} ${disabled ? "disabled" : ""} ${classes}`;
 </script>
 
-<button
-  {type}
-  aria-label={ariaLabel}
-  {disabled}
-  class={_class}
->
+<button {type} aria-label={ariaLabel} {disabled} class={_class}>
   <slot>{loading ? "Loading..." : text}</slot>
 </button>
 
@@ -32,11 +27,11 @@
 
   /* Size styles */
   .small {
-    padding: 0.25rem 1rem;
+    padding: 0.15rem 0.75rem;
     font-size: 0.85rem;
   }
   .medium {
-    padding: 0.5rem 1.8rem;
+    padding: 0.5rem 1.25rem;
     font-size: 1rem;
   }
   .large {

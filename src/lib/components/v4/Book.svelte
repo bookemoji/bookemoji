@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { loadStories, type BookDefinition, type StoryDefinition } from "$lib/book-emoji.js";
+  import { loadStories, type BookDefinition } from "$lib/book-emoji.js";
 
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
-  import { variants } from "./stores.js";
-    import { createKeyKeyMap } from "$lib/utils.js";
+  import { createKeyKeyMap } from "$lib/utils.js";
 
   export let base: string = "/books";
   export let books: BookDefinition[] = [];
@@ -12,7 +11,6 @@
   const stories = writable<BookDefinition[]>(books);
 
   setContext("bookemoji.stories", stories);
-  setContext("bookemoji.storyStates", writable<Record<string, StoryDefinition>>({}));
   setContext("bookemoji.base", base);
   setContext("bookemoji.meta", new Map());
   setContext("bookemoji.argTypes", createKeyKeyMap());
@@ -55,5 +53,9 @@
     font-weight: 400;
     margin: 0;
     font-size: 1.5em;
+  }
+
+  :global(.controls) {
+    font-family: "Inter", sans-serif;
   }
 </style>
