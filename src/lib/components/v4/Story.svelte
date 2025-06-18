@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { nameToId } from "$lib/book-emoji.js";
+  import { getMeta, nameToId, type ArgTypeControl } from "$lib/book-emoji.js";
   import { type Component } from "svelte";
 
   export let name: string;
@@ -7,13 +7,21 @@
   export let args: Record<string, any> = {};
 
   let id = nameToId(name);
+
+  const meta = getMeta<typeof of>(of, name);
+
+  $: finalArgs = {
+    ...args,
+    ...$meta.args,
+  }
+  
 </script>
 
-<div class="story-root" {id}>
+<div class="story-root" {id} data-story>
   <h5 class="story-name">{name}</h5>
   <div class="story" data-name={name}>
-    <slot {args}>
-      <svelte:component this={of} {...args} />
+    <slot args={finalArgs}>
+      <svelte:component this={of} {...finalArgs} />
     </slot>
   </div>
 </div>

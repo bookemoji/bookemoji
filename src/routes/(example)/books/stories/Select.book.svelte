@@ -1,9 +1,15 @@
 <script lang="ts">
+    import { defineMeta } from "$lib/book-emoji.js";
   import Story from "$lib/components/v4/Story.svelte";
   import Select from "./Select.svelte";
+
+
+  defineMeta({
+    component: Select,
+  })
+
 </script>
 
-<!-- controls can override args -->
 <Story of={Select} name="Basic" args={{ variant: "primary", size: "medium" }} let:args>
   <Select {...args}>
     <option value="option1">Option 1</option>
