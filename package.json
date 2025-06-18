@@ -1,5 +1,5 @@
 {
-  "name": "bookemoji.dev",
+  "name": "bookemoji",
   "version": "0.0.1",
   "scripts": {
     "dev": "vite dev",
@@ -20,6 +20,7 @@
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*"
   ],
+  "license": "MIT",
   "sideEffects": [
     "**/*.css"
   ],
