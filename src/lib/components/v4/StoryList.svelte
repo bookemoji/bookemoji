@@ -1,13 +1,15 @@
 <script lang="ts">
-  import type { BookDefinition, StoryDefinition } from "$lib/book-emoji.js";
+  import type { BookDefinition } from "$lib/book-emoji.js";
   import { getContext } from "svelte";
   import { writable, type Readable } from "svelte/store";
 
   const stories = getContext<Readable<BookDefinition[]>>("bookemoji.stories") ?? writable([]);
+
+  export let expand: boolean = true;
 </script>
 
 <div class="story-list">
-  <ul class="story-list-items">
+  <ul class="flush">
     {#if $stories.length === 0}
       <li>No stories available</li>
     {/if}
@@ -16,6 +18,17 @@
         <li>
           <a class="story-list-item" href={`${story.route}`}>{story.name}</a>
         </li>
+        {#if expand}
+          <li>
+            <ul class="flush">
+              {#each Object.values(story.variants) as variant}
+                <li>
+                  <a class="story-variant-list-item" href={`${variant.route}`}>{variant.name}</a>
+                </li>
+              {/each}
+            </ul>
+          </li>
+        {/if}
       {/each}
     </slot>
   </ul>
@@ -24,17 +37,14 @@
 <slot />
 
 <style>
-  .story-list-items {
+  .flush {
     list-style: none;
     padding: 0;
     margin: 0;
   }
 
-  .story-list-items li {
-    display: block;
-  }
-
-  .story-list-item {
+  .story-list-item,
+  .story-variant-list-item {
     display: block;
     text-decoration: none;
     padding: 0.5rem 1rem;
@@ -42,7 +52,11 @@
     transition: background-color 0.2s;
   }
 
-  .story-list-item:hover {
+  :where(.story-list-item, .story-variant-list-item):hover {
     background-color: #f0f0f0;
+  }
+
+  .story-variant-list-item {
+    padding-left: 2rem;
   }
 </style>
