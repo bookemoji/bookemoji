@@ -10,7 +10,7 @@
   <div class="book-layout">
     <div class="book-sidebar">
       <div class="brand-header">
-        <a href={`/${base}`}>📚 Go Back to {base}</a>
+        <a href={`${base}/`}>📚 Go Back to {base + "/"}</a>
         <h1>Your Brand Here</h1>
       </div>
       <div class="book-header">
