@@ -6,4 +6,7 @@
   <li>
     <a href={`${base}/books`}>Example Component Library</a>
   </li>
+  <li>
+    <a href={`${base}/docs`}>Docs</a>
+  </li>
 </ul>
