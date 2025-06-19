@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+}
+
+.book-root .story-name,
+.book-root .story-list {
+  font-family: "Space Grotesque", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.book-root :where(h1, h2, h3, h4, h5, h6) {
+  font-family: "Space Grotesque", sans-serif;
+  font-weight: 400;
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.controls {
+  font-family: "Space Grotesque", sans-serif;
+}

@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "@sveltejs/kit": "^2.16.0",
-    "node-html-parser": "^7.0.1"
+    "node-html-parser": "^7.0.1",
+    "open-props": "^1.7.15"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"
@@ -58,6 +59,7 @@
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "publint": "^0.3.2",
+    "shiki": "^3.6.0",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "typescript": "^5.0.0",
