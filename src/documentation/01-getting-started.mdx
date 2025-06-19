@@ -1,0 +1,85 @@
+<script context="module">
+
+</script>
+
+# Getting Started
+
+
+Learn how to get started with Bookemoji, a component library for SvelteKit.
+
+
+## Installation
+```js
+npm install bookemoji
+```
+
+## Setup
+
+BookEmoji is a set of SvelteKit loaders and svelte components.
+
+#### Prerequisites:
+
+- An already-scaffolded SvelteKit applciation
+
+---
+
+
+1. Choose a directory in which to use as the root of your component library within your `src/routes`
+    - For the sake of example, we will use `(design)/books` for the rest of this setup.
+2. Create these files:
+    - `(design)/books/+layout.svelte`
+    - `(design)/books/+layout.server.ts`
+    - `(design)/book.json/+server.ts`
+  
+  ```svelte
+  // (design)/books/+layout.svelte
+  <script lang="ts">
+      import { Book } from "bookemoji";
+      import type { LayoutData} from "./$types";
+      export let data: LayoutData;
+  </script>
+
+  <Book base={"/books"}>
+      <slot />
+  </Book>
+    ```
+
+    ```ts
+    // (design)/books/+layout.server.ts
+    import type { BookDefinition } from "book-emoji";
+    import type { LayoutServerLoad } from "./$types.js";
+
+    export const load: LayoutServerLoad = async ({ fetch }) => {
+      const bookRes = await fetch("/books.json");
+      const bookList: BookDefinition[] = await bookRes.json();
+
+      return { bookList };
+    };
+    ```
+
+    ```ts
+    // (design)/book.json/+server.ts
+    import { json, type RequestHandler } from "@sveltejs/kit";
+    import { findStoryFiles } from "book-emoji";
+    import type { Component } from "svelte";
+
+    export const GET: RequestHandler = async () => {
+      const books = import.meta.glob<{ default: Component }>("../books/stories/**/*.book.svelte", {
+        eager: true,
+      });
+
+      const bookList = await findStoryFiles("/books", books);
+
+      return json(bookList);
+    };
+
+    export const prerender = true; // Enable prerendering for this route
+
+    ```
+3. 
+
+
+## Svelte Adder
+
+TODO
+

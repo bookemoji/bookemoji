@@ -1,6 +1,5 @@
 <script lang="ts">
   import { loadStories, type BookDefinition } from "$lib/book-emoji.js";
-
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { createKeyKeyMap } from "$lib/utils.js";
@@ -38,24 +37,4 @@
 </div>
 
 <style>
-  :global(body) {
-    margin: 0;
-  }
-
-  :global(.book-root .story-name, .book-root .story-list) {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 1rem;
-  }
-
-  :global(.book-header :where(h1, h2, h3, h4, h5, h6)) {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    margin: 0;
-    font-size: 1.5em;
-  }
-
-  :global(.controls) {
-    font-family: "Inter", sans-serif;
-  }
 </style>

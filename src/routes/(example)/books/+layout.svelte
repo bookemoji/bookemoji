@@ -6,11 +6,14 @@
   export let data: LayoutData;
 </script>
 
-<Book base="/books2" books={data.bookList}>
+<svelte:head>
+  <link rel="stylesheet" href={"/bookemoji-base.css"} />
+</svelte:head>
+
+<Book base="/books" books={data.bookList}>
   <div class="book-layout">
     <div class="book-sidebar">
       <div class="brand-header">
-        <a href={`${base}/`}>📚 Go Back to {base + "/"}</a>
         <h1>Your Brand Here</h1>
       </div>
       <div class="book-header">
