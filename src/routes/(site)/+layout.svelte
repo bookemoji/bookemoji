@@ -8,6 +8,7 @@
 
   import Header from "../Header.svelte";
   import type { LayoutData } from "./$types.js";
+  import { base } from "$app/paths";
   export let data: LayoutData;
 </script>
 
@@ -25,7 +26,7 @@
   <link rel="stylesheet" href={openPropsStyle} />
   <link rel="stylesheet" href={openPropsNormalize} />
   <link rel="stylesheet" href={openPropsButtons} />
-  <link id="common-site-styles" rel="stylesheet" href="/site-and-docs.css" />
+  <link id="common-site-styles" rel="stylesheet" href={`${base}/site-and-docs.css`} />
 </svelte:head>
 
 <Header />
