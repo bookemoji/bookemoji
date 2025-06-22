@@ -7,7 +7,7 @@
 </script>
 
 <svelte:head>
-  <link rel="stylesheet" href={"/bookemoji-base.css"} />
+  <link rel="stylesheet" href={`${base}/bookemoji-base.css`} />
 </svelte:head>
 
 <Book base="/books" books={data.bookList}>
