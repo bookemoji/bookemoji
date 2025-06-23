@@ -1,10 +1,10 @@
 <script lang="ts">
   /* the props */
-  import openPropsStyle from "open-props/style?url";
+  import "open-props/style";
 
   /* optional imports that use the props */
-  import openPropsNormalize from "open-props/normalize?url";
-  import openPropsButtons from "open-props/buttons?url";
+  import "open-props/normalize";
+  import "open-props/buttons";
 
   import Header from "../Header.svelte";
   import type { LayoutData } from "./$types.js";
@@ -23,9 +23,7 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href={openPropsStyle} />
-  <link rel="stylesheet" href={openPropsNormalize} />
-  <link rel="stylesheet" href={openPropsButtons} />
+
   <link id="common-site-styles" rel="stylesheet" href={`${base}/site-and-docs.css`} />
 </svelte:head>
 

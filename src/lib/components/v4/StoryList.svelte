@@ -43,17 +43,22 @@
     margin: 0;
   }
 
+  .flush li {
+    padding: 0 0;
+    margin: 0 0;
+  }
+
   .story-list-item,
   .story-variant-list-item {
     display: block;
     text-decoration: none;
     padding: 0.5rem 1rem;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--border-color);
     transition: background-color 0.2s;
   }
 
   :where(.story-list-item, .story-variant-list-item):hover {
-    background-color: #f0f0f0;
+    background-color: var(--hover-bg);
   }
 
   .story-variant-list-item {

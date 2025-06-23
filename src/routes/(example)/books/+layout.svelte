@@ -16,10 +16,8 @@
       <div class="brand-header">
         <h1>Your Brand Here</h1>
       </div>
-      <div class="book-header">
-        <h4>Stories</h4>
-      </div>
-      <StoryList />
+
+      <StoryList --border-color={"var(--surface-2)"} />
     </div>
     <div class="book-canvas">
       <slot />
@@ -36,13 +34,7 @@
     overflow: hidden;
   }
   .book-sidebar {
-    border-right: 1px solid #ccc;
-  }
-
-  .book-header {
-    padding: 1rem;
-    border-bottom: 1px solid #ccc;
-    margin: 0;
+    border-right: 1px solid var(--surface-2);
   }
 
   .brand-header {
@@ -50,5 +42,10 @@
     text-decoration: none;
     padding: 1rem;
     text-align: center;
+    border-bottom: 1px solid var(--surface-2);
+  }
+
+  .book-canvas {
+    padding: 2rem;
   }
 </style>
