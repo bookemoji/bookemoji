@@ -11,7 +11,6 @@
 <style>
   .back-ribbon {
     padding: 0.5rem 2rem;
-    background: #eee;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid var(--surface-2);
   }
 </style>
