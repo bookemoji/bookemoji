@@ -40,3 +40,5 @@
   name="Tertiary"
   args={{ variant: "tertiary", size: "medium", text: "Tertiary Button" }}
 />
+
+<Controls of={Button} story="Tertiary" />
