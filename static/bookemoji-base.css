@@ -4,17 +4,58 @@ body {
 
 .book-root .story-name,
 .book-root .story-list {
-  font-family: "Space Grotesque", sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
 }
 
 .book-root :where(h1, h2, h3, h4, h5, h6) {
-  font-family: "Space Grotesque", sans-serif;
-  font-weight: 400;
-  font-size: 1.5em;
 }
 
 .controls {
-  font-family: "Space Grotesque", sans-serif;
+}
+
+.story {
+  padding: 1rem;
+  border: 1px solid var(--surface-3);
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  background-color: var(--surface-2);
+}
+
+.story-root {
+  margin-bottom: 0.5rem;
+}
+
+.story-name {
+  margin-bottom: 0rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 0rem;
+  padding: 1rem;
+}
+
+.form-group {
+  display: inline-flex;
+  align-items: center;
+}
+
+.control > span {
+  cursor: pointer;
+}
+
+.control {
+  display: inline-flex;
+  gap: 1rem;
+  padding: 0.5rem;
+  align-items: center;
+}
+
+.control label {
+  cursor: pointer;
+}
+
+.controls-title {
+  font-size: 1rem;
 }

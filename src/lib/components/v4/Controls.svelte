@@ -17,9 +17,9 @@
   <fieldset class="controls">
     <legend class="controls-title">Controls</legend>
     {#each argTypes as [key, control]}
-      <div class="control">
-        <label>
-          {key}
+      <div class="form-group">
+        <label class="control">
+          <span>{key}</span>
           {#if control.type === "select"}
             <select bind:value={$meta.args[key]}>
               {#each control.options as option}
@@ -38,28 +38,3 @@
     {/each}
   </fieldset>
 </Isolate>
-
-<style>
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-top: 0rem;
-    padding: 1rem;
-    background-color: #eee;
-  }
-
-  .control {
-    display: inline-flex;
-    gap: 0.75rem;
-    padding: 0.5rem;
-  }
-
-  .control label {
-    cursor: pointer;
-  }
-
-  .controls-title {
-    font-size: 1rem;
-  }
-</style>

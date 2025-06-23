@@ -14,7 +14,7 @@
   <div class="book-layout">
     <div class="book-sidebar">
       <div class="brand-header">
-        <h1>Your Brand Here</h1>
+        <h1 class="brand-title">Your Brand Here</h1>
       </div>
 
       <StoryList --border-color={"var(--surface-2)"} />
@@ -43,6 +43,10 @@
     padding: 1rem;
     text-align: center;
     border-bottom: 1px solid var(--surface-2);
+  }
+
+  .brand-header .brand-title {
+    margin: 0;
   }
 
   .book-canvas {

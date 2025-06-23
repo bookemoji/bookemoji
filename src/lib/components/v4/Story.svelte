@@ -32,21 +32,3 @@
     </div>
   </div>
 </Isolate>
-
-<style>
-  .story {
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    background-color: #fff;
-  }
-
-  .story-root {
-    margin-bottom: 0.5rem;
-  }
-
-  .story-name {
-    margin-bottom: 0rem;
-  }
-</style>
