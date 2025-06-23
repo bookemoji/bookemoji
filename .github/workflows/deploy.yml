@@ -29,7 +29,8 @@ jobs:
 
       - name: build
         env:
-          BASE_PATH: "/${{ github.event.repository.name }}"
+          # when deployed to a custom domain, we don't need the base path
+          # BASE_PATH: "/${{ github.event.repository.name }}"
         run: npm run build
 
       - name: Upload Artifacts
