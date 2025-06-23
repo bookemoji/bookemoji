@@ -12,13 +12,11 @@
   <nav class="nav">
     <ul class="nav-links">
       <li>
-        <a class="brand jua-regular" href={`${base}/`}>📚 BookEmoji</a>
+        <a class="brand jua-regular" href={`/`}>📚 BookEmoji</a>
       </li>
       {#each urls as [name, url]}
         <li>
-          <a class="nav-link" class:active={$page.url.pathname === url} href={`${base}${url}`}
-            >{name}</a
-          >
+          <a class="nav-link" class:active={$page.url.pathname === url} href={`${url}`}>{name}</a>
         </li>
       {/each}
     </ul>
