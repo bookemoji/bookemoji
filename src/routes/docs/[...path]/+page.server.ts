@@ -23,7 +23,7 @@ export const entries: EntryGenerator = async () => {
 
   return Object.keys(docs).map((doc) => {
     const slug = `/docs/${doc}`;
-    console.log(slug);
+
     return {
       path: slug,
     };

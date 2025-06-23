@@ -7,8 +7,6 @@
     ["Roadmap", "/roadmap"],
     ["Example", "/books"],
   ];
-
-  $: console.log($page.url.pathname);
 </script>
 
 <header class="header">
