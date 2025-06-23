@@ -28,9 +28,9 @@ jobs:
         run: npm install
 
       - name: build
-        env:
-          # when deployed to a custom domain, we don't need the base path
-          # BASE_PATH: "/${{ github.event.repository.name }}"
+        # env:
+        # when deployed to a custom domain, we don't need the base path
+        # BASE_PATH: "/${{ github.event.repository.name }}"
         run: npm run build
 
       - name: Upload Artifacts
