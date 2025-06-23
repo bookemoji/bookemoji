@@ -6,7 +6,7 @@
   import "open-props/normalize";
   import "open-props/buttons";
 
-  import Header from "../Header.svelte";
+  import Header from "./Header.svelte";
   import type { LayoutData } from "./$types.js";
   export let data: LayoutData;
 </script>
