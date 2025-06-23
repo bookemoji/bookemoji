@@ -1,6 +1,6 @@
 import { browser } from "$app/environment";
 import { getContext, type Component, type ComponentProps } from "svelte";
-import { base as siteBase } from "$app/paths";
+
 import { writable, type Writable } from "svelte/store";
 import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
@@ -33,7 +33,7 @@ export const nameToId = (name: string): string => {
 
 export const createStoryUrl = (base: string, storyName: string) => {
   const story: string = nameToId(storyName.toLowerCase());
-  const route: string = `${siteBase}${base}/${story}`;
+  const route: string = `/${base}/${story}`;
   return {
     /**
      * The param value
@@ -56,7 +56,7 @@ export const createVariantUrl = (base: string, storyName: string, variantName: s
      * The param value
      */
     variant,
-    route: `${siteBase}${base}/${story}/${variant}`,
+    route: `${base}/${story}/${variant}`,
   };
 };
 

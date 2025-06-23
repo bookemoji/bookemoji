@@ -1,7 +1,6 @@
 <script lang="ts">
   import OpenProps from "open-props";
   import type { LayoutData } from "./$types.js";
-  import { base } from "$app/paths";
 
   export let data: LayoutData;
 </script>
@@ -14,7 +13,7 @@
       <ol class="nav-links">
         {#each data.tableOfContents.entries() as [href, text]}
           <li>
-            <a href={`${base}/docs/${href}`}>{text}</a>
+            <a href={`/docs/${href}`}>{text}</a>
           </li>
         {/each}
       </ol>

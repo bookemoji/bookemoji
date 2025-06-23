@@ -2,13 +2,12 @@
   import type { LayoutData } from "./$types.js";
   import Book from "$lib/components/v4/Book.svelte";
   import StoryList from "$lib/components/v4/StoryList.svelte";
-  import { base } from "$app/paths";
   export let data: LayoutData;
 </script>
 
-<svelte:head>
-  <link rel="stylesheet" href={`${base}/bookemoji-base.css`} />
-</svelte:head>
+<!-- <svelte:head>
+  <link rel="stylesheet" href={`/bookemoji-base.css`} />
+</svelte:head> -->
 
 <Book base="/books" books={data.bookList}>
   <div class="book-layout">

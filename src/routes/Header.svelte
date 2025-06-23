@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { base } from "$app/paths";
   import { page } from "$app/stores";
 
   const urls: (readonly [page: string, url: string])[] = [
