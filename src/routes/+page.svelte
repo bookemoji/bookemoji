@@ -1,7 +1,3 @@
-<script>
-  import { base } from "$app/paths";
-</script>
-
 <div class="hero">
   <h1 class="jua-regular">BookEmoji</h1>
   <h2>a SvelteKit Component Library</h2>

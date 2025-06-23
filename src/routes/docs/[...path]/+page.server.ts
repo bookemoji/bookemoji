@@ -1,4 +1,3 @@
-import { base } from "$app/paths";
 import { createDocs } from "$lib/server/docs.js";
 import type { EntryGenerator, PageServerLoad } from "./$types.js";
 // import { createDocs, docs } from "$lib/server/docs.js";
@@ -19,7 +18,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 };
 
 export const entries: EntryGenerator = async () => {
-  const { docs, tableOfContents } = await createDocs();
+  const { docs } = await createDocs();
 
   return Object.keys(docs).map((doc) => {
     const slug = `/docs/${doc}`;
