@@ -5,7 +5,12 @@
 
   const stories = getContext<Readable<BookDefinition[]>>("bookemoji.stories") ?? writable([]);
 
-  export let expand: boolean = true;
+  interface Props {
+    expand?: boolean;
+    children?: import("svelte").Snippet<[{ stories: BookDefinition[] }]>;
+  }
+
+  let { expand = true, children }: Props = $props();
 </script>
 
 <div class="story-list">
@@ -13,7 +18,7 @@
     {#if $stories.length === 0}
       <li>No stories available</li>
     {/if}
-    <slot stories={$stories}>
+    {#if children}{@render children({ stories: $stories })}{:else}
       {#each $stories as story}
         <li>
           <a class="story-list-item" href={`${story.route}`}>{story.name}</a>
@@ -30,7 +35,7 @@
           </li>
         {/if}
       {/each}
-    </slot>
+    {/if}
   </ul>
 </div>
 
@@ -55,7 +60,7 @@
     transition: background-color 0.2s;
   }
 
-  :where(.story-list-item, .story-variant-list-item):hover {
+  :where(:global(.story-list-item, .story-variant-list-item)):hover {
     background-color: var(--hover-bg);
   }
 

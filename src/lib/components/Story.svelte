@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { nameToId } from "$lib/book-emoji.js";
-  import { type SvelteComponent, type Component, getContext } from "svelte";
+  import Isolate from "./Isolate.svelte";
+  import { getMeta, nameToId, type ArgTypeControl } from "$lib/book-emoji.js";
+  import { getContext, onMount, type Component } from "svelte";
 
   interface Props {
     name: string;
@@ -11,20 +12,29 @@
 
   let { name, of, args = {}, children }: Props = $props();
 
-  let MyComponent: Component = $state(of);
+  let id = nameToId(name);
 
-  let root: HTMLDivElement;
+  const meta = getMeta<typeof of>(of, name);
 
-  let id = $derived(nameToId(name));
+  // apply args initially
+  onMount(() => {
+    $meta.args = args;
+  });
+
+  let finalArgs = $derived({
+    ...$meta.args,
+    ...args,
+  });
 </script>
 
-<div class="story" {id}>
-  {#if children}
-    {@render children({ args })}
-  {:else}
-    <MyComponent {...args} />
-  {/if}
-</div>
-
-<style>
-</style>
+<Isolate {name}>
+  {@const SvelteComponent = of}
+  <div class="story-root" {id} data-story={id}>
+    <h5 class="story-name">{name}</h5>
+    <div class="story" data-name={name}>
+      {#if children}{@render children({ args: finalArgs })}{:else}
+        <SvelteComponent {...finalArgs} />
+      {/if}
+    </div>
+  </div>
+</Isolate>
