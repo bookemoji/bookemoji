@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "start": "npm run build",
-    "prepare": "npm run build && publint",
+    "prepack": "npm run build && publint",
     "build": "tsc",
     "watch": "tsc --watch",
     "clean": "rm -rf bin",
