@@ -1,11 +1,16 @@
 <script lang="ts">
   import { type BookDefinition } from "$lib/book-emoji.js";
-  import { onMount, setContext } from "svelte";
+  import { setContext } from "svelte";
   import { writable } from "svelte/store";
   import { createKeyKeyMap } from "$lib/utils.js";
 
-  export let base: string = "/books";
-  export let books: BookDefinition[] = [];
+  interface Props {
+    base?: string;
+    books?: BookDefinition[];
+    children?: import("svelte").Snippet;
+  }
+
+  let { base = "/books", books = [], children }: Props = $props();
 
   const stories = writable<BookDefinition[]>(books);
 
@@ -16,7 +21,7 @@
 </script>
 
 <div class="book-root">
-  <slot />
+  {@render children?.()}
 </div>
 
 <style>
