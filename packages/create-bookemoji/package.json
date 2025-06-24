@@ -1,8 +1,13 @@
 {
   "name": "create-bookemoji",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "bin/index.js",
   "scripts": {
+    "start": "npm run build",
+    "prepare": "npm run build",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf bin",
     "create-temp": "sv create temp --types ts --template minimal --no-add-ons --no-install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
