@@ -1,3 +1,1 @@
-type Test = "hello";
-
-console.log("hello world" as Test);
+throw new Error("Not implemented yet");
