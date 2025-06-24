@@ -42,3 +42,7 @@ body {
   font-weight: 400;
   font-size: 1.5em;
 }
+
+body :where(li, dd, figcaption) {
+  max-inline-size: var(--size-content-3);
+}

@@ -1,0 +1,30 @@
+# Project Structure
+
+```
+/src/routes
+├───(design)
+│   ├───books
+│   │   │   +layout.server.ts
+│   │   │   +layout.svelte
+│   │   │   +page.svelte
+│   │   │   config.ts
+│   │   │
+│   │   ├───stories
+│   │   │       SomeComponent.book.svelte
+│   │   │       SomeOtherComponent.book.svelte
+│   │   │       ...etc
+│   │   │
+│   │   └───[story]
+│   │       │   +layout.ts
+│   │       │   +page.svelte
+│   │       │   +page.ts
+│   │       │
+│   │       └───[variant]
+│   │               +page.svelte
+│   │               +page.ts
+│   │
+│   └───books.json
+│           +server.ts
+│
+└─── ... the rest of your sveltekit application
+```
