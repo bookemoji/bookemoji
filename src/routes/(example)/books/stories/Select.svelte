@@ -13,3 +13,9 @@
     <slot />
   </select>
 {/if}
+
+<style>
+  .select {
+    min-width: 8em;
+  }
+</style>

@@ -34,7 +34,12 @@ const config = {
     paths: {
       base: process.argv.includes("dev") ? "" : process.env.BASE_PATH,
     },
+    alias: {
+      "$bookemoji.config": "src/routes/(example)/books/config.ts",
+      "$bookemoji.stories": "src/routes/(example)/books/stories",
+    },
   },
+
   extensions: [".svelte", ".mdx"],
 };
 

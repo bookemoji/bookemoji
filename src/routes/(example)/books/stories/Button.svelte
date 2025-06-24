@@ -23,6 +23,9 @@
     font-size: 1rem;
     border-radius: 4px;
     outline: none;
+    color: #202;
+    font-weight: 400;
+    text-shadow: none;
   }
 
   /* Size styles */

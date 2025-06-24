@@ -8,9 +8,7 @@
 
   const meta = getMeta<typeof of>(of, story);
 
-  $: argTypes = Object.entries($meta.argTypes).filter(
-    (kvp): kvp is [string, ArgTypeControl] => kvp[1] !== undefined,
-  );
+  $: argTypes = Object.entries($meta.argTypes).filter((kvp): kvp is [string, ArgTypeControl] => kvp[1] !== undefined);
 </script>
 
 <Isolate name={story}>

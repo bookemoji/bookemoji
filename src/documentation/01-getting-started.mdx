@@ -1,14 +1,11 @@
-<script context="module">
-
-</script>
+<script context="module"></script>
 
 # Getting Started
 
-
 Learn how to get started with Bookemoji, a component library for SvelteKit.
 
-
 ## Installation
+
 ```js
 npm install bookemoji
 ```
@@ -23,63 +20,63 @@ BookEmoji is a set of SvelteKit loaders and svelte components.
 
 ---
 
-
 1. Choose a directory in which to use as the root of your component library within your `src/routes`
-    - For the sake of example, we will use `(design)/books` for the rest of this setup.
+   - For the sake of example, we will use `(design)/books` for the rest of this setup.
 2. Create these files:
-    - `(design)/books/+layout.svelte`
-    - `(design)/books/+layout.server.ts`
-    - `(design)/book.json/+server.ts`
-  
-  ```svelte
-  // (design)/books/+layout.svelte
-  <script lang="ts">
-      import { Book } from "bookemoji";
-      import type { LayoutData} from "./$types";
-      export let data: LayoutData;
-  </script>
+   - `(design)/books/+layout.svelte`
+   - `(design)/books/+layout.server.ts`
+   - `(design)/book.json/+server.ts`
 
-  <Book base={"/books"}>
-      <slot />
-  </Book>
-    ```
+````svelte
+// (design)/books/+layout.svelte
+<script lang="ts">
+    import { Book } from "bookemoji";
+    import type { LayoutData} from "./$types";
+    export let data: LayoutData;
+</script>
 
-    ```ts
-    // (design)/books/+layout.server.ts
-    import type { BookDefinition } from "book-emoji";
-    import type { LayoutServerLoad } from "./$types.js";
+<Book base={"/books"}>
+    <slot />
+</Book>
+  ```
 
-    export const load: LayoutServerLoad = async ({ fetch }) => {
-      const bookRes = await fetch("/books.json");
-      const bookList: BookDefinition[] = await bookRes.json();
+  ```ts
+  // (design)/books/+layout.server.ts
+  import type { BookDefinition } from "book-emoji";
+  import type { LayoutServerLoad } from "./$types.js";
 
-      return { bookList };
-    };
-    ```
+  export const load: LayoutServerLoad = async ({ fetch }) => {
+    const bookRes = await fetch("/books.json");
+    const bookList: BookDefinition[] = await bookRes.json();
 
-    ```ts
-    // (design)/book.json/+server.ts
-    import { json, type RequestHandler } from "@sveltejs/kit";
-    import { findStoryFiles } from "book-emoji";
-    import type { Component } from "svelte";
+    return { bookList };
+  };
+  ```
 
-    export const GET: RequestHandler = async () => {
-      const books = import.meta.glob<{ default: Component }>("../books/stories/**/*.book.svelte", {
-        eager: true,
-      });
+  ```ts
+  // (design)/book.json/+server.ts
+  import { json, type RequestHandler } from "@sveltejs/kit";
+  import { findStoryFiles } from "book-emoji";
+  import type { Component } from "svelte";
 
-      const bookList = await findStoryFiles("/books", books);
+  export const GET: RequestHandler = async () => {
+    const books = import.meta.glob<{ default: Component }>("../books/stories/**/*.book.svelte", {
+      eager: true,
+    });
 
-      return json(bookList);
-    };
+    const bookList = await findStoryFiles("/books", books);
 
-    export const prerender = true; // Enable prerendering for this route
+    return json(bookList);
+  };
 
-    ```
-3. 
+  export const prerender = true; // Enable prerendering for this route
+
+  ```
+3.
 
 
 ## Svelte Adder
 
 TODO
 
+````
