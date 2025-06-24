@@ -11,11 +11,11 @@
 
   <div>
     <h3>Vision</h3>
-    <aside class="subtitle">initially vision, but later features</aside>
+    <aside class="subtitle">initially: vision, later: features</aside>
     <ul class="book-list">
       <li>Tight integration with sveltekit</li>
       <li>Support for Svelte 4.x and 5.x</li>
-      <li>unstyled components, yours style freely</li>
+      <li>unstyled components, style freely 🐎</li>
       <li>No JSX, no obscure errors <br /><i>just svelte and sveltekit.</i></li>
       <li>Low Dependencies</li>
       <li>Very little magic — enough for sorcerers to wield</li>
