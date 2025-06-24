@@ -6,7 +6,7 @@
 <div class="side-by-side">
   <div>
     <h3>What is it</h3>
-    <p>📕 Bookemoji is a component library for svelte. Rethought to suite the needs of a sveltekit application.</p>
+    <p>📕 Bookemoji is a component workshop for svelte. Rethought to suite the needs of a sveltekit application.</p>
   </div>
 
   <div>
