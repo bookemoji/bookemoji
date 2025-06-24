@@ -1,15 +1,6 @@
-import { json, type RequestHandler } from "@sveltejs/kit";
-import { findStoryFiles } from "$lib/book-emoji.js";
-import type { Component } from "svelte";
+import { type RequestHandler } from "@sveltejs/kit";
+import { createServerGET } from "$lib/loaders.js";
 
-export const GET: RequestHandler = async () => {
-  const books = import.meta.glob<{ default: Component }>("../books/stories/**/*.book.svelte", {
-    eager: true,
-  });
+export const GET: RequestHandler = createServerGET();
 
-  const bookList = await findStoryFiles("/books", books);
-
-  return json(bookList);
-};
-
-export const prerender = true; // Enable prerendering for this route
+export const prerender = true;

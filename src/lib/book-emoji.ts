@@ -6,6 +6,10 @@ import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
 import { parse } from "node-html-parser";
 
+export type BookEmojiConfig = {
+  base: `/${string}`;
+};
+
 /**
  * Represents a Story from SvelteKit's perspective
  */
@@ -33,7 +37,8 @@ export const nameToId = (name: string): string => {
 
 export const createStoryUrl = (base: string, storyName: string) => {
   const story: string = nameToId(storyName.toLowerCase());
-  const route: string = `/${base}/${story}`;
+  const route: string = `${base}/${story}`;
+
   return {
     /**
      * The param value
@@ -69,36 +74,34 @@ export const discoverVariants = (name: string, component: Component): string[] =
   return variantNames;
 };
 
-export const loadStories = async (path: string = "/books"): Promise<BookDefinition[]> => {
-  const response = await fetch(path);
-  if (!response.ok) {
-    throw new Error(`Failed to load stories from ${path}`);
-  }
+export type BookEndpointResponse = {
+  /**
+   * The base path of BookEmoji
+   */
+  base: `/${string}`;
 
-  const data = await response.json();
-
-  return data;
+  /**
+   * The list of BookDefinitions found
+   */
+  books: BookDefinition[];
 };
 
-export const findStoryFiles = async (
-  base: string = "",
-  books: Record<
-    string,
-    {
-      default: Component;
-    }
-  >,
-) => {
+export const findStoryFiles = async (config: BookEmojiConfig) => {
+  const books: Record<string, Component> = import.meta.glob<Component>("$bookemoji.stories/**/*.book.svelte", {
+    eager: true,
+    import: "default",
+  });
+
   const bookList: BookDefinition[] = Object.entries(books).map(([localPath, mod]) => {
     const name = basename(localPath).replace(".book.svelte", "");
     const path = localPath;
-    const bookUrl = createStoryUrl(base, name);
+    const bookUrl = createStoryUrl(config.base, name);
 
-    const variantNames = discoverVariants(name, mod.default);
+    const variantNames = discoverVariants(name, mod);
 
     const variants: Record<string, VariantDefinition> = Object.fromEntries(
       variantNames.map((variant) => {
-        const vrnt = createVariantUrl(base, name, variant);
+        const vrnt = createVariantUrl(config.base, name, variant);
         return [
           variant,
           {
@@ -125,10 +128,7 @@ export const findStoryFiles = async (
 export type MetaOptions<T extends Component> = {
   component: Component;
   args?: Omit<ComponentProps<T>, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">;
-  argTypes?: Record<
-    keyof Omit<ComponentProps<T>, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">,
-    undefined | ArgTypeControl
-  >;
+  argTypes?: Record<keyof Omit<ComponentProps<T>, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">, undefined | ArgTypeControl>;
 };
 
 export type ArgTypeControl = ComponentControl | SelectControl | TextControl | SwitchControl;
@@ -166,9 +166,7 @@ export function defineMeta<T extends Component>(definition: MetaOptions<T>) {
   const meta = getContext<Map<Component, Required<ComponentArgTypes>>>("bookemoji.meta");
 
   if (!meta) {
-    throw new Error(
-      `No "bookemoji.meta" context found. Make sure to set the context in your book component at the top level.`,
-    );
+    throw new Error(`No "bookemoji.meta" context found. Make sure to set the context in your book component at the top level.`);
   }
 
   const { component, ...componentArgs } = definition;
@@ -193,9 +191,7 @@ export function getMeta<T extends Component>(component: T, variant: string): Com
   const argData = getContext<KeyKeyMap<Component, string, ComponentArgStore>>("bookemoji.argTypes");
 
   if (!argData || !meta) {
-    throw new Error(
-      `No "bookemoji.meta" context found. Make sure your Story, Control, etc is within a <Book>`,
-    );
+    throw new Error(`No "bookemoji.meta" context found. Make sure your Story, Control, etc is within a <Book>`);
   }
 
   let argTypes = argData.get(component, variant);

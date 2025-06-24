@@ -12,7 +12,7 @@ const docFileNames = Object.keys(docFiles);
 export const docs = new Map<string, string>();
 
 export const createDocs = async () => {
-  for (let key of docFileNames) {
+  for (const key of docFileNames) {
     if (docs.has(key)) {
       continue;
     }

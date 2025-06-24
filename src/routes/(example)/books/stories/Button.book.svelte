@@ -20,25 +20,13 @@
   });
 </script>
 
-<Story
-  of={Button}
-  name="Basic"
-  args={{ variant: "primary", size: "medium", text: "Primary Button" }}
-/>
+<Story of={Button} name="Basic" args={{ variant: "primary", size: "medium", text: "Primary Button" }} />
 
 <Controls of={Button} story="Basic" />
 
-<Story
-  of={Button}
-  name="Secondary"
-  args={{ variant: "secondary", size: "medium", text: "Secondary Button" }}
-/>
+<Story of={Button} name="Secondary" args={{ variant: "secondary", size: "medium", text: "Secondary Button" }} />
 <Controls of={Button} story="Secondary" />
 
-<Story
-  of={Button}
-  name="Tertiary"
-  args={{ variant: "tertiary", size: "medium", text: "Tertiary Button" }}
-/>
+<Story of={Button} name="Tertiary" args={{ variant: "tertiary", size: "medium", text: "Tertiary Button" }} />
 
 <Controls of={Button} story="Tertiary" />
