@@ -69,6 +69,10 @@
     "vitest": "^3.2.3"
   },
   "keywords": [
-    "svelte"
+    "svelte",
+    "sveltekit",
+    "storybook",
+    "design system",
+    "component workshop"
   ]
 }
