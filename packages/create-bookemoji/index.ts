@@ -1,1 +1,3 @@
-throw new Error("Not implemented yet");
+import degit from "degit";
+
+degit;
