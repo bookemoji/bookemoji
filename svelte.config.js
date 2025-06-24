@@ -7,7 +7,7 @@ import { createHighlighter } from "shiki";
 const theme = "catppuccin-frappe";
 const highlighter = await createHighlighter({
   themes: [theme],
-  langs: ["javascript", "typescript", "svelte"],
+  langs: ["javascript", "typescript", "svelte", "diff"],
 });
 
 /** @type {import('mdsvex').MdsvexOptions} */
@@ -35,7 +35,7 @@ const config = {
       base: process.argv.includes("dev") ? "" : process.env.BASE_PATH,
     },
     alias: {
-      "$bookemoji.config": "src/routes/(example)/books/config.ts",
+      "$bookemoji.config": "src/routes/(example)/books/bookemoji.config.ts",
       "$bookemoji.stories": "src/routes/(example)/books/stories",
     },
   },

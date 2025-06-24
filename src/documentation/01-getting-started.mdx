@@ -16,67 +16,47 @@ BookEmoji is a set of SvelteKit loaders and svelte components.
 
 #### Prerequisites:
 
-- An already-scaffolded SvelteKit applciation
+- An already-scaffolded SvelteKit application
+- You may want to familiarize yourself with the [Project Structure](project-structure)
 
 ---
 
-1. Choose a directory in which to use as the root of your component library within your `src/routes`
-   - For the sake of example, we will use `(design)/books` for the rest of this setup.
-2. Create these files:
-   - `(design)/books/+layout.svelte`
-   - `(design)/books/+layout.server.ts`
-   - `(design)/book.json/+server.ts`
+<h3 id="setup-aliases">Setup Aliases</h3>
 
-````svelte
-// (design)/books/+layout.svelte
-<script lang="ts">
-    import { Book } from "bookemoji";
-    import type { LayoutData} from "./$types";
-    export let data: LayoutData;
-</script>
+Within your `svelte.config.js` add two new aliases. <br />
 
-<Book base={"/books"}>
-    <slot />
-</Book>
-  ```
+1. `$bookemoji.config` <br /> The alias path of your config **file**.
+2. `$bookemoji.stories` <br /> The alias path of your stories **directory**.
 
-  ```ts
-  // (design)/books/+layout.server.ts
-  import type { BookDefinition } from "book-emoji";
-  import type { LayoutServerLoad } from "./$types.js";
+```diff
+// svelte.config.js
+/**
+ * @type {import('@sveltejs/kit').Config}
+ */
+const config = {
+  preprocess: [vitePreprocess()],
+  kit: {
+    adapter: adapter(),
+    paths: {
+      base: process.argv.includes("dev") ? "" : process.env.BASE_PATH,
+    },
++    alias: {
++      "$bookemoji.config": "src/routes/(design)/books/bookemoji.config.ts",
++      "$bookemoji.stories": "src/routes/(design)/books/stories",
++    },
+  },
+};
 
-  export const load: LayoutServerLoad = async ({ fetch }) => {
-    const bookRes = await fetch("/books.json");
-    const bookList: BookDefinition[] = await bookRes.json();
+```
 
-    return { bookList };
-  };
-  ```
+<h3 id="create-bookemoji-config">Create bookemoji.config.ts</h3>
 
-  ```ts
-  // (design)/book.json/+server.ts
-  import { json, type RequestHandler } from "@sveltejs/kit";
-  import { findStoryFiles } from "book-emoji";
-  import type { Component } from "svelte";
+This file primarily is to configure the `base` of the design system.
 
-  export const GET: RequestHandler = async () => {
-    const books = import.meta.glob<{ default: Component }>("../books/stories/**/*.book.svelte", {
-      eager: true,
-    });
+```ts
+import type { BookEmojiConfig } from "bookemoji";
 
-    const bookList = await findStoryFiles("/books", books);
-
-    return json(bookList);
-  };
-
-  export const prerender = true; // Enable prerendering for this route
-
-  ```
-3.
-
-
-## Svelte Adder
-
-TODO
-
-````
+export default {
+  base: "/books",
+} satisfies BookEmojiConfig;
+```
