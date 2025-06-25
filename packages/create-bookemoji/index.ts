@@ -8,6 +8,15 @@ main();
 async function main() {
   intro(`create-bookemoji`);
 
+  log.step("Checking SvelteKit project");
+  if (await isSvelteKitProject()) {
+    log.success("svelte.config.js found");
+  } else {
+    log.info("svelte.config.js not found");
+    log.error("Current directory does not appear to be a sveltekit project.");
+    return;
+  }
+
   const bookEmojiBaseRoute = await text({
     message: "Where should bookemoji be configured?",
     placeholder: "src/routes/(design)",
@@ -18,7 +27,7 @@ async function main() {
   });
 
   if (isCancel(bookEmojiBaseRoute)) {
-    log.error("Quiting");
+    log.error("You quit");
     return;
   }
 
@@ -26,6 +35,15 @@ async function main() {
   await applyAliases(bookEmojiBaseRoute);
 
   outro(`You're all set!`);
+}
+
+async function isSvelteKitProject() {
+  try {
+    const stat = await fs.stat("./svelte.config.js");
+    return stat.isFile();
+  } catch (err: any) {
+    return false;
+  }
 }
 
 async function scaffoldRoutes(bookEmojiBaseRoute: string) {
@@ -65,4 +83,6 @@ async function scaffoldRoutes(bookEmojiBaseRoute: string) {
   }
 }
 
-async function applyAliases(bookEmojiBaseRoute: string) {}
+async function applyAliases(bookEmojiBaseRoute: string) {
+  log.step("Configuring your sveltekit config");
+}
