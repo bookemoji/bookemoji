@@ -1,6 +1,17 @@
 import degit from "degit";
 import { intro, outro, text, isCancel, spinner, log } from "@clack/prompts";
 import * as fs from "node:fs/promises";
+import {
+  Identifier,
+  ObjectLiteralElementLike,
+  ObjectLiteralExpression,
+  Project,
+  PropertyAssignment,
+  ScriptTarget,
+  SyntaxKind,
+  ts,
+  VariableDeclaration,
+} from "ts-morph";
 
 const DEFAULT_ROUTE = "(design)";
 main();
@@ -84,5 +95,67 @@ async function scaffoldRoutes(bookEmojiBaseRoute: string) {
 }
 
 async function applyAliases(bookEmojiBaseRoute: string) {
-  log.step("Configuring your sveltekit config");
+  log.step("Adding bookemoji aliases to sveltekit config");
+  let success: boolean = false;
+
+  const project = new Project({
+    compilerOptions: {
+      target: ScriptTarget.Latest,
+    },
+  });
+
+  const sourceFile = project.addSourceFileAtPath("./svelte.config.js");
+  let configDeclaration: VariableDeclaration | undefined = undefined;
+  for (const statement of sourceFile.getVariableStatements()) {
+    for (const decs of statement.getDeclarations()) {
+      // const config = {}
+      if (decs.getName() === "config" && decs.getInitializer() !== undefined) {
+        configDeclaration = decs;
+      }
+    }
+  }
+
+  if (configDeclaration) {
+    const initializer = configDeclaration.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+    for (const assignment of initializer.getChildrenOfKind(SyntaxKind.PropertyAssignment)) {
+      if (assignment.getName() === "kit") {
+        const kitInit = assignment.getInitializer() as ObjectLiteralExpression;
+        const kitProperties = kitInit.getProperties();
+        let aliasProp: ObjectLiteralElementLike = kitInit.getProperty("alias");
+
+        if (aliasProp && aliasProp instanceof PropertyAssignment) {
+          const initializer = aliasProp.getInitializer() as ObjectLiteralExpression;
+          //   const props = initializer.getProperties();
+          if (initializer.getFullText().includes(`"$bookemoji.config"`) && initializer.getFullText().includes(`"$bookemoji.stories"`)) {
+            // already here, nothing to do
+            log.info("Aliases already present — nothing to do");
+          } else {
+            initializer.addPropertyAssignments([
+              {
+                name: "$bookemoji.config",
+                initializer: `src/routes/${bookEmojiBaseRoute})/books/bookemoji.config.ts`,
+              },
+              {
+                name: "$bookemoji.stories",
+                initializer: `src/routes/${bookEmojiBaseRoute})/books/stories`,
+              },
+            ]);
+            success = true;
+          }
+        } else {
+        }
+      }
+    }
+  } else {
+    // find it as "export default { }" ?
+  }
+
+  await sourceFile.save();
+  if (success) {
+    log.step("Inserted aliases and saved file");
+  } else {
+    log.info("What happened?");
+  }
+
+  console.log();
 }
