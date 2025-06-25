@@ -1,35 +1,68 @@
 import degit from "degit";
-import { intro, outro, text } from "@clack/prompts";
+import { intro, outro, text, isCancel, spinner, log } from "@clack/prompts";
+import * as fs from "node:fs/promises";
+
+const DEFAULT_ROUTE = "(design)";
+main();
 
 async function main() {
   intro(`create-bookemoji`);
-  // https://github.com/bookemoji/template
-  // https://github.com/bookemoji/bookemoji
-  const TEMPLATE_REPO: string = "https://github.com/bookemoji/template";
 
-  const meaning = await text({
-    message: "What is the meaning of life?",
-    placeholder: "Not sure",
-    initialValue: "42",
+  const bookEmojiBaseRoute = await text({
+    message: "Where should bookemoji be configured?",
+    placeholder: "src/routes/(design)",
+    initialValue: DEFAULT_ROUTE,
     validate(value: string) {
       if (value.length === 0) return `Value is required!`;
     },
   });
-  const emitter = degit(TEMPLATE_REPO, {
-    cache: true,
-    force: true,
-    verbose: true,
-  });
 
-  emitter.on("info", (info) => {
-    console.log(info.message);
-  });
+  if (isCancel(bookEmojiBaseRoute)) {
+    log.error("Quiting");
+    return;
+  }
 
-  emitter.clone("path/to/dest").then(() => {
-    console.log("done");
-  });
+  await scaffoldRoutes(bookEmojiBaseRoute);
+  await applyAliases(bookEmojiBaseRoute);
 
   outro(`You're all set!`);
 }
 
-main();
+async function scaffoldRoutes(bookEmojiBaseRoute: string) {
+  const s = spinner();
+  s.start("Creating Routes...");
+  console.log();
+  const TEMPLATE_REPO: string = "bookemoji/template";
+  const DEFAULT_ROUTE = "(design)";
+  let template = "base";
+
+  const emitter = degit(`${TEMPLATE_REPO}/${template}`, {
+    cache: false,
+    force: true,
+    verbose: false,
+  });
+
+  emitter.on("info", (info) => {
+    // we intentionally are forcing
+    if (info.message.startsWith("destination directory is not empty.")) {
+      return;
+    }
+
+    log.success(info.message);
+  });
+
+  await emitter.clone("./src/routes/");
+  s.stop("Routes Created");
+
+  if (bookEmojiBaseRoute !== DEFAULT_ROUTE) {
+    log.step("Updating downloaded route");
+    const srcPath = `./src/routes/${DEFAULT_ROUTE}`;
+    const destPath = `./src/routes/${bookEmojiBaseRoute}`;
+
+    await fs.cp(srcPath, destPath, { recursive: true });
+    await fs.rm(srcPath, { recursive: true, force: true });
+    log.success(`Route renamed from ${DEFAULT_ROUTE} to ${bookEmojiBaseRoute}`);
+  }
+}
+
+async function applyAliases(bookEmojiBaseRoute: string) {}
