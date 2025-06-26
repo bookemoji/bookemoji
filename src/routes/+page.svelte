@@ -1,6 +1,6 @@
 <div class="hero">
   <h1 class="jua-regular">BookEmoji</h1>
-  <h2>a SvelteKit Component Workshop</h2>
+  <h2>a Component Workshop for SvelteKit</h2>
 </div>
 
 <div class="side-by-side">
