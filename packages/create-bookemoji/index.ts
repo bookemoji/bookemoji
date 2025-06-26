@@ -1,16 +1,16 @@
+#!/usr/bin/env node
+
 import degit from "degit";
 import { intro, outro, text, isCancel, spinner, log } from "@clack/prompts";
 import * as fs from "node:fs/promises";
 import {
   CodeBlockWriter,
-  Identifier,
   ObjectLiteralElementLike,
   ObjectLiteralExpression,
   Project,
   PropertyAssignment,
   ScriptTarget,
   SyntaxKind,
-  ts,
   VariableDeclaration,
 } from "ts-morph";
 import { exec } from "node:child_process";
