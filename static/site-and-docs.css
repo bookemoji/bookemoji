@@ -19,7 +19,8 @@ body {
   font-family: var(--font-system-ui);
 }
 
-.nav-link {
+.nav-link,
+.brand {
   text-decoration: none;
 }
 
