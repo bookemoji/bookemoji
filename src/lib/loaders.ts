@@ -1,6 +1,8 @@
 import type * as Kit from "@sveltejs/kit";
 import { error, json } from "@sveltejs/kit";
-import { findStoryFiles, type BookEmojiConfig, type BookEndpointResponse } from "./book-emoji.js";
+import { findStoryFiles, type BookEndpointResponse } from "./book-emoji.js";
+import "./bookemoji-module.d.ts";
+import { base, stories } from "virtual:bookemoji";
 
 import type {
   StoryLayoutParams,
@@ -29,11 +31,12 @@ export const layoutServerLoad: Kit.ServerLoad<never, never, BookEndpointResponse
 export const createServerGET = <T extends Kit.RequestHandler = Kit.RequestHandler>(): T => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const GET: Kit.RequestHandler = async (event) => {
-    const config: BookEmojiConfig = (await import("$bookemoji.config")).default;
-    const books = await findStoryFiles(config);
+    // const bookEmojiModule = await import("virtual:bookemoji");
+    // const config: BookEmojiConfig = bookEmojiModule.config;
+    const books = await findStoryFiles();
 
     return json({
-      base: config.base,
+      base,
       books,
     });
   };
@@ -61,7 +64,10 @@ export const storyLayoutLoad: Kit.Load<Partial<StoryLayoutParams>, null, StoryLa
     error(404, `Book ${story} not found in booklist`);
   }
 
-  const bookComponent = await import(`$bookemoji.stories/${book.name}.book.svelte`);
+  // const bookEmoji = await import("virtual:bookemoji");
+
+  // const bookComponent = await import(/* @vite-ignore */ `${base}/${book.name}.book.svelte`);
+  const bookComponent = await import(/* @vite-ignore */ book.path);
 
   return {
     Book: bookComponent.default,
