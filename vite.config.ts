@@ -1,9 +1,11 @@
 import { svelteTesting } from "@testing-library/svelte/vite";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
+import Inspect from "vite-plugin-inspect";
+import bookEmoji from "./dist/vite/vite-plugin-bookemoji.js";
 
 export default defineConfig({
-  plugins: [sveltekit()],
+  plugins: [sveltekit(), Inspect(), bookEmoji()],
   test: {
     projects: [
       {
