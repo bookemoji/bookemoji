@@ -5,10 +5,7 @@ import { writable, type Writable } from "svelte/store";
 import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
 import { parse } from "node-html-parser";
-
-export type BookEmojiConfig = {
-  base: `/${string}`;
-};
+import { base, stories, loadStories } from "virtual:bookemoji";
 
 /**
  * Represents a Story from SvelteKit's perspective
@@ -86,22 +83,24 @@ export type BookEndpointResponse = {
   books: BookDefinition[];
 };
 
-export const findStoryFiles = async (config: BookEmojiConfig) => {
-  const books: Record<string, Component> = import.meta.glob<Component>("$bookemoji.stories/**/*.book.svelte", {
-    eager: true,
-    import: "default",
-  });
+export const findStoryFiles = async () => {
+  // const books: Record<string, Component> = import.meta.glob<Component>("$bookemoji.stories/**/*.book.svelte", {
+  //   eager: true,
+  //   import: "default",
+  // });
+  // const bookEmoji = await import("virtual:bookemoji");
+  const books: Record<string, Component> = await loadStories();
 
   const bookList: BookDefinition[] = Object.entries(books).map(([localPath, mod]) => {
     const name = basename(localPath).replace(".book.svelte", "");
     const path = localPath;
-    const bookUrl = createStoryUrl(config.base, name);
+    const bookUrl = createStoryUrl(base, name);
 
     const variantNames = discoverVariants(name, mod);
 
     const variants: Record<string, VariantDefinition> = Object.fromEntries(
       variantNames.map((variant) => {
-        const vrnt = createVariantUrl(config.base, name, variant);
+        const vrnt = createVariantUrl(base, name, variant);
         return [
           variant,
           {

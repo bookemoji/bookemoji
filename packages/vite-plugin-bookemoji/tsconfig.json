@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "erasableSyntaxOnly": true,
+        "esModuleInterop": true,
+        "declaration": true,
+        "module": "nodenext",
+        "outDir": "./dist",
+
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+    ],
+    "include": ["./src/index.ts"],
+}
