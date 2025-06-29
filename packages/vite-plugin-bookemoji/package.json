@@ -2,6 +2,7 @@
   "name": "vite-plugin-bookemoji",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "workspace": "../../",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -14,7 +15,7 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf dist",
-    "dev": "tsc -c ./tsconfig.json --watch",
+    "dev": "tsc --watch",
     "build": "tsc && npm run prepack",
     "preview": "vite preview",
     "prepack": "publint",
