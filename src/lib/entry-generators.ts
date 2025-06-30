@@ -1,4 +1,4 @@
-import { findStoryFiles, type BookEmojiConfig } from "./book-emoji.js";
+import { findStoryFiles } from "./book-emoji.js";
 import type { StoryEntryGenerator, VariantEntryGenerator, VariantRouteParams } from "./sveltekit-runtime-types.js";
 
 /**
@@ -7,8 +7,8 @@ import type { StoryEntryGenerator, VariantEntryGenerator, VariantRouteParams } f
  */
 export const generateVariantEntries = (): VariantEntryGenerator => {
   return async () => {
-    const config: BookEmojiConfig = (await import("$bookemoji.config")).default;
-    const bookList = await findStoryFiles(config);
+    // const config: BookEmojiConfig = (await import("$bookemoji.config")).default;
+    const bookList = await findStoryFiles();
 
     const prerenderStories = bookList.map((book) => {
       return Object.values(book.variants).map((variant) => {
@@ -29,9 +29,7 @@ export const generateVariantEntries = (): VariantEntryGenerator => {
  */
 export const createStoryEntryGenerator = (): StoryEntryGenerator => {
   return async () => {
-    const config: BookEmojiConfig = (await import("$bookemoji.config")).default;
-
-    const bookList = await findStoryFiles(config);
+    const bookList = await findStoryFiles();
 
     const prerenderStories = bookList.map((book) => ({
       story: book.slug,

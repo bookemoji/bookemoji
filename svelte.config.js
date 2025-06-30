@@ -37,7 +37,7 @@ const config = {
   },
   bookemoji: {
     base: "/books",
-    stories: "src/routes/(example)/books/stories/**/*.book.svelte",
+    stories: "./src/routes/(example)/books/**/*.book.svelte",
   },
 
   extensions: [".svelte", ".mdx"],

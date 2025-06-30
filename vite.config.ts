@@ -5,12 +5,7 @@ import Inspect from "vite-plugin-inspect";
 import bookEmojiPlugin from "vite-plugin-bookemoji";
 
 export default defineConfig({
-  plugins: [
-    sveltekit(),
-    Inspect(),
-    // comment this out for first build
-    bookEmojiPlugin(),
-  ],
+  plugins: [sveltekit(), Inspect(), bookEmojiPlugin()],
   test: {
     projects: [
       {
