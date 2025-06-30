@@ -1,2 +1,3 @@
-export * from "./vite-plugin-bookemoji.js";
+import bookEmojiPlugin from "./vite-plugin-bookemoji.js";
+export default bookEmojiPlugin;
 export * from "./config.js";
