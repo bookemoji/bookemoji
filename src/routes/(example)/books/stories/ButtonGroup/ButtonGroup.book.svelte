@@ -1,11 +1,11 @@
 <script lang="ts">
   import Story from "$lib/components/v4/Story.svelte";
   import Controls from "$lib/components/v4/Controls.svelte";
-  import Button from "./ButtonGroup.svelte";
+  import ButtonGroup from "./ButtonGroup.svelte";
   import { defineMeta } from "$lib/book-emoji.js";
 
-  defineMeta<typeof Button>({
-    component: Button,
+  defineMeta<typeof ButtonGroup>({
+    component: ButtonGroup,
 
     argTypes: {
       variant: { type: "select", options: ["primary", "secondary", "tertiary"] },
@@ -20,13 +20,13 @@
   });
 </script>
 
-<Story of={Button} name="Basic" args={{ variant: "primary", size: "medium", text: "Primary Button" }} />
+<Story of={ButtonGroup} name="Basic" args={{ variant: "primary", size: "medium", text: "Primary Button" }} />
 
-<Controls of={Button} story="Basic" />
+<Controls of={ButtonGroup} story="Basic" />
 
-<Story of={Button} name="Secondary" args={{ variant: "secondary", size: "medium", text: "Secondary Button" }} />
-<Controls of={Button} story="Secondary" />
+<Story of={ButtonGroup} name="Secondary" args={{ variant: "secondary", size: "medium", text: "Secondary Button" }} />
+<Controls of={ButtonGroup} story="Secondary" />
 
-<Story of={Button} name="Tertiary" args={{ variant: "tertiary", size: "medium", text: "Tertiary Button" }} />
+<Story of={ButtonGroup} name="Tertiary" args={{ variant: "tertiary", size: "medium", text: "Tertiary Button" }} />
 
-<Controls of={Button} story="Tertiary" />
+<Controls of={ButtonGroup} story="Tertiary" />
