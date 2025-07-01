@@ -14,6 +14,7 @@ import {
   VariableDeclaration,
 } from "ts-morph";
 import { exec } from "node:child_process";
+import pc from "picocolors";
 
 type PackageJson = Partial<{
   name: string;
@@ -30,10 +31,10 @@ async function main() {
 
   log.step("Checking SvelteKit project");
   if (await isSvelteKitProject()) {
-    log.success("svelte.config.js found");
+    log.success("sveltekit detected");
   } else {
-    log.info("svelte.config.js not found");
-    log.error("Current directory does not appear to be a sveltekit project.");
+    log.error("Required files are missing.");
+    log.info("Are you within a sveltekit project?");
     return;
   }
 
@@ -53,19 +54,41 @@ async function main() {
 
   await installBookEmoji();
   await scaffoldRoutes(bookEmojiBaseRoute);
-  await applyAliases(bookEmojiBaseRoute);
+  await applyConfig(bookEmojiBaseRoute);
 
   outro(`📚 Books are stacked. You're ready to go!`);
 }
 
-async function isSvelteKitProject() {
+async function fileExists(filepath: string) {
   try {
-    const stat = await fs.stat("./svelte.config.js");
-    const pkg = await fs.stat("./package.json");
-    return stat.isFile() && pkg.isFile();
+    return (await fs.stat(filepath)).isFile();
   } catch (err: any) {
     return false;
   }
+}
+
+async function isSvelteKitProject() {
+  const skconfig = await fileExists("./svelte.config.js");
+  const packageJsonFile = await fileExists("./package.json");
+  const viteConfig = (await fileExists("./vite.config.ts")) || (await fileExists("./vite.config.js"));
+
+  if (skconfig && packageJsonFile && viteConfig) {
+    return true;
+  }
+
+  if (!skconfig) {
+    log.error("svelte.config.js was not found");
+  }
+
+  if (!packageJsonFile) {
+    log.error("package.json was not found");
+  }
+
+  if (!viteConfig) {
+    log.error(`vite.config.ts / vite.config.js not found`);
+  }
+
+  return false;
 }
 
 async function installBookEmoji() {
@@ -143,8 +166,19 @@ async function scaffoldRoutes(bookEmojiBaseRoute: string) {
   }
 }
 
-async function applyAliases(bookEmojiBaseRoute: string) {
-  log.step("Adding bookemoji aliases to sveltekit config");
+async function applyVitePlugin() {
+  const project = new Project({
+    compilerOptions: {
+      target: ScriptTarget.Latest,
+      allowJs: true,
+    },
+  });
+
+  const sourceFile = project.addSourceFileAtPath("./vite.config.js");
+}
+
+async function applyConfig(bookEmojiBaseRoute: string) {
+  log.step("Adding bookemoji configuration to sveltekit config");
   let modified: boolean = false;
 
   const project = new Project({
