@@ -1,4 +1,4 @@
 declare const _default: {
-    base: "/books";
+  base: "/books";
 };
 export default _default;
