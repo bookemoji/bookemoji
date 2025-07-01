@@ -6,7 +6,8 @@ import { default as fg } from "fast-glob"; // Fast and efficient globbing librar
 import * as fs from "node:fs/promises"; // For checking file existence asynchronously
 import type { BookEmojiConfig } from "./config.js";
 
-const plugin_prefix: string = pc.magenta("  📘 bookemoji  ");
+const bec = pc.magenta;
+const plugin_prefix: string = bec("  📘 bookemoji  ");
 const virtualModuleId: string = "virtual:bookemoji" as const;
 const resolvedVirtualModuleId: string = "\0" + virtualModuleId;
 
@@ -39,7 +40,7 @@ export default function bookEmojiPlugin(options?: BookEmojiPluginOptions): Plugi
     log("error", ...args);
   };
 
-  let config; // Stores Vite's resolved configuration
+  let config: ResolvedConfig; // Stores Vite's resolved configuration
   // Default glob pattern. This will be used if no custom config file is found
   // or if the globPattern is not defined in the custom config.
   let bookEmojiConfig: BookEmojiConfig | undefined = undefined;
@@ -60,9 +61,7 @@ export default function bookEmojiPlugin(options?: BookEmojiPluginOptions): Plugi
           if (url && bookEmojiConfig?.base && bookEmojiConfig?.base !== "/") {
             const bookEmojiUrl = new URL(url);
             bookEmojiUrl.pathname = bookEmojiConfig?.base;
-            config.logger.info(
-              `  ${pc.green("➜")}  ${pc.bold("BookEmoji")}: ${pc.magenta(bookEmojiUrl.origin.toString())}${pc.magenta(pc.bold(bookEmojiUrl.pathname))}`,
-            );
+            config.logger.info(`  ${pc.green("➜")}  ${pc.bold("bookemoji")}: ${bec(bookEmojiUrl.origin.toString())}${bec(pc.bold(bookEmojiUrl.pathname))}`);
           }
         }
       };
@@ -99,10 +98,9 @@ export default function bookEmojiPlugin(options?: BookEmojiPluginOptions): Plugi
         if (svelteConfig && svelteConfig.default) {
           bookEmojiConfig = svelteConfig.default?.bookemoji;
           userGlobPattern = bookEmojiConfig?.stories ?? "";
-          log(
-            "info",
-            `${pc.green("Config found")} — ${resolvedConfig.command === "build" ? "building stories from" : "watching"} "${pc.dim(userGlobPattern)}"`,
-          );
+
+          const action = `${resolvedConfig.command === "build" ? "building stories from" : "watching"} ${pc.dim(userGlobPattern)}`;
+          log("info", `${pc.green(pc.bold("config found"))} — ${pc.dim(action)}`);
         }
 
         if (!bookEmojiConfig) {
@@ -179,7 +177,11 @@ export default function bookEmojiPlugin(options?: BookEmojiPluginOptions): Plugi
             ignore: ["node_modules/**", "dist/**", ".git/**", ".vscode/**"],
           });
 
+          if (config.command === "build") {
+            log("info", "");
+          }
           log("info", `Found ${files.length} ${files.length === 1 ? "story" : "stories"}`);
+
           files.forEach((f) => log("debug", "- ", f.name));
 
           // Generate an array of dynamic import expressions.
