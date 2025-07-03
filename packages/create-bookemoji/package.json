@@ -15,7 +15,9 @@
     "clean": "rm -rf bin",
     "create-temp": "sv create temp --types ts --template minimal --no-add-ons --no-install",
     "test-run": "node ./bin/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && eslint ."
   },
   "author": "Rory Duncan",
   "license": "MIT",
