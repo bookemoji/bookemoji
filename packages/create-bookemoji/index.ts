@@ -54,9 +54,9 @@ async function main() {
     return;
   }
   await applyVitePlugin();
-  // await installBookEmoji();
-  // await scaffoldRoutes(bookEmojiBaseRoute);
-  // await applyConfig(bookEmojiBaseRoute);
+  await installBookEmoji();
+  await scaffoldRoutes(bookEmojiBaseRoute);
+  await applyConfig(bookEmojiBaseRoute);
 
   outro(`📚 Books are stacked. You're ready to go!`);
 }
@@ -279,48 +279,28 @@ async function applyConfig(bookEmojiBaseRoute: string) {
         if (assignment.getName() === "kit") {
           const kitInit = assignment.getInitializer() as ObjectLiteralExpression;
 
-          let aliasProp: ObjectLiteralElementLike | undefined = kitInit.getProperty("alias");
+          const bookemojiProperty: ObjectLiteralElementLike | undefined = kitInit.getProperty("bookemoji");
 
-          if (aliasProp) {
-            // alias field already exists
-            const initializer = (<PropertyAssignment>aliasProp).getInitializer() as ObjectLiteralExpression;
-            //   const props = initializer.getProperties();
-            if (initializer.getFullText().includes(`"$bookemoji.config"`) && initializer.getFullText().includes(`"$bookemoji.stories"`)) {
-              // already here, nothing to do
-              log.message("Aliases already present — nothing to do 🎉");
-            } else {
-              initializer.addPropertyAssignments([
-                {
-                  name: "$bookemoji.config",
-                  initializer: `src/routes/${bookEmojiBaseRoute}/books/bookemoji.config.ts`,
-                },
-                {
-                  name: "$bookemoji.stories",
-                  initializer: `src/routes/${bookEmojiBaseRoute}/books/stories`,
-                },
-              ]);
-              modified = true;
-            }
-          } else {
-            // "alias" does not exist in the config
+          if (!bookemojiProperty) {
             kitInit.addPropertyAssignment({
-              name: "alias",
+              name: "bookemoji",
               initializer: (writer: CodeBlockWriter) => {
                 writer.write("{");
-                writer.writeLine(`"$bookemoji.config": "src/routes/${bookEmojiBaseRoute}/books/bookemoji.config.ts",`);
-                writer.writeLine(`"$bookemoji.stories": "src/routes/${bookEmojiBaseRoute}/books/stories"`);
+                writer.writeLine(`base: "/books",`);
+                writer.writeLine(`stories: "src/routes/${bookEmojiBaseRoute}/books/stories"`);
                 writer.writeLine("}");
               },
             });
 
             modified = true;
+          } else {
+            // "bookemoji" field already exists, we do nada
+            log.success("config already present");
           }
         }
       }
     } else {
-      // find it as "export default { }" ?
-      // who would do this?!
-      log.warn("The format of your svelte.config.js wasn't implemented.");
+      log.warn("The format of your svelte.config.js wasn't implemented by this tool.");
     }
 
     if (modified) {
