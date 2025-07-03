@@ -40,14 +40,19 @@ async function main() {
     return;
   }
 
-  const bookEmojiBaseRoute = await text({
-    message: "Where should bookemoji be configured?",
-    placeholder: "src/routes/(design)",
-    initialValue: DEFAULT_ROUTE,
-    validate(value: string) {
-      if (value.length === 0) return `Value is required!`;
-    },
-  });
+  const cli = process.argv.includes("--cli");
+  let bookEmojiBaseRoute: string | symbol = DEFAULT_ROUTE;
+
+  if (!cli) {
+    bookEmojiBaseRoute = await text({
+      message: "Where should bookemoji be configured?",
+      placeholder: "src/routes/(design)",
+      initialValue: DEFAULT_ROUTE,
+      validate(value: string) {
+        if (value.length === 0) return `Value is required!`;
+      },
+    });
+  }
 
   if (isCancel(bookEmojiBaseRoute)) {
     log.error("You quit");
