@@ -23,6 +23,6 @@ jobs:
       - name: Install bookemoji in temp
         run: |
           cd temp
-          npm create bookemoji@latest
+          npm create bookemoji@latest --cli
           npm install
           npm build
