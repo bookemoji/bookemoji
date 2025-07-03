@@ -25,4 +25,4 @@ jobs:
           cd temp
           npm install
           npm create bookemoji@latest --cli
-          npm build
+          npm run build
