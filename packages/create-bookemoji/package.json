@@ -1,7 +1,7 @@
 {
   "name": "create-bookemoji",
   "version": "4.0.0",
-  "main": "",
+  "main": null,
   "exports": null,
   "bin": "bin/index.js",
   "files": [
