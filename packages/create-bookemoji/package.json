@@ -20,7 +20,7 @@
     "lint": "prettier --check . && eslint ."
   },
   "author": "Rory Duncan",
-  "license": "MIT",
+  "license": "GNU AGPLv3",
   "type": "module",
   "description": "",
   "devDependencies": {
