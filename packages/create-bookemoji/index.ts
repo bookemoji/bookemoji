@@ -40,7 +40,8 @@ async function main() {
     return;
   }
 
-  const cli = process.argv.includes("--cli");
+  const cli = process.argv.map((a) => a.trim()).includes("--cli");
+
   let bookEmojiBaseRoute: string | symbol = DEFAULT_ROUTE;
 
   if (!cli) {
