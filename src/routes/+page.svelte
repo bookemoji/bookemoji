@@ -1,12 +1,15 @@
 <div class="hero">
-  <h1 class="jua-regular">BookEmoji</h1>
+  <h1 class="brand-font">BookEmoji</h1>
   <h2>a Component Workshop for SvelteKit</h2>
 </div>
 
 <div class="side-by-side">
   <div>
     <h3>What is it</h3>
-    <p>📕 Bookemoji is a component workshop for svelte. Rethought to suite the needs of a sveltekit application.</p>
+    <p>
+      📕 Bookemoji is a component workshop for <a href="https://svelte.dev/docs/kit/introduction#What-is-Svelte" target="_blank">svelte</a> and
+      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a> Rethought to suite the needs of a sveltekit application.
+    </p>
   </div>
 
   <div>

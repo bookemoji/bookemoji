@@ -4,6 +4,7 @@
   const urls: (readonly [page: string, url: string])[] = [
     ["Docs", "/docs"],
     ["Roadmap", "/roadmap"],
+    ["Blog", "/blog"],
     ["Example", "/books"],
   ];
 </script>
@@ -12,7 +13,7 @@
   <nav class="nav">
     <ul class="nav-links">
       <li>
-        <a class="brand jua-regular" href={`/`}>📚 BookEmoji</a>
+        <a class="brand brand-font" href={`/`}>📚 BookEmoji</a>
       </li>
       {#each urls as [name, url]}
         <li>
