@@ -63,7 +63,17 @@ async function main() {
   await scaffoldRoutes(bookEmojiBaseRoute);
   await applyConfig(bookEmojiBaseRoute);
 
-  outro(`📚 Books are stacked. You're ready to go!`);
+  const indent = "      ";
+  outro(`📚 bookemoji configured`);
+  console.log(`${indent}Next Steps:`);
+  console.log();
+  console.log(`${indent}${pc.dim("1.")} Run "npm run format" to tidy generated files`);
+  console.log(`${indent}${pc.dim("2.")} Run "npm run dev"`);
+  console.log(`${indent}${pc.dim("3.")} View your git diff to see what was changed`);
+  console.log(`${indent}${pc.dim("4.")} Begin writing stories`);
+  console.log();
+  console.log(`${indent}Checkout https://bookemoji.dev/docs for documentation.`);
+  console.log(`${indent}📚 Books are stacked. ${pc.green("You're ready to go!")}`);
 }
 
 async function fileExists(filepath: string) {
@@ -280,29 +290,25 @@ async function applyConfig(bookEmojiBaseRoute: string) {
 
     if (configDeclaration) {
       const initializer = configDeclaration.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-      for (const assignment of initializer.getChildrenOfKind(SyntaxKind.PropertyAssignment)) {
-        if (assignment.getName() === "kit") {
-          const kitInit = assignment.getInitializer() as ObjectLiteralExpression;
 
-          const bookemojiProperty: ObjectLiteralElementLike | undefined = kitInit.getProperty("bookemoji");
+      const bookemojiProperty: ObjectLiteralElementLike | undefined = initializer.getProperty("bookemoji");
 
-          if (!bookemojiProperty) {
-            kitInit.addPropertyAssignment({
-              name: "bookemoji",
-              initializer: (writer: CodeBlockWriter) => {
-                writer.write("{");
-                writer.writeLine(`base: "/books",`);
-                writer.writeLine(`stories: "src/routes/${bookEmojiBaseRoute}/books/stories"`);
-                writer.writeLine("}");
-              },
-            });
+      if (!bookemojiProperty) {
+        initializer.addPropertyAssignment({
+          name: "bookemoji",
+          initializer: (writer: CodeBlockWriter) => {
+            writer.write("{");
+            writer.writeLine(`base: "/books",`);
+            writer.writeLine(`stories: "src/routes/${bookEmojiBaseRoute}/books/stories"`);
+            writer.indent(0);
+            writer.writeLine("}");
+          },
+        });
 
-            modified = true;
-          } else {
-            // "bookemoji" field already exists, we do nada
-            log.success("config already present");
-          }
-        }
+        modified = true;
+      } else {
+        // "bookemoji" field already exists, we do nada
+        log.success("bookemoji config is already present");
       }
     } else {
       log.warn("The format of your svelte.config.js wasn't implemented by this tool.");
