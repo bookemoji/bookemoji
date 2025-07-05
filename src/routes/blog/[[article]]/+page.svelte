@@ -12,10 +12,12 @@
       <h2>Posts</h2>
       <nav class="articles-list">
         <ul>
-          {#each data.articles as article}
+          {#each data.articles.filter((a) => a.published || data.showAll) as article}
             <li>
               <a href={`${base}/blog/${article.slug}`}>{article.title}</a>
             </li>
+          {:else}
+            <li>No posts yet</li>
           {/each}
         </ul>
       </nav>
@@ -33,20 +35,6 @@
       {:else}
         <h1>Blog</h1>
         <p class="subtitle"><i>Musings and discussions</i></p>
-        <!-- <h2>Posts</h2>
-    <nav class="articles-list">
-      <ul>
-        {#each data.articles.filter((p) => p.published || data.showAll) as article}
-          <li>
-            <a href={`${base}/blog/${article.slug}`}>{article.title}</a>
-          </li>
-        {:else}
-          <li>
-            <p>Nothing posted yet. Check back soon.</p>
-          </li>
-        {/each}
-      </ul>
-    </nav> -->
       {/if}
     {/key}
   </svelte:fragment>
