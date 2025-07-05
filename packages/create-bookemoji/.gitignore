@@ -1,4 +1,6 @@
 bin
 src/routes
 svelte.config.js
+vite.config.js
+vite.config.ts
 temp

@@ -5,8 +5,10 @@ import { intro, outro, text, isCancel, spinner, log } from "@clack/prompts";
 import * as fs from "node:fs/promises";
 import {
   CodeBlockWriter,
+  ExportAssignment,
   ObjectLiteralElementLike,
   ObjectLiteralExpression,
+  printNode,
   Project,
   PropertyAssignment,
   ScriptTarget,
@@ -14,6 +16,7 @@ import {
   VariableDeclaration,
 } from "ts-morph";
 import { exec } from "node:child_process";
+import pc from "picocolors";
 
 type PackageJson = Partial<{
   name: string;
@@ -30,42 +33,80 @@ async function main() {
 
   log.step("Checking SvelteKit project");
   if (await isSvelteKitProject()) {
-    log.success("svelte.config.js found");
+    log.success("sveltekit detected");
   } else {
-    log.info("svelte.config.js not found");
-    log.error("Current directory does not appear to be a sveltekit project.");
+    log.error("Required files are missing.");
+    log.info("Are you within a sveltekit project?");
     return;
   }
 
-  const bookEmojiBaseRoute = await text({
-    message: "Where should bookemoji be configured?",
-    placeholder: "src/routes/(design)",
-    initialValue: DEFAULT_ROUTE,
-    validate(value: string) {
-      if (value.length === 0) return `Value is required!`;
-    },
-  });
+  const cli = process.argv.map((a) => a.trim()).includes("--cli");
+
+  let bookEmojiBaseRoute: string | symbol = DEFAULT_ROUTE;
+
+  if (!cli) {
+    bookEmojiBaseRoute = await text({
+      message: "Where should bookemoji be configured?",
+      placeholder: "src/routes/(design)",
+      initialValue: DEFAULT_ROUTE,
+      validate(value: string) {
+        if (value.length === 0) return `Value is required!`;
+      },
+    });
+  }
 
   if (isCancel(bookEmojiBaseRoute)) {
     log.error("You quit");
     return;
   }
-
+  await applyVitePlugin();
   await installBookEmoji();
   await scaffoldRoutes(bookEmojiBaseRoute);
-  await applyAliases(bookEmojiBaseRoute);
+  await applyConfig(bookEmojiBaseRoute);
 
-  outro(`📚 Books are stacked. You're ready to go!`);
+  const indent = "      ";
+  outro(`📚 bookemoji configured`);
+  console.log(`${indent}Next Steps:`);
+  console.log();
+  console.log(`${indent}${pc.dim("1.")} Run "npm run format" to tidy generated files`);
+  console.log(`${indent}${pc.dim("2.")} Run "npm run dev"`);
+  console.log(`${indent}${pc.dim("3.")} View your git diff to see what was changed`);
+  console.log(`${indent}${pc.dim("4.")} Begin writing stories`);
+  console.log();
+  console.log(`${indent}Checkout https://bookemoji.dev/docs for documentation.`);
+  console.log(`${indent}📚 Books are stacked. ${pc.green("You're ready to go!")}`);
 }
 
-async function isSvelteKitProject() {
+async function fileExists(filepath: string) {
   try {
-    const stat = await fs.stat("./svelte.config.js");
-    const pkg = await fs.stat("./package.json");
-    return stat.isFile() && pkg.isFile();
+    return (await fs.stat(filepath)).isFile();
   } catch (err: any) {
     return false;
   }
+}
+
+async function isSvelteKitProject() {
+  const skconfig = await fileExists("./svelte.config.js");
+  const packageJsonFile = await fileExists("./package.json");
+  const viteConfig = (await fileExists("./vite.config.ts")) || (await fileExists("./vite.config.js"));
+
+  if (skconfig && packageJsonFile && viteConfig) {
+    return true;
+  }
+
+  if (!skconfig) {
+    log.error("svelte.config.js was not found");
+  }
+
+  if (!packageJsonFile) {
+    log.error("package.json was not found");
+  }
+
+  if (!viteConfig) {
+    log.error(`vite.config.ts / vite.config.js not found`);
+  }
+
+  return false;
 }
 
 async function installBookEmoji() {
@@ -143,8 +184,89 @@ async function scaffoldRoutes(bookEmojiBaseRoute: string) {
   }
 }
 
-async function applyAliases(bookEmojiBaseRoute: string) {
-  log.step("Adding bookemoji aliases to sveltekit config");
+async function applyVitePlugin() {
+  log.step("Adding to Vite Config");
+  const project = new Project({
+    compilerOptions: {
+      target: ScriptTarget.Latest,
+      allowJs: true,
+    },
+  });
+
+  const sourceFile = project.addSourceFileAtPathIfExists("./vite.config.js") ?? project.addSourceFileAtPathIfExists("./vite.config.ts");
+
+  let changed: boolean = false;
+  if (sourceFile) {
+    try {
+      const importDecs = sourceFile?.getImportDeclarations();
+
+      let found: boolean = false;
+      for (const importDec of importDecs) {
+        const specifier = importDec.getModuleSpecifier();
+        const text = specifier.getText().replaceAll(`"`, "").replaceAll(`'`, "");
+
+        if (text === "bookemoji/vite" || text === "vite-plugin-bookemoji") {
+          found = true;
+          break;
+        }
+      }
+
+      if (found) {
+        log.info("Import for bookemoji already present. ");
+      } else {
+        changed = true;
+        // add `import { bookemoji } from "bookemoji/vite";
+        sourceFile.addImportDeclaration({
+          namedImports: ["bookemoji"],
+          moduleSpecifier: "bookemoji/vite",
+        });
+      }
+
+      const defineConfig = sourceFile.getExportAssignment((exportAssignment) => exportAssignment.getText().startsWith(`export default defineConfig`));
+
+      if (defineConfig) {
+        // defineConfig( )
+        const callExpression = defineConfig.getExpressionIfKind(SyntaxKind.CallExpression);
+        if (callExpression) {
+          const obj = callExpression.getArguments().at(0)?.asKind(SyntaxKind.ObjectLiteralExpression);
+
+          if (obj) {
+            const plugins = obj.getProperty("plugins");
+
+            if (plugins !== undefined) {
+              const pluginList = plugins.getChildAtIndex(2);
+              const p = pluginList.asKind(SyntaxKind.ArrayLiteralExpression);
+
+              if (p) {
+                p.addElement("bookemoji()");
+                changed = true;
+              } else {
+                log.warn(`value of "plugins" section isn't modifyable or doesn't exist.`);
+                log.step(`Please add ${pc.green("bookemoji()")} to your "plugins" field:\n` + `plugins: [sveltekit(), bookemoji()]`);
+              }
+            } else {
+              log.warn("");
+            }
+          }
+        }
+      } else {
+        log.warn("export default defineConfig not found in vite.config.");
+      }
+
+      if (changed) {
+        log.success("Modified vite config");
+        await sourceFile.save();
+      } else {
+        log.error("Unable to modify vite config");
+      }
+    } catch (ex) {
+      log.error("Something went wrong: " + (<Error>ex).message);
+    }
+  }
+}
+
+async function applyConfig(bookEmojiBaseRoute: string) {
+  log.step("Adding bookemoji configuration to sveltekit config");
   let modified: boolean = false;
 
   const project = new Project({
@@ -169,52 +291,28 @@ async function applyAliases(bookEmojiBaseRoute: string) {
 
     if (configDeclaration) {
       const initializer = configDeclaration.getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-      for (const assignment of initializer.getChildrenOfKind(SyntaxKind.PropertyAssignment)) {
-        if (assignment.getName() === "kit") {
-          const kitInit = assignment.getInitializer() as ObjectLiteralExpression;
 
-          let aliasProp: ObjectLiteralElementLike | undefined = kitInit.getProperty("alias");
+      const bookemojiProperty: ObjectLiteralElementLike | undefined = initializer.getProperty("bookemoji");
 
-          if (aliasProp) {
-            // alias field already exists
-            const initializer = (<PropertyAssignment>aliasProp).getInitializer() as ObjectLiteralExpression;
-            //   const props = initializer.getProperties();
-            if (initializer.getFullText().includes(`"$bookemoji.config"`) && initializer.getFullText().includes(`"$bookemoji.stories"`)) {
-              // already here, nothing to do
-              log.message("Aliases already present — nothing to do 🎉");
-            } else {
-              initializer.addPropertyAssignments([
-                {
-                  name: "$bookemoji.config",
-                  initializer: `src/routes/${bookEmojiBaseRoute}/books/bookemoji.config.ts`,
-                },
-                {
-                  name: "$bookemoji.stories",
-                  initializer: `src/routes/${bookEmojiBaseRoute}/books/stories`,
-                },
-              ]);
-              modified = true;
-            }
-          } else {
-            // "alias" does not exist in the config
-            kitInit.addPropertyAssignment({
-              name: "alias",
-              initializer: (writer: CodeBlockWriter) => {
-                writer.write("{");
-                writer.writeLine(`"$bookemoji.config": "src/routes/${bookEmojiBaseRoute}/books/bookemoji.config.ts",`);
-                writer.writeLine(`"$bookemoji.stories": "src/routes/${bookEmojiBaseRoute}/books/stories"`);
-                writer.writeLine("}");
-              },
-            });
+      if (!bookemojiProperty) {
+        initializer.addPropertyAssignment({
+          name: "bookemoji",
+          initializer: (writer: CodeBlockWriter) => {
+            writer.write("{");
+            writer.writeLine(`base: "/books",`);
+            writer.writeLine(`stories: "src/routes/${bookEmojiBaseRoute}/books/stories"`);
+            writer.indent(0);
+            writer.writeLine("}");
+          },
+        });
 
-            modified = true;
-          }
-        }
+        modified = true;
+      } else {
+        // "bookemoji" field already exists, we do nada
+        log.success("bookemoji config is already present");
       }
     } else {
-      // find it as "export default { }" ?
-      // who would do this?!
-      log.warn("The format of your svelte.config.js wasn't implemented.");
+      log.warn("The format of your svelte.config.js wasn't implemented by this tool.");
     }
 
     if (modified) {

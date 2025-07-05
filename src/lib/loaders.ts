@@ -1,6 +1,10 @@
 import type * as Kit from "@sveltejs/kit";
 import { error, json } from "@sveltejs/kit";
-import { findStoryFiles, type BookEmojiConfig, type BookEndpointResponse } from "./book-emoji.js";
+import { findStoryFiles, type BookEndpointResponse } from "./book-emoji.js";
+import "./bookemoji-module.d.ts";
+import { stories } from "virtual:bookemoji";
+// import { base, stories } from "virtual:bookemoji";
+const base = "/books";
 
 import type {
   StoryLayoutParams,
@@ -10,6 +14,7 @@ import type {
   VariantLayoutParams,
   VariantLayoutOutputData,
 } from "./sveltekit-runtime-types.js";
+import type { Component } from "svelte";
 
 /**
  * Loads books via API endpoint
@@ -29,11 +34,12 @@ export const layoutServerLoad: Kit.ServerLoad<never, never, BookEndpointResponse
 export const createServerGET = <T extends Kit.RequestHandler = Kit.RequestHandler>(): T => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const GET: Kit.RequestHandler = async (event) => {
-    const config: BookEmojiConfig = (await import("$bookemoji.config")).default;
-    const books = await findStoryFiles(config);
+    // const bookEmojiModule = await import("virtual:bookemoji");
+    // const config: BookEmojiConfig = bookEmojiModule.config;
+    const books = await findStoryFiles();
 
     return json({
-      base: config.base,
+      base,
       books,
     });
   };
@@ -61,10 +67,26 @@ export const storyLayoutLoad: Kit.Load<Partial<StoryLayoutParams>, null, StoryLa
     error(404, `Book ${story} not found in booklist`);
   }
 
-  const bookComponent = await import(`$bookemoji.stories/${book.name}.book.svelte`);
+  // const bookEmoji = await import("virtual:bookemoji");
+
+  // const bookComponent = await import(/* @vite-ignore */ `${base}/${book.name}.book.svelte`);
+  // const bookComponent = await import(book.path);
+  const [, loadComponent] = Object.entries(stories).find(([localPath]) => {
+    return localPath === book.path;
+  }) ?? [book.name, undefined];
+
+  if (loadComponent === undefined) {
+    error(404, `Book ${story} not found when preloading.`);
+  }
+
+  const bookComponent: Component | undefined = await loadComponent.then((mod) => <Component | undefined>mod.default);
+
+  if (bookComponent === undefined) {
+    error(404, `Book ${story} could not be loaded.`);
+  }
 
   return {
-    Book: bookComponent.default,
+    Book: bookComponent,
     name: book.name,
   };
 };

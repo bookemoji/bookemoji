@@ -5,10 +5,7 @@ import { writable, type Writable } from "svelte/store";
 import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
 import { parse } from "node-html-parser";
-
-export type BookEmojiConfig = {
-  base: `/${string}`;
-};
+import { base, loadStories } from "virtual:bookemoji";
 
 /**
  * Represents a Story from SvelteKit's perspective
@@ -66,9 +63,15 @@ export const createVariantUrl = (base: string, storyName: string, variantName: s
 };
 
 export const discoverVariants = (name: string, component: Component): string[] => {
-  const result = render(component, { context: new Map([["bookemoji.meta", {}]]) });
+  let html: string;
+  if (component instanceof Function) {
+    const result = render(component, { context: new Map([["bookemoji.meta", {}]]) });
+    html = result.body;
+  } else {
+    html = `<p>Component was not renderable</p><p>Component is of type "${typeof component}"`;
+  }
   // and alternative way to do this is to use the svelte/compiler parse — which may also be more stable
-  const dom = parse(result.body);
+  const dom = parse(html);
   const variantNames = Array.from(dom.querySelectorAll(".story-root")).map((rootEl) => rootEl.id);
 
   return variantNames;
@@ -86,22 +89,23 @@ export type BookEndpointResponse = {
   books: BookDefinition[];
 };
 
-export const findStoryFiles = async (config: BookEmojiConfig) => {
-  const books: Record<string, Component> = import.meta.glob<Component>("$bookemoji.stories/**/*.book.svelte", {
-    eager: true,
-    import: "default",
-  });
+export const findStoryFiles = async () => {
+  // const books: Record<string, Component> = import.meta.glob<Component>("./**/*.book.svelte", {
+  //   eager: true,
+  //   import: "default",
+  // });
+  const books: Record<string, Component> = await loadStories();
 
   const bookList: BookDefinition[] = Object.entries(books).map(([localPath, mod]) => {
     const name = basename(localPath).replace(".book.svelte", "");
     const path = localPath;
-    const bookUrl = createStoryUrl(config.base, name);
+    const bookUrl = createStoryUrl(base, name);
 
     const variantNames = discoverVariants(name, mod);
 
     const variants: Record<string, VariantDefinition> = Object.fromEntries(
       variantNames.map((variant) => {
-        const vrnt = createVariantUrl(config.base, name, variant);
+        const vrnt = createVariantUrl(base, name, variant);
         return [
           variant,
           {
