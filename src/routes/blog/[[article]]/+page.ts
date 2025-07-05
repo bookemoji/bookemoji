@@ -1,8 +1,12 @@
 import type { Component } from "svelte";
 import type { PageLoad } from "./$types.js";
+import { building, dev } from "$app/environment";
 
 export const load: PageLoad = async ({ data, ...event }) => {
-  const showAll = event.url.searchParams.has("unpublished");
+  let showAll: boolean = false;
+  if (dev && !building) {
+    showAll = event.url.searchParams.has("unpublished");
+  }
   return {
     ...data,
     showAll,
