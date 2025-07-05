@@ -10,6 +10,7 @@ body {
 }
 
 .controls {
+  display: flex;
 }
 
 .story {
