@@ -46,12 +46,6 @@
     --font-system-ui: "Space Grotesque", var(--font-system-ui, sans-serif);
   }
 
-  .doc-canvas {
-    padding: 1rem;
-    background-color: var(--surface-1);
-    border-radius: 24px;
-  }
-
   .toc {
     position: sticky;
     top: 1rem;

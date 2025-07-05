@@ -25,7 +25,7 @@
     display: grid;
     grid-template-columns: 12rem 1fr;
     gap: 1rem;
-    height: 100vh;
+    min-height: 100vh;
     overflow: hidden;
     border-top: 1px solid var(--surface-2);
   }
