@@ -40,6 +40,14 @@
     margin: 0;
   }
 
+  .hero :where(h1) {
+    font-size: var(--font-size-fluid-3);
+  }
+
+  .hero :where(h2) {
+    font-size: var(--font-size-fluid-2);
+  }
+
   .side-by-side {
     margin: 2rem 0;
     padding-bottom: 20vh;

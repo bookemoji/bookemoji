@@ -1,5 +1,8 @@
 body {
   margin: 0;
+  --brand: #efb890;
+  --link: #fa886b;
+  --link-visited: #fa886b;
   --font-system-ui: "Space Grotesque", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
 }
 
