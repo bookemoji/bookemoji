@@ -8,7 +8,8 @@
     <h3>What is it</h3>
     <p>
       📕 Bookemoji is a component workshop for <a href="https://svelte.dev/docs/kit/introduction#What-is-Svelte" target="_blank">svelte</a> and
-      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a> Rethought to suite the needs of a sveltekit application.
+      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>. Rethought to suite the needs of a sveltekit
+      application.
     </p>
   </div>
 
