@@ -27,6 +27,7 @@
     gap: 1rem;
     height: 100vh;
     overflow: hidden;
+    border-top: 1px solid var(--surface-2);
   }
   .book-sidebar {
     border-right: 1px solid var(--surface-2);

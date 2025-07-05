@@ -1,0 +1,28 @@
+name: Test Installation
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+
+jobs:
+  test-installation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Create clean temp directory
+        run: rm -rf temp && npx sv create --template minimal --types ts --no-add-ons "./temp"
+
+      - name: Install bookemoji in temp
+        run: |
+          cd temp
+          npm install
+          npm create bookemoji@latest --cli
+          npm run build

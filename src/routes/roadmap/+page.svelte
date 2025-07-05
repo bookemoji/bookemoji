@@ -1,13 +1,8 @@
 <script lang="ts">
+  import TwoColumnLayout from "../TwoColumnLayout.svelte";
   import Roadmap from "./roadmap.mdx";
 </script>
 
-<div class="padded-for-some-reason">
+<TwoColumnLayout>
   <Roadmap />
-</div>
-
-<style>
-  .padded-for-some-reason {
-    padding: 2rem 2rem;
-  }
-</style>
+</TwoColumnLayout>

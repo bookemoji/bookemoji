@@ -1,10 +1,14 @@
 body {
   margin: 0;
+  --brand: #efb890;
+  --link: #fa886b;
+  --link-visited: #fa886b;
   --font-system-ui: "Space Grotesque", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
 }
 
-.jua-regular {
-  font-family: "Jua", sans-serif;
+.brand-font {
+  /* font-family: "Geo", "Space Grotesque", sans-serif; */
+  font-family: "Space Grotesque", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
