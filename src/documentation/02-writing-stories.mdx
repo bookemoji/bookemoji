@@ -1,0 +1,45 @@
+# Writing Stories
+
+After you've installed and configured bookemoji you'll want to know how to write stories.
+
+## What is a Story
+
+Stories are simply svelte components.
+
+They must:
+
+- be within the configured "stories" directory
+- have a `.book.svelte` file extension
+
+...and that's it!
+
+And that's also by design. This allows you to create "docs" pages simply with svelte.
+
+To elevate a story though—you want to use the `<Story>` component. Read on.
+
+## Writing your first story
+
+<div class="reminder">
+Reminder: You can use either svelte 4 or svelte 5 to write stories—but you will need to use different import paths.
+</div>
+
+Below is a simple example of a story for a fictional component.
+
+```svelte
+<script lang="ts">
+    import { Story, Controls, defineMeta } from "bookemoji/v4";
+    import MyComponent from "$lib/path/to/your/components/Component.svelte"; 
+    // if your components aren't in $lib, that's fine too!
+</script>
+
+<Story name="Default" of={MyComponent} />
+```
+
+The above story has a single variant, named "Default". 
+
+If you're not already doing so, run `npm run dev` in your sveltekit application and go to the `/books` url (or your configured url)
+
+## Adding `args`
+With the story rendering, it'd be nice if you could manipulate it from the UI—a key feature of component workshops.
+
+To do so you need to use the `args` of

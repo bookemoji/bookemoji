@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getMeta, type ArgTypeControl } from "$lib/book-emoji.js";
-  import type { Component, ComponentProps, ComponentType } from "svelte";
+  import type { Component, ComponentProps, ComponentType, SvelteComponent } from "svelte";
   import Isolate from "./Isolate.svelte";
 
-  export let of: Component;
+  export let of: ComponentType<SvelteComponent<any, any, any>>;
   export let story: string;
 
   const meta = getMeta<typeof of>(of, story);

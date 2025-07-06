@@ -1,5 +1,5 @@
 import { browser } from "$app/environment";
-import { getContext, type Component, type ComponentProps } from "svelte";
+import { getContext, type SvelteComponent, type Component, type ComponentProps, type ComponentType } from "svelte";
 
 import { writable, type Writable } from "svelte/store";
 import type { KeyKeyMap } from "./utils.js";
@@ -29,7 +29,7 @@ function basename(path: string): string {
 }
 
 export const nameToId = (name: string): string => {
-  return encodeURIComponent(name);
+  return encodeURIComponent(name.replaceAll(" ", "-"));
 };
 
 export const createStoryUrl = (base: string, storyName: string) => {
@@ -47,7 +47,8 @@ export const createStoryUrl = (base: string, storyName: string) => {
 
 export const createVariantUrl = (base: string, storyName: string, variantName: string) => {
   const { story } = createStoryUrl(base, storyName);
-  const variant: string = nameToId(variantName.toLowerCase());
+  const variantParam: string = nameToId(variantName.toLowerCase());
+  console.log("Creating variant url for", variantName, "as", variantParam);
 
   return {
     /**
@@ -57,8 +58,9 @@ export const createVariantUrl = (base: string, storyName: string, variantName: s
     /**
      * The param value
      */
-    variant,
-    route: `${base}/${story}/${variant}`,
+    variantName,
+    variantParam,
+    route: `${base}/${story}/${variantParam}`,
   };
 };
 
@@ -72,7 +74,7 @@ export const discoverVariants = (name: string, component: Component): string[] =
   }
   // and alternative way to do this is to use the svelte/compiler parse — which may also be more stable
   const dom = parse(html);
-  const variantNames = Array.from(dom.querySelectorAll(".story-root")).map((rootEl) => rootEl.id);
+  const variantNames = Array.from(dom.querySelectorAll(".story-root")).map((rootEl) => rootEl.attrs["data-story"]);
 
   return variantNames;
 };
@@ -111,7 +113,7 @@ export const findStoryFiles = async () => {
           {
             name: variant,
             route: vrnt.route,
-            slug: vrnt.variant,
+            slug: vrnt.variantParam,
           } satisfies VariantDefinition,
         ];
       }),
@@ -129,10 +131,22 @@ export const findStoryFiles = async () => {
   return bookList;
 };
 
-export type MetaOptions<T extends Component> = {
-  component: Component;
-  args?: Omit<ComponentProps<T>, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">;
-  argTypes?: Record<keyof Omit<ComponentProps<T>, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">, undefined | ArgTypeControl>;
+export type MetaOptions<Comp extends SvelteComponent | Component<any, any>> = {
+  component: Comp extends Component<infer P, any>
+    ? Component<P, any>
+    : Comp extends ComponentType<infer P>
+      ? ComponentType<P>
+      : ComponentType<SvelteComponent<Record<string, any>>>;
+  args?: Comp extends Component<infer P, any>
+    ? Omit<P, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">
+    : Comp extends ComponentType<infer P>
+      ? Omit<P, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">
+      : Record<string, any>;
+  argTypes?: Comp extends Component<infer P, any>
+    ? Record<keyof Omit<P, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">, undefined | ArgTypeControl>
+    : Comp extends ComponentType<infer P>
+      ? Record<keyof Omit<P, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">, undefined | ArgTypeControl>
+      : Record<string, undefined | ArgTypeControl>;
 };
 
 export type ArgTypeControl = ComponentControl | SelectControl | TextControl | SwitchControl;
@@ -163,11 +177,11 @@ export type ComponentArgTypes = {
 
 export type ComponentArgStore = Writable<Required<ComponentArgTypes>>;
 
-export function defineMeta<T extends Component>(definition: MetaOptions<T>) {
+export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(definition: MetaOptions<Comp>) {
   if (!browser) {
     return;
   }
-  const meta = getContext<Map<Component, Required<ComponentArgTypes>>>("bookemoji.meta");
+  const meta = getContext<Map<SvelteComponent | Component<any, any>, Required<ComponentArgTypes>>>("bookemoji.meta");
 
   if (!meta) {
     throw new Error(`No "bookemoji.meta" context found. Make sure to set the context in your book component at the top level.`);
@@ -180,10 +194,11 @@ export function defineMeta<T extends Component>(definition: MetaOptions<T>) {
     argTypes: componentArgs.argTypes ?? {},
   };
 
+  // @ts-expect-error the type here ultimately doesn't matter so not bothering
   meta.set(component, argData);
 }
 
-export function getMeta<T extends Component>(component: T, variant: string): ComponentArgStore {
+export function getMeta<T extends Component | ComponentType<SvelteComponent>>(component: T, variant: string): ComponentArgStore {
   if (!browser) {
     return writable({
       args: {},
@@ -191,8 +206,8 @@ export function getMeta<T extends Component>(component: T, variant: string): Com
     }) as ComponentArgStore;
   }
 
-  const meta = getContext<Map<Component, Required<ComponentArgTypes>>>("bookemoji.meta");
-  const argData = getContext<KeyKeyMap<Component, string, ComponentArgStore>>("bookemoji.argTypes");
+  const meta = getContext<Map<any, Required<ComponentArgTypes>>>("bookemoji.meta");
+  const argData = getContext<KeyKeyMap<any, string, ComponentArgStore>>("bookemoji.argTypes");
 
   if (!argData || !meta) {
     throw new Error(`No "bookemoji.meta" context found. Make sure your Story, Control, etc is within a <Book>`);

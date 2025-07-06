@@ -1,14 +1,14 @@
-<script lang="ts">
+<script lang="ts" generics="T extends Component<any>">
   import { getMeta, type ArgTypeControl } from "$lib/book-emoji.js";
-  import type { Component } from "svelte";
+  import type { Component, ComponentProps } from "svelte";
   import Isolate from "./Isolate.svelte";
 
-  interface Props {
-    of: Component;
+  interface Props<Comp extends Component<any>, CompProps extends ComponentProps<Comp> = any> {
+    of: T;
     story: string;
   }
 
-  let { of, story }: Props = $props();
+  let { of, story }: Props<T> = $props();
 
   const meta = getMeta<typeof of>(of, story);
 

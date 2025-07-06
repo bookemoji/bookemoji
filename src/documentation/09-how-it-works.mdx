@@ -1,0 +1,34 @@
+
+# How it works
+
+Below is a deconstruction of how bookemoji is composed.
+
+## Functionality
+
+bookemoji is composed of three primary aspects:
+1. A `bookemoji` library which exports utility functions
+2. SvelteKit routes, endpoint, and layouts
+3. A vite plugin which handles some behind-the-scenes magic for loading the stories based on configuration
+
+## The `bookemoji` library
+
+The book emoji library is _also_ two sets of exports:
+1. A set of pre-written sveltekit loaders
+2. A set of sveltekit components
+
+
+## The sveltekit routes
+
+The key sveltekit routes are:
+- A `/books/books.json` endpoint — this is intentionally an endpoint for extensibility
+- The `/books/[story]` and `/books/[story]/[variant]` pages
+- The layouts for loading data for the pages
+
+
+## The vite plugin
+
+The vite plugin is published as `vite-plugin-bookemoji` and powers the bookemoji experiences. 
+
+Its details aren't covered here but you can explore its source freely.
+
+
