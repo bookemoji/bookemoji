@@ -1,5 +1,5 @@
 import * as RootModule from "bookemoji";
-import * as v4Module from "bookemoji/v4";
+import * as v4Module from "bookemoji/components/v4";
 import * as v5Module from "bookemoji/components";
 
 import { describe, it, expect } from "vitest";

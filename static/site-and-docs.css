@@ -51,3 +51,18 @@ body {
 body :where(li, dd, figcaption) {
   max-inline-size: var(--size-content-3);
 }
+
+.docs :where(ul) {
+  margin-bottom: 1em;
+}
+
+:where(:not(pre) > code) {
+  font-size: 0.8em;
+  color: var(--cyan-7);
+}
+
+@media (prefers-color-scheme: dark) {
+  :where(:not(pre) > code) {
+    color: var(--cyan-3);
+  }
+}

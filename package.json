@@ -36,10 +36,10 @@
       "default": "./dist/index.js"
     },
     "./components": {
-      "types": "./dist/components/v4/index.d.ts",
-      "svelte": "./dist/components/v4/index.js"
+      "types": "./dist/components/v5/index.d.ts",
+      "svelte": "./dist/components/v5/index.js"
     },
-    "./v4": {
+    "./components/v4": {
       "types": "./dist/components/v4/index.d.ts",
       "svelte": "./dist/components/v4/index.js"
     },
