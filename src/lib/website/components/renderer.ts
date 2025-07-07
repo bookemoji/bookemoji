@@ -1,3 +1,5 @@
+import { debounce } from "../renderer-utils.js";
+
 type CreateRendererOptions = {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
@@ -15,11 +17,14 @@ export type TimeInfo = {
 type FrameCallback = (time: TimeInfo, context: CanvasRenderingContext2D) => void;
 
 export const createRenderer = (options: CreateRendererOptions) => {
-  const { context, width, height } = options;
+  const { context, width: initialWidth, height: initialHeight } = options;
 
-  let animationId: number = -1;
+  let width: number = initialWidth;
+  let height: number = initialHeight;
+
+  let animationId: number;
   let running: boolean = false;
-  let lastFrame: DOMHighResTimeStamp = performance.timeOrigin;
+  const lastFrame: DOMHighResTimeStamp = performance.timeOrigin;
   let startTime: DOMHighResTimeStamp = performance.timeOrigin;
 
   let callbacks: FrameCallback[] = [];
@@ -41,15 +46,23 @@ export const createRenderer = (options: CreateRendererOptions) => {
 
     if (running) {
       animationId = window.requestAnimationFrame(loop);
+    } else {
+      window.cancelAnimationFrame(animationId);
     }
   }
 
+  const start = () => {
+    startTime = performance.now();
+    running = true;
+    loop(startTime);
+  };
+
+  const stop = () => {
+    running = false;
+  };
+
   return {
-    start: () => {
-      startTime = performance.now();
-      running = true;
-      loop(startTime);
-    },
+    start,
 
     onFrame: (frameCallback: FrameCallback) => {
       callbacks.push(frameCallback);
@@ -58,8 +71,23 @@ export const createRenderer = (options: CreateRendererOptions) => {
         callbacks = callbacks.filter((f) => f === frameCallback);
       };
     },
-    stop: () => {
-      running = false;
+
+    onResize: (callback: (width: number, height: number) => void | Promise<void>) => {
+      const dbCallback = debounce(() => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        callback(width, height);
+        start();
+      }, 50);
+      const cb = () => {
+        stop();
+        dbCallback();
+      };
+      window.addEventListener("resize", cb);
+      return () => {
+        window.removeEventListener("resize", cb);
+      };
     },
+    stop,
   };
 };
