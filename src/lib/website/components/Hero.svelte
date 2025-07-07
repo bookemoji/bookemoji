@@ -179,8 +179,7 @@
     bottom: 0;
   }
   .stack {
-    height: calc(90vh - 10rem);
-    width: 100vw;
+    height: calc(85vh - 10rem);
     place-content: center;
     display: grid;
   }
