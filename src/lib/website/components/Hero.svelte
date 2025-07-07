@@ -2,6 +2,7 @@
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
   import { createRenderer, type TimeInfo } from "./renderer.js";
+  import { wait } from "../renderer-utils.js";
 
   let canvasRef: HTMLCanvasElement;
   let containerRef: HTMLDivElement;
@@ -17,6 +18,8 @@
     x: 0,
     y: 0,
   };
+
+  let freeze_mouse: boolean = true;
 
   const peachColor: readonly [r: number, g: number, b: number] = [250, 136, 107];
 
@@ -41,7 +44,6 @@
       const [rows, cols] = grid;
 
       datagrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => 0));
-      console.log(datagrid);
 
       let padding: number = 1;
       const cellsize = grid_size - padding;
@@ -51,12 +53,12 @@
         return Math.max(0, value - Math.random() * 4);
       }
 
-      function updateMouseHover() {
+      function applyBrushToMouseLocation() {
         if (last_mouse.x !== mouse.x || last_mouse.y !== mouse.y) {
           last_mouse.x = mouse.x;
           last_mouse.y = mouse.y;
-          const row = Math.floor(mouse.x / cellOffset);
-          const col = Math.floor(mouse.y / cellOffset);
+          const row = Math.max(0, Math.floor(mouse.x / cellOffset));
+          const col = Math.max(0, Math.floor(mouse.y / cellOffset));
 
           const within = 2; // You can tweak this value to change the neighbor range
 
@@ -103,7 +105,7 @@
           }
         }
 
-        updateMouseHover();
+        applyBrushToMouseLocation();
       }
       function render(time: TimeInfo, ctx: CanvasRenderingContext2D) {
         for (let row = 0; row < rows; row++) {
@@ -145,12 +147,76 @@
 
       renderer.start();
 
+      const bezierPath = randomBezierPath([0, 0], [width, height]);
+
+      const subPath1 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.25, 0.65)], [width, 0]);
+      const subPath2 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.15, 0.85)], [width, height]);
+
+      const paintPath: (el: Coords) => void = ([x, y]) => {
+        mouse.x = x;
+        mouse.y = y;
+        applyBrushToMouseLocation();
+      };
+
+      bezierPath.forEach(paintPath);
+      subPath1.forEach(paintPath);
+      subPath2.forEach(paintPath);
+      freeze_mouse = false;
+
       return () => {
         renderer.stop();
         unsub();
       };
     }
   });
+
+  type Coords = readonly [x: number, y: number];
+
+  function rand(n = 1) {
+    return Math.random() * n;
+  }
+
+  function randomIntAlong(n: number, min: number, max: number) {
+    const start = Math.floor(min * n);
+    const end = Math.floor(max * n);
+    const index = Math.max(0, Math.min(n, start + Math.floor(Math.random() * Math.max(1, end - start))));
+    return index;
+  }
+
+  function randomBezierPath(start: Coords, end: Coords, numPoints = 50): Coords[] {
+    // Random control points
+    // To create a stronger S-shaped curve, place control points on opposite sides of the line from start to end.
+    // For a diagonal S, offset control points perpendicularly from the line.
+    const dx = end[0] - start[0];
+    const dy = end[1] - start[1];
+    const mx = (start[0] + end[0]) / 2;
+    const my = (start[1] + end[1]) / 2;
+    // Perpendicular vector (normalized)
+    const perpLen = Math.sqrt(dx * dx + dy * dy) || 1;
+    const perpX = -dy / perpLen;
+    const perpY = dx / perpLen;
+    // S-curve strength
+    const strength = 0.4 * perpLen + rand(perpLen * 0.1);
+
+    // Control points on opposite sides for S shape
+    const cp1: Coords = [mx - dx * 0.25 + perpX * strength, my - dy * 0.25 + perpY * strength];
+    const cp2: Coords = [mx + dx * 0.25 - perpX * strength, my + dy * 0.25 - perpY * strength];
+
+    // Cubic Bezier formula
+    function bezier(t: number): Coords {
+      const x = Math.pow(1 - t, 3) * start[0] + 3 * Math.pow(1 - t, 2) * t * cp1[0] + 3 * (1 - t) * Math.pow(t, 2) * cp2[0] + Math.pow(t, 3) * end[0];
+      const y = Math.pow(1 - t, 3) * start[1] + 3 * Math.pow(1 - t, 2) * t * cp1[1] + 3 * (1 - t) * Math.pow(t, 2) * cp2[1] + Math.pow(t, 3) * end[1];
+      return [x, y];
+    }
+
+    const path: Coords[] = [];
+    for (let i = 0; i <= numPoints; i++) {
+      const t = i / numPoints;
+      path.push(bezier(t));
+    }
+
+    return path;
+  }
 
   function onMouseMove(e: MouseEvent) {
     mouse.x = e.x;
