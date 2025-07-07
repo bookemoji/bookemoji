@@ -62,6 +62,7 @@ export const createRenderer = (options: CreateRendererOptions) => {
   };
 
   return {
+    isRunning: () => running,
     start,
 
     onFrame: (frameCallback: FrameCallback) => {
@@ -73,16 +74,25 @@ export const createRenderer = (options: CreateRendererOptions) => {
     },
 
     onResize: (callback: (width: number, height: number) => void | Promise<void>) => {
+      let wasRunningBeforeResize: boolean = running;
       const dbCallback = debounce(() => {
         width = window.innerWidth;
         height = window.innerHeight;
         callback(width, height);
-        start();
-      }, 50);
+        if (wasRunningBeforeResize) {
+          start();
+        }
+      }, 150);
+
       const cb = () => {
-        stop();
+        if (running) {
+          wasRunningBeforeResize = true;
+          stop();
+        }
+
         dbCallback();
       };
+
       window.addEventListener("resize", cb);
       return () => {
         window.removeEventListener("resize", cb);
