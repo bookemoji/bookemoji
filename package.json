@@ -1,7 +1,7 @@
 {
   "name": "bookemoji",
   "description": "Bookemoji is a component workshop for svelte and sveltekit",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "author": "Rory Duncan",
   "scripts": {
     "dev": "vite dev",
