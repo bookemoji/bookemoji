@@ -1,7 +1,16 @@
-<div class="hero">
-  <h1 class="brand-font">BookEmoji</h1>
-  <h2>a Component Workshop for SvelteKit</h2>
-</div>
+<script lang="ts">
+  import Hero from "$lib/website/components/Hero.svelte";
+  import type { PageData } from "./$types.js";
+
+  export let data: PageData;
+</script>
+
+<Hero>
+  <div class="hero">
+    <h1 class="brand-font">BookEmoji</h1>
+    <h2>a Component Workshop for SvelteKit</h2>
+  </div>
+</Hero>
 
 <div class="side-by-side">
   <div>
@@ -29,12 +38,6 @@
 
 <style>
   .hero {
-    height: calc(90vh - 2rem);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: calc(2rem + 10vw);
-    margin-bottom: 2rem;
   }
 
   .hero :where(h1, h2) {
@@ -47,6 +50,7 @@
 
   .hero :where(h2) {
     font-size: var(--font-size-fluid-2);
+    max-inline-size: var(--size-header-3);
   }
 
   .side-by-side {
