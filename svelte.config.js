@@ -12,6 +12,7 @@ const highlighter = await createHighlighter({
 
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {
+  smartypants: false,
   extension: ".mdx",
   // layout: {
   //   default: "./src/routes/docs/layouts/DefaultLayout.svelte",

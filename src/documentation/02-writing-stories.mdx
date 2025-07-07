@@ -1,33 +1,46 @@
+
 # Writing Stories
 
-After you've installed and configured bookemoji you'll want to know how to write stories.
+After you've installed and configured bookemoji you'll need to know how to write a story.
+
+Writing stories is intended to be fairly translatable to stories written in StoryBook.
 
 ## What is a Story
 
-Stories are simply svelte components.
+<details style="margin-bottom: 1rem;">
+    <summary>
+        Stories are simply svelte components
+    </summary>
+    Stories primarily allow a component to have its props rendered dynamically, and externally controlled.
+</details>
 
-They must:
 
-- be within the configured "stories" directory
+For bookemoji, a story must:
+
+- be a file within the configured "stories" directory
 - have a `.book.svelte` file extension
 
-...and that's it!
+...and that's it! And that's also by design.
 
-And that's also by design. This allows you to create "docs" pages simply with svelte.
-
-To elevate a story though—you want to use the `<Story>` component. Read on.
+To elevate a story file though—you want to use the `&lt;Story&gt;` component. Read on.
 
 ## Writing your first story
 
-<div class="reminder">
-Reminder: You can use either svelte 4 or svelte 5 to write stories—but you will need to use different import paths.
-</div>
+First,
 
-Below is a simple example of a story for a fictional component.
+1. Run `npm run dev` if not already
+1. Create a new file within your stories directory, e.g. `Example.book.svelte`
+
+
+<p style="margin-top:1rem;">
+    Then, type or paste the below code sample into the file. 
+</p>
+
+Replace the `MyComponent` reference with a real import of a component.
 
 ```svelte
 <script lang="ts">
-    import { Story, Controls, defineMeta } from "bookemoji/v4";
+    import { Story, Controls, defineMeta } from "bookemoji/components/v4";
     import MyComponent from "$lib/path/to/your/components/Component.svelte"; 
     // if your components aren't in $lib, that's fine too!
 </script>
@@ -35,11 +48,92 @@ Below is a simple example of a story for a fictional component.
 <Story name="Default" of={MyComponent} />
 ```
 
-The above story has a single variant, named "Default". 
+<details class="reminder" style="margin: 2rem 0;">
+    <summary>You can write stories with either svelte 4 or svelte 5</summary>
 
-If you're not already doing so, run `npm run dev` in your sveltekit application and go to the `/books` url (or your configured url)
+Svelte 5 path
+```ts
+import { ... } from "bookemoji/components";
+```
 
-## Adding `args`
-With the story rendering, it'd be nice if you could manipulate it from the UI—a key feature of component workshops.
 
-To do so you need to use the `args` of
+Svelte 4 path 
+```ts
+import { ... } from "bookemoji/components/v4";
+```
+</details>
+
+If your component requires more setup, you can use the slot of the `Story` to do so. See below as an example.
+
+```svelte
+...
+
+<Story name="Default" of={Tab} let:args>
+    <Figure>
+        <Image {...args} />
+    </Figure>
+</Story>
+```
+
+## Using `args`
+ 
+`args` allow you to present variants distinctly.
+They generally are your props, but you can use them creatively to make better stories.
+
+```svelte
+<Story name="Default" of={MyComponent}  />
+<Story name="Red Variant" of={MyComponent} args={{ color: "red", }}  />
+
+<Story name="Green Variant" of={MyComponent} args={{ color: "green", }}>
+    <div class="wrapper">
+        <MyComponent {...args}>
+    </div>
+</Story>
+```
+
+
+## Using `defineMeta`, `argTypes`, and `Controls`
+
+With the variants rendering, it'd be nice if you can present a component and manipulate it from the UI—a key feature of component workshops.
+
+That's where `argTypes` comes in. To establish `argTypes` we use the `defineMeta` function. 
+Here is the source of the [example Button](/books/Button) as an example
+
+```svelte
+<script lang="ts">
+  import { Story, Controls } from "$lib/components/v4";
+  import Button from "$lib/Button.svelte";
+  import { defineMeta } from "book-emoji";
+
+  defineMeta<typeof Button>({
+    component: Button,
+
+    argTypes: {
+      variant: { type: "select", options: ["primary", "secondary", "tertiary"] },
+      size: { type: "select", options: ["small", "medium", "large"] },
+      disabled: { type: "boolean" },
+      loading: { type: "boolean" },
+      classes: { type: "text" },
+      type: { type: "select", options: ["button", "submit", "reset"] },
+      ariaLabel: { type: "text" },
+      text: { type: "text" },
+    },
+  });
+</script>
+
+<Story of={Button} name="Basic" args={{ variant: "primary", size: "medium", text: "Primary Button" }} />
+
+<Controls of={Button} story="Basic" />
+
+<Story of={Button} name="Secondary" args={{ variant: "secondary", size: "medium", text: "Secondary Button" }} />
+<Controls of={Button} story="Secondary" />
+
+<Story of={Button} name="Tertiary" args={{ variant: "tertiary", size: "medium", text: "Tertiary Button" }} />
+
+<Controls of={Button} story="Tertiary" />
+
+```
+
+In the sample, the `defineMeta` is what allows `Controls` to know the types of `args` of the components.
+
+`Controls` then is keyed by the `name` / `story` properties.

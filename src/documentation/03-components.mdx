@@ -2,6 +2,72 @@
 
 ## Book
 
+The `<Book>` component is the root of your `bookemoji` application.
+It recieves a list of `books`, which is provided to other bookemoji components behind the scenes.
+
+It also has an optional `base` prop, which defaults to `/books`.
+It is used for constructing urls.
+
+By default, it should recieve `books` and `base` from the layout loader.
+
+It does not have any UI by default.
+
+
+```svelte
+<script lang="ts">
+  import type { LayoutData } from "./$types.js";
+  import { Book } from "bookemoji/components";
+
+  export let data: LayoutData;
+</script>
+
+<Book base={data.base} books={data.books}>
+  <slot />
+</Book>
+```
+
 ## Story
 
+`<Story>` is the component used to indicate a variant within a `{Component}.book.svelte` file.
+
 ## Controls
+
+`<Controls>` are used to _control_ a story variant's args via UI. 
+Each Controls is mapped to a specific variant via the `of` and `story` props. 
+
+```svelte
+<Story name="Story Name" of={SomeComponent} />
+<Controls story="Story Name" of={SomeComponent} />
+```
+
+**The `name` / `story` props must match, in addition to the `of` prop.**
+
+## StoryList
+
+`<StoryList>` is a utility for listing all of the stories and their variants.
+
+Below, the `<Book>` sample has been modified to display as a sidebar layout [really, this is roughly the source of the examples section of the website](/books)
+
+```svelte
+<script lang="ts">
+  import type { LayoutData } from "./$types.js";
+  import { Book, StoryList } from "bookemoji/components";
+
+  export let data: LayoutData;
+</script>
+
+<Book base="/books" books={data.books}>
+<div class="book-layout">
+    <div class="book-sidebar">
+      <div class="brand-header">
+        <h1 class="brand-title">Your Brand Here</h1>
+      </div>
+
+      <StoryList />
+    </div>
+    <div class="book-canvas">
+      <slot />
+    </div>
+  </div>
+</Book>
+```
