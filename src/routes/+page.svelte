@@ -8,7 +8,7 @@
 <Hero>
   <div class="hero">
     <h1 class="brand-font">BookEmoji</h1>
-    <h2>a Component Workshop for SvelteKit</h2>
+    <h2>a component workshop for SvelteKit</h2>
   </div>
 </Hero>
 
@@ -16,9 +16,12 @@
   <div>
     <h3>What is it</h3>
     <p>
-      📕 Bookemoji is a component workshop for <a href="https://svelte.dev/docs/kit/introduction#What-is-Svelte" target="_blank">svelte</a> and
-      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>. Rethought to suite the needs of a sveltekit
-      application.
+      📕 Bookemoji is a component workshop—a place to showcase, collaborate, and develop the technical aspects of user interfaces—for <a
+        href="https://svelte.dev/docs/kit/introduction#What-is-Svelte"
+        target="_blank">svelte</a
+      >
+      and
+      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>
     </p>
   </div>
 
@@ -37,9 +40,6 @@
 </div>
 
 <style>
-  .hero {
-  }
-
   .hero :where(h1, h2) {
     margin: 0;
   }

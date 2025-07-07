@@ -8,9 +8,10 @@ body {
 
 .brand-font {
   /* font-family: "Geo", "Space Grotesque", sans-serif; */
-  font-family: "Space Grotesque", sans-serif;
+  font-family: "Averia Sans Libre", sans-serif;
   font-weight: 400;
   font-style: normal;
+  text-transform: lowercase;
 }
 
 :where(h1, h2, h3, h4, h5, h6) {

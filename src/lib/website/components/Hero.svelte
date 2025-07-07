@@ -19,6 +19,8 @@
     y: 0,
   };
 
+  let isRunning: boolean = false;
+
   type RGBColor = readonly [r: number, g: number, b: number];
 
   const peachColor: RGBColor = [250, 136, 107];
@@ -147,7 +149,7 @@
 
         return {
           init: () => {
-            const bezierPath = randomBezierPath([0, 0], [width, height]);
+            const bezierPath = randomBezierPath([rand(200), 0], [width, height]);
 
             const subPath1 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.25, 0.65)], [width, 0]);
             const subPath2 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.15, 0.85)], [width, height]);
@@ -175,20 +177,32 @@
       });
 
       const unsubResize = renderer.onResize((w, h) => {
-        console.log("Resizing");
-        // update the canvas size
         width = w;
         height = h;
         app = createHeroViz(32, w, h);
       });
 
+      const toggle = () => {
+        isRunning = renderer.isRunning();
+        if (isRunning) {
+          renderer.stop();
+        } else {
+          renderer.start();
+        }
+        isRunning = !isRunning;
+      };
+
+      document.querySelector<HTMLButtonElement>("button#toggle-pause")?.addEventListener("click", toggle);
+
       renderer.start();
+      isRunning = true;
       app.init();
 
       return () => {
         renderer.stop();
         unsubResize();
         unsub();
+        document.querySelector<HTMLButtonElement>("button#toggle-pause")?.removeEventListener("click", toggle);
       };
     }
   });
@@ -246,6 +260,8 @@
     mouse.x = e.x;
     mouse.y = e.y;
   }
+
+  function onToggleRenderer() {}
 </script>
 
 <svelte:window on:mousemove={onMouseMove} />
@@ -256,6 +272,7 @@
   </div>
   {#if browser}
     <canvas id="screen" {width} {height} aria-hidden="true" bind:this={canvasRef}></canvas>
+    <button type="button" id="toggle-pause" aria-label="Toggle interactive graphics" on:click={onToggleRenderer}>{isRunning ? "pause" : "play"}</button>
   {/if}
 </div>
 
@@ -281,5 +298,18 @@
   .hero-content {
     display: grid;
     place-content: center;
+  }
+
+  #toggle-pause {
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    font-weight: 400;
+    color: var(--stone-8);
   }
 </style>
