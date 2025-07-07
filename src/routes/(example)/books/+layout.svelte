@@ -13,6 +13,12 @@
       </div>
 
       <StoryList --border-color={"var(--surface-2)"} />
+      {#each data.books as story}
+        <li>
+          {story.name}
+          <a href={story.route}>{story.slug}</a>
+        </li>
+      {/each}
     </div>
     <div class="book-canvas">
       <slot />
