@@ -5,7 +5,7 @@ type CreateRendererOptions = {
   height: number;
 };
 
-type TimeInfo = {
+export type TimeInfo = {
   time: DOMHighResTimeStamp;
   seconds: number;
   delta: number;
