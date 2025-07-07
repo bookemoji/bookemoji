@@ -5,7 +5,7 @@
   export let data: LayoutData;
 </script>
 
-<Book base="/books" books={data.books}>
+<Book base={data.base} books={data.books}>
   <div class="book-layout">
     <div class="book-sidebar">
       <div class="brand-header">

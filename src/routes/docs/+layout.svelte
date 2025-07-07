@@ -11,7 +11,6 @@
     <svelte:fragment slot="sidebar">
       <aside class="toc">
         <h2 style:font-size={OpenProps.fontSize2}>Table of Contents</h2>
-
         <nav>
           <ol class="nav-links">
             {#each data.tableOfContents.entries() as [href, text]}
