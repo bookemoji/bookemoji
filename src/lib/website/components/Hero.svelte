@@ -3,6 +3,9 @@
   import { onMount } from "svelte";
   import { createRenderer, type TimeInfo } from "./renderer.js";
   import { decay, wait } from "../renderer-utils.js";
+  import Icon from "../icons/Icon.svelte";
+
+  export let size: number = 32;
 
   let canvasRef: HTMLCanvasElement;
   let containerRef: HTMLDivElement;
@@ -55,7 +58,6 @@
       });
 
       function createHeroViz(grid_size: number, width: number, height: number) {
-        // const grid_size = 32;
         const grid: readonly [rows: number, cols: number] = [Math.floor(width / grid_size), Math.floor(height / grid_size)];
         const [rows, cols] = grid;
 
@@ -147,39 +149,73 @@
           }
         }
 
+        const paintPath: (el: Coords, size?: number) => void = ([x, y], size = 2) => {
+          mouse.x = x;
+          mouse.y = y;
+          applyBrushToMouseLocation(size);
+        };
+
         return {
           init: () => {
-            const bezierPath = randomBezierPath([rand(200), 0], [width, height]);
+            const dir: readonly [Coords, Coords] =
+              Math.random() > 0.2
+                ? [
+                    // top left to bottom right
+                    [rand(200), 0],
+                    [width, height],
+                  ]
+                : // bottom left to top right
+                  [
+                    [-200, height / 2 + rand(height / 2)],
+                    [width, 0],
+                  ];
+            const bezierPath = randomBezierPath(...dir);
 
             const subPath1 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.25, 0.65)], [width, 0]);
             const subPath2 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.15, 0.85)], [width, height]);
 
-            const paintPath: (el: Coords) => void = ([x, y]) => {
-              mouse.x = x;
-              mouse.y = y;
-              applyBrushToMouseLocation();
-            };
+            bezierPath.forEach((el) => paintPath(el, 2));
+            subPath1.forEach((el) => paintPath(el, 2));
+            subPath2.forEach((el) => paintPath(el, 2));
+          },
+          cta: async (e: MouseEvent) => {
+            const bezierPath1 = randomBezierPath([e.screenX, e.screenY], [rand(width), Math.random() > 0.5 ? height : 0]);
+            const bezierPath2 = randomBezierPath([e.screenX, e.screenY], [rand(width), Math.random() > 0.5 ? height : 0]);
 
-            bezierPath.forEach(paintPath);
-            subPath1.forEach(paintPath);
-            subPath2.forEach(paintPath);
+            for (let row = 0; row < datagrid.length; row++) {
+              for (let col = 0; col < datagrid[row].length; col++) {
+                datagrid[row][col] = datagrid[row][col] / 2;
+              }
+            }
+
+            for (const index in bezierPath1) {
+              paintPath(bezierPath1[index], Math.floor(rand(3)));
+              paintPath(bezierPath2[index], Math.floor(rand(3)));
+              await wait(0.5);
+            }
           },
           render,
           update,
         };
       }
 
-      let app = createHeroViz(32, width, height);
+      let app = createHeroViz(size, width, height);
 
       const unsub = renderer.onFrame((time, ctx) => {
         app.update(time);
         app.render(time, ctx);
       });
 
+      const ctaButton = document.querySelector<HTMLButtonElement>("a.cta");
+      const subCTAButton = document.querySelector<HTMLButtonElement>("button.copy-btn");
+
+      ctaButton?.addEventListener("mouseover", app.cta);
+      subCTAButton?.addEventListener("click", app.cta);
+
       const unsubResize = renderer.onResize((w, h) => {
         width = w;
         height = h;
-        app = createHeroViz(32, w, h);
+        app = createHeroViz(size, w, h);
       });
 
       const toggle = () => {
@@ -202,6 +238,8 @@
         renderer.stop();
         unsubResize();
         unsub();
+        ctaButton?.removeEventListener("mouseover", app.cta);
+        subCTAButton?.removeEventListener("click", app.cta);
         document.querySelector<HTMLButtonElement>("button#toggle-pause")?.removeEventListener("click", toggle);
       };
     }
@@ -272,7 +310,16 @@
   </div>
   {#if browser}
     <canvas id="screen" {width} {height} aria-hidden="true" bind:this={canvasRef}></canvas>
-    <button type="button" id="toggle-pause" aria-label="Toggle interactive graphics" on:click={onToggleRenderer}>{isRunning ? "pause" : "play"}</button>
+    <button
+      type="button"
+      id="toggle-pause"
+      role="switch"
+      aria-checked={isRunning ? "true" : "false"}
+      on:click={onToggleRenderer}
+      aria-label={isRunning ? "pause interactive visuals" : "play interractive visuals"}
+    >
+      <Icon name={isRunning ? "pause_circle" : "play_circle"} size="3rem" color={"var(--gray-6)"} />
+    </button>
   {/if}
 </div>
 
@@ -305,11 +352,18 @@
     border: none;
     outline: none;
     box-shadow: none;
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
+    position: absolute;
+    /* top: calc(85vh - 13rem); */
+    top: 0.5rem;
+    right: 0rem;
     padding: 1rem;
     font-weight: 400;
     color: var(--stone-8);
+  }
+
+  @media screen and (min-width: 48rem) {
+    #toggle-pause {
+      top: 10vh;
+    }
   }
 </style>
