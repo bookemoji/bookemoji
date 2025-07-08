@@ -3,11 +3,9 @@ body {
 }
 
 .book-root .story-name,
-.book-root .story-list {
-}
+.book-root .story-list {}
 
-.book-root :where(h1, h2, h3, h4, h5, h6) {
-}
+.book-root :where(h1, h2, h3, h4, h5, h6) {}
 
 .controls {
   display: flex;
@@ -23,6 +21,18 @@ body {
 
 .story-root {
   margin-bottom: 0.5rem;
+}
+
+.story-root.minimal .story-name {
+  display: none;
+}
+
+.story-root.minimal .story {
+
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
 }
 
 .story-name {
@@ -42,7 +52,7 @@ body {
   align-items: center;
 }
 
-.control > span {
+.control>span {
   cursor: pointer;
 }
 
