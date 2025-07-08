@@ -19,12 +19,12 @@
   <div>
     <h3>What is it</h3>
     <p>
-      📕 Bookemoji is a place to showcase, collaborate, and develop the technical aspects of user interfaces<a
+      📕 Bookemoji is a place to showcase, collaborate, and develop the technical aspects of user interfaces using <a
         href="https://svelte.dev/docs/kit/introduction#What-is-Svelte"
         target="_blank">svelte</a
       >
       and
-      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>
+      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>.
     </p>
   </div>
 
