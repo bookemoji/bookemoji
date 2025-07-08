@@ -3,7 +3,10 @@
   // import type { PageData } from "./$types.js";
 
   // export let data: PageData;
+  import { MetaTags } from "svelte-meta-tags";
 </script>
+
+<MetaTags title="bookemoji" />
 
 <Hero>
   <div class="hero">
