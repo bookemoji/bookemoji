@@ -12,7 +12,6 @@ By default, it should recieve `books` and `base` from the layout loader.
 
 It does not have any UI by default.
 
-
 ```svelte
 <script lang="ts">
   import type { LayoutData } from "./$types.js";
@@ -32,8 +31,8 @@ It does not have any UI by default.
 
 ## Controls
 
-`<Controls>` are used to _control_ a story variant's args via UI. 
-Each Controls is mapped to a specific variant via the `of` and `story` props. 
+`<Controls>` are used to _control_ a story variant's args via UI.
+Each Controls is mapped to a specific variant via the `of` and `story` props.
 
 ```svelte
 <Story name="Story Name" of={SomeComponent} />
@@ -44,7 +43,7 @@ Each Controls is mapped to a specific variant via the `of` and `story` props.
 
 ## StoryList
 
-`<StoryList>` is a utility for listing all of the stories and their variants.
+`<StoryList>` is a convenience component for listing all of the stories and their variants.
 
 Below, the `<Book>` sample has been modified to display as a sidebar layout [really, this is roughly the source of the examples section of the website](/books)
 
@@ -57,7 +56,7 @@ Below, the `<Book>` sample has been modified to display as a sidebar layout [rea
 </script>
 
 <Book base="/books" books={data.books}>
-<div class="book-layout">
+  <div class="book-layout">
     <div class="book-sidebar">
       <div class="brand-header">
         <h1 class="brand-title">Your Brand Here</h1>
