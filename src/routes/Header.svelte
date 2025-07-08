@@ -10,7 +10,7 @@
   ];
 </script>
 
-<header class="header">
+<header class="header" class:sticky={$page.route.id === "/"}>
   <nav class="nav">
     <a class="brand brand-font" href={`/`}>📚 BookEmoji</a>
     <ul class="nav-links">
@@ -60,7 +60,7 @@
   }
 
   .header {
-    padding: 0.5rem 0;
+    padding: 0rem 0;
     margin: 0;
   }
 
@@ -71,6 +71,13 @@
     }
     .nav {
       display: flex;
+    }
+
+    .sticky {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(to bottom, rgba(20, 30, 40, 0.1) 85%, transparent);
+      backdrop-filter: saturate(0.7);
     }
   }
 </style>
