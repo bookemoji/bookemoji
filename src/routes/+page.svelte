@@ -1,8 +1,8 @@
 <script lang="ts">
   import Hero from "$lib/website/components/Hero.svelte";
-  import type { PageData } from "./$types.js";
+  // import type { PageData } from "./$types.js";
 
-  export let data: PageData;
+  // export let data: PageData;
 </script>
 
 <Hero>
