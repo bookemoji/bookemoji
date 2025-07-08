@@ -16,7 +16,7 @@
   <div>
     <h3>What is it</h3>
     <p>
-      📕 Bookemoji is a component workshop—a place to showcase, collaborate, and develop the technical aspects of user interfaces—for <a
+      📕 Bookemoji is a place to showcase, collaborate, and develop the technical aspects of user interfaces<a
         href="https://svelte.dev/docs/kit/introduction#What-is-Svelte"
         target="_blank">svelte</a
       >
@@ -27,7 +27,6 @@
 
   <div>
     <h3>Vision</h3>
-    <aside class="subtitle">initially: vision, later: features</aside>
     <ul class="book-list">
       <li>Flexible yet strong integration with sveltekit</li>
       <li>Support for Svelte 4.x and 5.x</li>
@@ -56,14 +55,6 @@
   .side-by-side {
     margin: 2rem 0;
     padding-bottom: 20vh;
-  }
-
-  .subtitle {
-    margin-top: -2.5em;
-    font-style: italic;
-    font-size: 1rem;
-    color: var(--gray-6);
-    margin-bottom: 1rem;
   }
 
   @media screen and (min-width: 60rem) {
