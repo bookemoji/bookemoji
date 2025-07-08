@@ -37,7 +37,7 @@
     <h2>a component workshop for SvelteKit</h2>
     <h4 class="copy-cmd">
       <code class="npm-command">npm create bookemoji@latest</code>
-      <button type="button" on:click={copy} class="copy-btn">
+      <button type="button" on:click={copy} class="copy-btn" data-rybbit-event="copy_npm_create_cmd">
         <Icon name={copied ? "check" : "content_copy"} size={"1.75rem"} color={copied ? "var(--teal-5)" : "currentColor"} />
       </button>
     </h4>
@@ -70,7 +70,7 @@
   </div>
 </div>
 <div class="cta-section">
-  <a class="cta" href={`${base}/docs/getting-started`}>Get Started</a>
+  <a class="cta" href={`${base}/docs/getting-started`} data-rybbit-event="clicked_getting_started">Get Started</a>
 </div>
 
 <style>
