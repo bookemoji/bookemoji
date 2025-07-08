@@ -6,6 +6,9 @@
   export let name: string;
   export let of: ComponentType<SvelteComponent<any, any, any>>;
   export let args: Record<string, any> = {};
+  let classNames: string = "";
+
+  export { classNames as class };
 
   let id = nameToId(name);
 
@@ -23,7 +26,7 @@
 </script>
 
 <Isolate {name}>
-  <div class="story-root" {id} data-story={name}>
+  <div class={`story-root ${classNames}`} {id} data-story={name}>
     <h5 class="story-name">{name}</h5>
     <div class="story" data-name={name}>
       <slot args={finalArgs}>
