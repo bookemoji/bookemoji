@@ -17,7 +17,7 @@ export type TimeInfo = {
 type FrameCallback = (time: TimeInfo, context: CanvasRenderingContext2D) => void;
 
 export const createRenderer = (options: CreateRendererOptions) => {
-  const { context, width: initialWidth, height: initialHeight } = options;
+  const { canvas, context, width: initialWidth, height: initialHeight } = options;
 
   let width: number = initialWidth;
   let height: number = initialHeight;
@@ -79,12 +79,14 @@ export const createRenderer = (options: CreateRendererOptions) => {
         width = window.innerWidth;
         height = window.innerHeight;
         callback(width, height);
+        canvas.style.opacity = "1";
         if (wasRunningBeforeResize) {
           start();
         }
       }, 150);
 
       const cb = () => {
+        canvas.style.opacity = "0";
         if (running) {
           wasRunningBeforeResize = true;
           stop();
