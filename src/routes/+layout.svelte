@@ -6,10 +6,11 @@
   import "open-props/normalize";
   import "open-props/buttons";
 
-  import Header from "./Header.svelte";
+  import Header from "$lib/website/components/Header.svelte";
+  import Footer from "$lib/website/components/Footer.svelte";
   import type { LayoutData } from "./$types.js";
   import { MetaTags } from "svelte-meta-tags";
-  import { descriptionLookup, titleLookup, titlify } from "$lib/website/metatags.js";
+  import { descriptionLookup, titlify } from "$lib/website/metatags.js";
   import { page } from "$app/stores";
 
   export let data: LayoutData;
@@ -26,6 +27,8 @@
 <div class="docs-root" class:main={data.hasHero}>
   <slot />
 </div>
+
+<Footer />
 
 <style>
   .main {
