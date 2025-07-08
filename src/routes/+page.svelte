@@ -31,10 +31,10 @@
   <div>
     <h3>Vision</h3>
     <ul class="book-list">
-      <li>Flexible yet strong integration with sveltekit</li>
+      <li>Flexible and strong integration with sveltekit</li>
       <li>Support for Svelte 4.x and 5.x</li>
       <li>unstyled components, style freely 🐎</li>
-      <li>No JSX, no obscure errors</li>
+      <li>No JSX, no runtime React errors</li>
       <li>Low Dependencies</li>
       <li>Very little magic — enough for sorcerers to wield</li>
     </ul>
