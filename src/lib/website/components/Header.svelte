@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { page } from "$app/stores";
+  import GithubLogo from "../icons/GithubLogo.svelte";
 
   const urls: (readonly [page: string, url: string])[] = [
     ["Docs", "/docs"],
@@ -19,6 +20,11 @@
           <a class="nav-link" class:active={$page.url.pathname === url} href={`${url}`}>{name}</a>
         </li>
       {/each}
+      <li>
+        <a href="https://github.com/bookemoji/bookemoji" target="_blank">
+          <GithubLogo />
+        </a>
+      </li>
     </ul>
   </nav>
 </header>
