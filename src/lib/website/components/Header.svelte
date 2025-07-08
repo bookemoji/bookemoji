@@ -61,6 +61,7 @@
   .brand {
     display: flex;
     padding: 2rem 2rem;
+    font-size: 1.5em;
     align-items: center;
     justify-content: center;
   }
