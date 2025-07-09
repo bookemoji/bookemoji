@@ -33,7 +33,7 @@
 
 <Hero>
   <div class="hero">
-    <h1 class="brand-font">BookEmoji</h1>
+    <h1 class="brand-font brand-color">BookEmoji</h1>
     <h2>a component workshop for SvelteKit</h2>
     <h4 class="copy-cmd">
       <code class="npm-command">npm create bookemoji@latest</code>

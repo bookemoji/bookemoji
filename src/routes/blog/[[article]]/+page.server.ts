@@ -3,10 +3,11 @@ import type { Component } from "svelte";
 import type { PageServerLoad } from "./$types.js";
 import { error } from "@sveltejs/kit";
 
-type FrontMatterMetaData = {
+export type FrontMatterMetaData = {
   title: string;
   published?: boolean;
-  order?: number;
+  author?: string;
+  date?: string;
 };
 
 type FrontMatterModule = { default: Component; metadata?: FrontMatterMetaData };
@@ -29,10 +30,24 @@ const articles = Array.from(articlesBySlug.entries())
       slug: key,
       published: mod.metadata?.published ?? false,
       title: mod.metadata?.title ?? `"${key}" is missing an h1`,
-      order: mod.metadata?.order ?? -1,
+      date: mod.metadata?.date ?? "1/1/1975",
+      author: mod.metadata?.author ?? "bookemoji team",
     };
   })
-  .sort((a, b) => a.order - b.order);
+  .sort((a, b) => {
+    const aDate = new Date(a.date);
+    const bDate = new Date(b.date);
+
+    if (aDate.toString() === "Invalid Date") {
+      return 1;
+    }
+
+    if (bDate.toString() === "Invalid Date") {
+      return -1;
+    }
+
+    return aDate.valueOf() - bDate.valueOf();
+  });
 
 export const load: PageServerLoad = ({ params }) => {
   if (params.article === undefined) {

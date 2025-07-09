@@ -2,6 +2,8 @@
   import OpenProps from "open-props";
   import type { LayoutData } from "./$types.js";
   import TwoColumnLayout from "../TwoColumnLayout.svelte";
+  import { base } from "$app/paths";
+  import { page } from "$app/stores";
 
   export let data: LayoutData;
 </script>
@@ -10,12 +12,13 @@
   <TwoColumnLayout>
     <svelte:fragment slot="sidebar">
       <aside class="toc">
-        <h2 style:font-size={OpenProps.fontSize2}>Table of Contents</h2>
+        <h2>Table of Contents</h2>
+
         <nav>
           <ol class="nav-links">
             {#each data.tableOfContents.entries() as [href, text]}
               <li>
-                <a href={`/docs/${href}`}>{text}</a>
+                <a href={`${base}/docs/${href}`} class:active={`${base}/docs/${href}` === $page.url.pathname}>{text}</a>
               </li>
             {/each}
           </ol>
@@ -41,8 +44,14 @@
     padding-inline-start: 0;
   }
 
-  .docs {
-    --font-system-ui: "Space Grotesque", var(--font-system-ui, sans-serif);
+  .nav-links a {
+    display: block;
+    padding: 0.5rem 1rem;
+    margin: 0 -1rem 0 -1rem;
+  }
+
+  .nav-links a.active {
+    background: var(--surface-2);
   }
 
   .toc {

@@ -2,10 +2,10 @@ body {
   margin: 0;
 }
 
-.book-root .story-name,
-.book-root .story-list {}
+/* .book-root .story-name,
+.book-root .story-list {} */
 
-.book-root :where(h1, h2, h3, h4, h5, h6) {}
+/* .book-root :where(h1, h2, h3, h4, h5, h6) {} */
 
 .controls {
   display: flex;
