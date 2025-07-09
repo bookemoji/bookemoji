@@ -1,9 +1,21 @@
 body {
   margin: 0;
-  --brand: #fa886b;
-  --link: #fa886b;
-  --link-visited: #fa886b;
+  --brand: #756767;
+  --link: #5d97da;
+  --link-visited: #5d97da;
   --font-system-ui: "Quicksand", "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    --brand: rgb(236, 197, 197);
+    --link: #fa886b;
+    --link-visited: #fa886b;
+  }
+}
+
+a[href] {
+  color: var(--link, var(--brand));
 }
 
 :where(a):where([href]):visited {
@@ -11,11 +23,14 @@ body {
 }
 
 .brand-font {
-  /* font-family: "Geo", "Space Grotesque", sans-serif; */
   font-family: "Averia Sans Libre", sans-serif;
   font-weight: 400;
   font-style: normal;
   text-transform: lowercase;
+}
+
+.brand-color {
+  color: var(--brand) !important;
 }
 
 :where(h1, h2, h3, h4, h5, h6) {
@@ -70,4 +85,16 @@ body :where(li, dd, figcaption) {
   :where(:not(pre) > code) {
     color: var(--cyan-3);
   }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }

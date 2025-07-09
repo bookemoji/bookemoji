@@ -34,7 +34,8 @@
       padding-top: calc(var(--font-lineheight-4) * var(--font-size-8));
       border-bottom: none;
       border-right: 1px solid var(--surface-2);
-      height: 100vh;
+      height: 100%;
+      min-height: 100vh;
     }
   }
 

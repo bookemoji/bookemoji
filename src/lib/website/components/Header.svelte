@@ -13,7 +13,7 @@
 
 <header class="header" class:sticky={$page.route.id === "/"}>
   <nav class="nav">
-    <a class="brand brand-font" href={`/`}>📚 BookEmoji</a>
+    <a class="brand brand-font brand-color" href={`/`}>📚 BookEmoji</a>
     <ul class="nav-links">
       {#each urls as [name, url]}
         <li>
@@ -21,7 +21,8 @@
         </li>
       {/each}
       <li>
-        <a href="https://github.com/bookemoji/bookemoji" target="_blank">
+        <a href="https://github.com/bookemoji/bookemoji" target="_blank" aria-label="Github" data-rybbit-event="clicked_github_in_nav">
+          <span class="visually-hidden">Github</span>
           <GithubLogo />
         </a>
       </li>
@@ -84,8 +85,20 @@
     .sticky {
       position: sticky;
       top: 0;
-      background: linear-gradient(to bottom, rgba(20, 30, 40, 0.1) 85%, transparent);
+
       backdrop-filter: saturate(0.7);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .sticky {
+        background: linear-gradient(to bottom, rgba(20, 30, 40, 0.1) 5%, transparent);
+      }
+    }
+
+    @media (prefers-color-scheme: light) {
+      .sticky {
+        background: linear-gradient(to bottom, rgba(240, 250, 255, 0.8) 5%, transparent);
+      }
     }
   }
 </style>
