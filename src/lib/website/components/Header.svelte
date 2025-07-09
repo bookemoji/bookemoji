@@ -85,6 +85,7 @@
     .sticky {
       position: sticky;
       top: 0;
+      z-index: 1;
 
       backdrop-filter: saturate(0.7);
     }
