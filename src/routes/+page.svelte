@@ -66,6 +66,7 @@
       <li>No JSX, no runtime React errors</li>
       <li>Low Dependencies</li>
       <li>Very little magic — enough for sorcerers to wield</li>
+      <li>Open Source</li>
     </ul>
   </div>
 </div>
