@@ -1,12 +1,14 @@
 import { browser } from "$app/environment";
-import { getContext, type SvelteComponent, type Component, type ComponentProps, type ComponentType } from "svelte";
+import { getContext, type SvelteComponent, type Component, type ComponentType } from "svelte";
 
-import { writable, type Writable } from "svelte/store";
+import { writable } from "svelte/store";
 import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
 import { parse } from "node-html-parser";
 import { base, loadStories } from "virtual:bookemoji";
+import type { ComponentMeta, ComponentMetaStore, MetaOptions } from "./meta.js";
 
+export type * from "./meta.js";
 /**
  * Represents a Story from SvelteKit's perspective
  */
@@ -131,57 +133,11 @@ export const findStoryFiles = async () => {
   return bookList;
 };
 
-export type MetaOptions<Comp extends SvelteComponent | Component<any, any>> = {
-  component: Comp extends Component<infer P, any>
-    ? Component<P, any>
-    : Comp extends ComponentType<infer P>
-      ? ComponentType<P>
-      : ComponentType<SvelteComponent<Record<string, any>>>;
-  args?: Comp extends Component<infer P, any>
-    ? Omit<P, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">
-    : Comp extends ComponentType<infer P>
-      ? Omit<P, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">
-      : Record<string, any>;
-  argTypes?: Comp extends Component<infer P, any>
-    ? Record<keyof Omit<P, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">, undefined | ArgTypeControl>
-    : Comp extends ComponentType<infer P>
-      ? Record<keyof Omit<P, "children" | "$$props" | "$$events" | "$$slots" | "$$rest">, undefined | ArgTypeControl>
-      : Record<string, undefined | ArgTypeControl>;
-};
-
-export type ArgTypeControl = ComponentControl | SelectControl | TextControl | SwitchControl;
-
-export type ComponentControl<T extends Component = Component> = {
-  type: T;
-  props: ComponentProps<T>;
-};
-
-export type SelectControl = {
-  type: "select";
-  options: string[];
-};
-
-export type SwitchControl = {
-  type: "boolean";
-};
-
-export type TextControl = {
-  type: "text";
-};
-
-export type ComponentArgTypes = {
-  argTypes?: Record<string, undefined | ArgTypeControl>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  args?: Record<string, any>;
-};
-
-export type ComponentArgStore = Writable<Required<ComponentArgTypes>>;
-
 export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(definition: MetaOptions<Comp>) {
   if (!browser) {
     return;
   }
-  const meta = getContext<Map<SvelteComponent | Component<any, any>, Required<ComponentArgTypes>>>("bookemoji.meta");
+  const meta = getContext<Map<SvelteComponent | Component<any, any>, Required<ComponentMeta>>>("bookemoji.meta");
 
   if (!meta) {
     throw new Error(`No "bookemoji.meta" context found. Make sure to set the context in your book component at the top level.`);
@@ -189,7 +145,8 @@ export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(d
 
   const { component, ...componentArgs } = definition;
 
-  const argData: Required<ComponentArgTypes> = {
+  const argData: Required<ComponentMeta> = {
+    key: "initial",
     args: componentArgs.args ?? {},
     argTypes: componentArgs.argTypes ?? {},
   };
@@ -198,16 +155,16 @@ export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(d
   meta.set(component, argData);
 }
 
-export function getMeta<T extends Component | ComponentType<SvelteComponent>>(component: T, variant: string): ComponentArgStore {
+export function getMeta<T extends Component | ComponentType<SvelteComponent>>(component: T, variant: string): ComponentMetaStore {
   if (!browser) {
     return writable({
       args: {},
       argTypes: {},
-    }) as ComponentArgStore;
+    }) as ComponentMetaStore;
   }
 
-  const meta = getContext<Map<any, Required<ComponentArgTypes>>>("bookemoji.meta");
-  const argData = getContext<KeyKeyMap<any, string, ComponentArgStore>>("bookemoji.argTypes");
+  const meta = getContext<Map<any, Required<ComponentMeta>>>("bookemoji.meta");
+  const argData = getContext<KeyKeyMap<any, string, ComponentMetaStore>>("bookemoji.argTypes");
 
   if (!argData || !meta) {
     throw new Error(`No "bookemoji.meta" context found. Make sure your Story, Control, etc is within a <Book>`);

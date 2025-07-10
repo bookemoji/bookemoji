@@ -10,7 +10,7 @@
       size: 20,
     },
     argTypes: {
-      size: { type: "text" },
+      size: { type: "number", min: 0, max: 1000, step: 10, required: true },
     },
   });
 </script>
