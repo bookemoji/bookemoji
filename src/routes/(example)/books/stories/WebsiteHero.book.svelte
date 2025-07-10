@@ -17,7 +17,10 @@
 
 <Story name="Basic" of={Hero} class={"minimal"} let:args>
   <div style:position="relative">
-    <Hero {...args} />
+    <Hero {...args}>
+      <h1>Hero</h1>
+      <p>This is the "Hero" component used on the landing page of <a href="/">bookemoji.dev</a></p>
+    </Hero>
   </div>
 </Story>
 
