@@ -11,6 +11,7 @@ body {
   display: flex;
 }
 
+
 .story {
   padding: 1rem;
   border: 1px solid var(--surface-2);
@@ -77,6 +78,4 @@ body {
 
 .controls .actions {
   margin-inline-start: auto;
-  align-self: end;
-  ;
 }

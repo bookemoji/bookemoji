@@ -7,40 +7,53 @@
   export let data: LayoutData;
 
   let embellished: boolean = false;
+  let animating: boolean = false;
 </script>
 
 <Book base={data.base} books={data.books}>
-  <div class="book-layout" class:embellished>
-    <div class="book-sidebar">
-      <div class="brand-header">
-        <h1 class="brand-title">Your Brand Here</h1>
-      </div>
-      <div class="embellish-area">
-        <label>
-          <input type="checkbox" bind:checked={embellished} />
-          Show Customized
-        </label>
-      </div>
-
+  <div class="book-layout" class:embellished class:animating on:animationstart={() => (animating = true)} on:animationend={() => (animating = false)}>
+    <div class="sidebar">
       {#if embellished}
-        <!-- When embellished / customized, we just build the <StoryList> ourselves, but style it how we please -->
-        {#each data.books as book}
-          <div class="book-item">
-            <Collapsible open>
-              <svelte:fragment slot="header">
-                <a class="book-title" href={book.route} class:active={$page.url.pathname === book.route}>{book.name}</a>
-              </svelte:fragment>
-
-              {#each Object.entries(book.variants) as [path, variant]}
-                <div class="variant-item">
-                  <a class="variant-title" href={variant.route} class:active={$page.url.pathname === variant.route}>{variant.name}</a>
-                </div>
-              {/each}
-            </Collapsible>
+        <div class="book-sidebar">
+          <div class="brand-header">
+            <h1 class="brand-title">Your Brand Here</h1>
           </div>
-        {/each}
+          <div class="embellish-area">
+            <label>
+              <input id="enable-customizations" type="checkbox" bind:checked={embellished} />
+              Show Customization
+            </label>
+          </div>
+          <!-- When embellished / customized, we just build the <StoryList> ourselves, but style it how we please -->
+          {#each data.books as book}
+            <div class="book-item">
+              <Collapsible open>
+                <svelte:fragment slot="header">
+                  <a class="book-title" href={book.route} class:active={$page.url.pathname === book.route}>{book.name}</a>
+                </svelte:fragment>
+
+                {#each Object.entries(book.variants) as [path, variant]}
+                  <div class="variant-item">
+                    <a class="variant-title" href={variant.route} class:active={$page.url.pathname === variant.route}>{variant.name}</a>
+                  </div>
+                {/each}
+              </Collapsible>
+            </div>
+          {/each}
+        </div>
       {:else}
-        <StoryList --border-color={"var(--surface-2)"} />
+        <div class="book-sidebar">
+          <div class="brand-header">
+            <h1 class="brand-title">Your Brand Here</h1>
+          </div>
+          <div class="embellish-area">
+            <label>
+              <input id="enable-customizations" type="checkbox" bind:checked={embellished} />
+              Show Customization
+            </label>
+          </div>
+          <StoryList --border-color={"var(--surface-2)"} />
+        </div>
       {/if}
     </div>
     <div class="book-canvas">
@@ -52,17 +65,22 @@
 <style>
   .book-layout {
     display: grid;
-    grid-template-columns: 12rem 1fr;
+    grid-template-columns: 13rem 1fr;
     min-height: 100vh;
     overflow: hidden;
     border-top: 1px solid var(--surface-2);
   }
-  .book-sidebar {
+
+  .sidebar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     border-right: 1px solid var(--surface-2);
+    background: var(--surface-1);
   }
 
   .book-layout.embellished {
-    grid-template-columns: 19rem 1fr;
+    grid-template-columns: 18rem 1fr;
   }
 
   .embellished .book-canvas {
