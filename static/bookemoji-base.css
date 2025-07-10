@@ -13,14 +13,17 @@ body {
 
 .story {
   padding: 1rem;
-  border: 1px solid var(--surface-3);
+  border: 1px solid var(--surface-2);
   border-radius: 4px;
   margin-bottom: 1rem;
-  background-color: var(--surface-2);
 }
 
 .story-root {
   margin-bottom: 0.5rem;
+}
+
+.story-name:has(+ .minimal) {
+  display: none;
 }
 
 .story-root.minimal .story-name {
@@ -36,7 +39,7 @@ body {
 }
 
 .story-name {
-  margin-bottom: 0rem;
+  margin: 0rem;
 }
 
 .controls {
