@@ -41,11 +41,164 @@
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateColorScheme);
   }
 
+  let datagrid: number[][] = [];
+
+  let app: ReturnType<typeof createHeroViz>;
+
+  $: onSizeChange(size);
+
+  function createHeroViz(grid_size: number, width: number, height: number) {
+    const grid: readonly [rows: number, cols: number] = [Math.floor(width / grid_size), Math.floor(height / grid_size)];
+    const [rows, cols] = grid;
+
+    datagrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => 0));
+
+    let padding: number = 1;
+    const cellsize = grid_size - padding;
+    const cellOffset = grid_size + padding;
+
+    function applyBrushToMouseLocation(size: number = 2) {
+      if (last_mouse.x !== mouse.x || last_mouse.y !== mouse.y) {
+        last_mouse.x = mouse.x;
+        last_mouse.y = mouse.y;
+        const row = Math.max(0, Math.floor(mouse.x / cellOffset));
+        const col = Math.max(0, Math.floor(mouse.y / cellOffset));
+
+        if (row < rows && col < cols) {
+          datagrid[row][col] = 400 + Math.random() * 600;
+
+          const neighbors = [];
+          // Collect all valid neighboring cells within a Manhattan distance of `within`
+          for (let dr = -size; dr <= size; dr++) {
+            for (let dc = -size; dc <= size; dc++) {
+              // Skip the center cell itself
+              if (dr === 0 && dc === 0) continue;
+
+              const neighborRow = row + dr;
+              const neighborCol = col + dc;
+
+              const isInBounds = neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols;
+
+              const manhattanDistance = Math.abs(dr) + Math.abs(dc);
+
+              if (isInBounds && manhattanDistance <= size) {
+                neighbors.push([neighborRow, neighborCol]);
+              }
+            }
+          }
+
+          for (let i = 0; i < Math.min(size, neighbors.length); i++) {
+            const idx = Math.floor(Math.random() * neighbors.length);
+            const [nr, nc] = neighbors.splice(idx, 1)[0];
+            if (datagrid[nr][nc] === 0) {
+              datagrid[nr][nc] = Math.random() * 2000;
+            }
+          }
+        }
+      }
+    }
+
+    function update(time: TimeInfo) {
+      for (let row = 0; row < datagrid.length; row++) {
+        // const row = datagrid[row];
+        for (let col = 0; col < datagrid[row].length; col++) {
+          const value = datagrid[row][col];
+          datagrid[row][col] = decay(time.delta, value);
+        }
+      }
+
+      applyBrushToMouseLocation();
+    }
+    function render(time: TimeInfo, ctx: CanvasRenderingContext2D) {
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const value = datagrid[row][col];
+          let alpha = 1;
+          let r: number, g: number, b: number;
+          if (value > 0) {
+            alpha = value / (1000 * 3);
+            [r, g, b] = peachColor;
+          } else {
+            [r, g, b] = squareGridColor;
+          }
+
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+
+          if (value > 0) {
+            ctx.save();
+            const offset = cellsize / 2;
+            const size = Math.max(offset, cellsize * (1 - value / 1000));
+            ctx.translate(row * cellOffset + offset, col * cellOffset + offset);
+            ctx.rotate(((value / 1000) * 180 * Math.PI) / 180);
+            ctx.fillRect(-offset, -offset, size, size);
+            ctx.restore();
+          } else {
+            ctx.fillRect(row * cellOffset, col * cellOffset, cellsize, cellsize);
+          }
+        }
+      }
+    }
+
+    const paintPath: (el: Coords, size?: number) => void = ([x, y], size = 2) => {
+      mouse.x = x;
+      mouse.y = y;
+      applyBrushToMouseLocation(size);
+    };
+
+    return {
+      init: () => {
+        const dir: readonly [Coords, Coords] =
+          Math.random() > 0.2
+            ? [
+                // top left to bottom right
+                [rand(200), 0],
+                [width, height],
+              ]
+            : // bottom left to top right
+              [
+                [-200, height / 2 + rand(height / 2)],
+                [width, 0],
+              ];
+        const bezierPath = randomBezierPath(...dir);
+
+        const subPath1 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.25, 0.65)], [width, 0]);
+        const subPath2 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.15, 0.85)], [width, height]);
+
+        bezierPath.forEach((el) => paintPath(el, 2));
+        subPath1.forEach((el) => paintPath(el, 2));
+        subPath2.forEach((el) => paintPath(el, 2));
+      },
+      cta: async (e: MouseEvent) => {
+        const bezierPath1 = randomBezierPath([e.screenX, e.screenY], [rand(width), Math.random() > 0.5 ? height : 0]);
+        const bezierPath2 = randomBezierPath([e.screenX, e.screenY], [rand(width), Math.random() > 0.5 ? height : 0]);
+
+        for (let row = 0; row < datagrid.length; row++) {
+          for (let col = 0; col < datagrid[row].length; col++) {
+            datagrid[row][col] = datagrid[row][col] / 2;
+          }
+        }
+
+        for (const index in bezierPath1) {
+          paintPath(bezierPath1[index], Math.floor(rand(3)));
+          paintPath(bezierPath2[index], Math.floor(rand(3)));
+          await wait(0.5);
+        }
+      },
+      render,
+      update,
+    };
+  }
+
+  function onSizeChange(_size: number) {
+    if (browser && app && typeof size === "number" && size > 0) {
+      app = createHeroViz(size, width, height);
+    }
+  }
+
   onMount(() => {
     let renderer: ReturnType<typeof createRenderer>;
     let context = canvasRef.getContext("2d");
 
-    let datagrid: number[][] = [];
     // todo
     // let changed: Record<number, number> = {};
 
@@ -57,153 +210,13 @@
         height,
       });
 
-      function createHeroViz(grid_size: number, width: number, height: number) {
-        const grid: readonly [rows: number, cols: number] = [Math.floor(width / grid_size), Math.floor(height / grid_size)];
-        const [rows, cols] = grid;
-
-        datagrid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => 0));
-
-        let padding: number = 1;
-        const cellsize = grid_size - padding;
-        const cellOffset = grid_size + padding;
-
-        function applyBrushToMouseLocation(size: number = 2) {
-          if (last_mouse.x !== mouse.x || last_mouse.y !== mouse.y) {
-            last_mouse.x = mouse.x;
-            last_mouse.y = mouse.y;
-            const row = Math.max(0, Math.floor(mouse.x / cellOffset));
-            const col = Math.max(0, Math.floor(mouse.y / cellOffset));
-
-            if (row < rows && col < cols) {
-              datagrid[row][col] = 400 + Math.random() * 600;
-
-              const neighbors = [];
-              // Collect all valid neighboring cells within a Manhattan distance of `within`
-              for (let dr = -size; dr <= size; dr++) {
-                for (let dc = -size; dc <= size; dc++) {
-                  // Skip the center cell itself
-                  if (dr === 0 && dc === 0) continue;
-
-                  const neighborRow = row + dr;
-                  const neighborCol = col + dc;
-
-                  const isInBounds = neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols;
-
-                  const manhattanDistance = Math.abs(dr) + Math.abs(dc);
-
-                  if (isInBounds && manhattanDistance <= size) {
-                    neighbors.push([neighborRow, neighborCol]);
-                  }
-                }
-              }
-
-              for (let i = 0; i < Math.min(size, neighbors.length); i++) {
-                const idx = Math.floor(Math.random() * neighbors.length);
-                const [nr, nc] = neighbors.splice(idx, 1)[0];
-                if (datagrid[nr][nc] === 0) {
-                  datagrid[nr][nc] = Math.random() * 2000;
-                }
-              }
-            }
-          }
-        }
-
-        function update(time: TimeInfo) {
-          for (let row = 0; row < datagrid.length; row++) {
-            // const row = datagrid[row];
-            for (let col = 0; col < datagrid[row].length; col++) {
-              const value = datagrid[row][col];
-              datagrid[row][col] = decay(time.delta, value);
-            }
-          }
-
-          applyBrushToMouseLocation();
-        }
-        function render(time: TimeInfo, ctx: CanvasRenderingContext2D) {
-          for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-              const value = datagrid[row][col];
-              let alpha = 1;
-              let r: number, g: number, b: number;
-              if (value > 0) {
-                alpha = value / (1000 * 3);
-                [r, g, b] = peachColor;
-              } else {
-                [r, g, b] = squareGridColor;
-              }
-
-              ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-
-              if (value > 0) {
-                ctx.save();
-                const offset = cellsize / 2;
-                const size = Math.max(offset, cellsize * (1 - value / 1000));
-                ctx.translate(row * cellOffset + offset, col * cellOffset + offset);
-                ctx.rotate(((value / 1000) * 180 * Math.PI) / 180);
-                ctx.fillRect(-offset, -offset, size, size);
-                ctx.restore();
-              } else {
-                ctx.fillRect(row * cellOffset, col * cellOffset, cellsize, cellsize);
-              }
-            }
-          }
-        }
-
-        const paintPath: (el: Coords, size?: number) => void = ([x, y], size = 2) => {
-          mouse.x = x;
-          mouse.y = y;
-          applyBrushToMouseLocation(size);
-        };
-
-        return {
-          init: () => {
-            const dir: readonly [Coords, Coords] =
-              Math.random() > 0.2
-                ? [
-                    // top left to bottom right
-                    [rand(200), 0],
-                    [width, height],
-                  ]
-                : // bottom left to top right
-                  [
-                    [-200, height / 2 + rand(height / 2)],
-                    [width, 0],
-                  ];
-            const bezierPath = randomBezierPath(...dir);
-
-            const subPath1 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.25, 0.65)], [width, 0]);
-            const subPath2 = randomBezierPath(bezierPath[randomIntAlong(bezierPath.length - 1, 0.15, 0.85)], [width, height]);
-
-            bezierPath.forEach((el) => paintPath(el, 2));
-            subPath1.forEach((el) => paintPath(el, 2));
-            subPath2.forEach((el) => paintPath(el, 2));
-          },
-          cta: async (e: MouseEvent) => {
-            const bezierPath1 = randomBezierPath([e.screenX, e.screenY], [rand(width), Math.random() > 0.5 ? height : 0]);
-            const bezierPath2 = randomBezierPath([e.screenX, e.screenY], [rand(width), Math.random() > 0.5 ? height : 0]);
-
-            for (let row = 0; row < datagrid.length; row++) {
-              for (let col = 0; col < datagrid[row].length; col++) {
-                datagrid[row][col] = datagrid[row][col] / 2;
-              }
-            }
-
-            for (const index in bezierPath1) {
-              paintPath(bezierPath1[index], Math.floor(rand(3)));
-              paintPath(bezierPath2[index], Math.floor(rand(3)));
-              await wait(0.5);
-            }
-          },
-          render,
-          update,
-        };
-      }
-
-      let app = createHeroViz(size, width, height);
+      app = createHeroViz(size, width, height);
 
       const unsub = renderer.onFrame((time, ctx) => {
-        app.update(time);
-        app.render(time, ctx);
+        if (app) {
+          app.update(time);
+          app.render(time, ctx);
+        }
       });
 
       const ctaButton = document.querySelector<HTMLButtonElement>("a.cta");

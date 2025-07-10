@@ -14,9 +14,12 @@
 
   const meta = getMeta<typeof of>(of, name);
 
-  // apply args initially
   onMount(() => {
-    $meta.args = args;
+    // CASE: IF we have defined `args` on our story, we want to apply them to our meta
+    //       otherwise, we defer to the defaults from our defineMeta
+    if (Object.keys(args).length > 0) {
+      $meta.args = args;
+    }
   });
 
   $: finalArgs = {
@@ -26,12 +29,14 @@
 </script>
 
 <Isolate {name}>
-  <div class={`story-root ${classNames}`} {id} data-story={name}>
-    <h5 class="story-name">{name}</h5>
-    <div class="story" data-name={name}>
-      <slot args={finalArgs}>
-        <svelte:component this={of} {...finalArgs} />
-      </slot>
+  {#key $meta.key}
+    <div class={`story-root ${classNames}`} {id} data-story={name}>
+      <h5 class="story-name">{name}</h5>
+      <div class="story" data-name={name}>
+        <slot args={finalArgs}>
+          <svelte:component this={of} {...finalArgs} />
+        </slot>
+      </div>
     </div>
-  </div>
+  {/key}
 </Isolate>
