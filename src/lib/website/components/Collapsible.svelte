@@ -46,6 +46,5 @@
   .content {
     interpolate-size: allow-keywords;
     height: auto;
-    margin-bottom: 1rem;
   }
 </style>
