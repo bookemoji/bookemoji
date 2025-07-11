@@ -15,8 +15,8 @@
 
 <h2>Your Opportunity to Customize</h2>
 <p>
-  The current simplicity of this example is by design—it's a blank canvas waiting for your brand's visual style! Think of it as a <em>white-label tool</em>,
-  ready to be shaped specifically for you and your team.
+  The current simplicity of this example is by design—it's a blank canvas. Think of it as a <em>white-label tool</em>, ready to be shaped specifically for you
+  and your team.
 </p>
 
 <p style="color: var(--green-6);">Explore the stories to see what the initial installation experience looks like before any customizations.</p>
