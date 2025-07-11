@@ -18,6 +18,11 @@ a[href] {
   color: var(--link, var(--brand));
 }
 
+/* links in content have underlines */
+p a[href] {
+  text-decoration: underline;
+}
+
 :where(a):where([href]):visited {
   text-decoration-color: var(--link-visited);
 }

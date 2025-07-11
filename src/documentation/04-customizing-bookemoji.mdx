@@ -1,0 +1,71 @@
+# Customizing bookemoji
+
+Re-iterating the core idea, `bookemoji` is a library within your sveltekit application.
+
+## Base Styles
+
+`bookemoji` inherits css you have loaded globally via `app.html` or through vite imports within your `+layout.svelte`.
+
+## Styling `bookemoji` components globally
+
+You can style bookemoji components by their classnames via a globally loaded css file.
+
+Copy the below CSS and use it as a kick-off point.
+
+```css
+.book-root .story-name,
+.book-root .story-list {
+}
+
+.book-root :where(h1, h2, h3, h4, h5, h6) {
+}
+
+.controls {
+}
+
+.story {
+}
+
+.story-root {
+}
+
+.story-root.minimal .story {
+}
+
+.story-name {
+}
+
+.controls {
+}
+
+.form-group {
+}
+
+.control > span {
+}
+
+.control {
+}
+
+.control label {
+}
+
+.controls-title {
+}
+
+.controls .actions {
+}
+```
+
+## Styling `bookemoji` components
+
+Reference the source files for the various `bookemoji` components' html and css.
+
+- [`&lt;Story&gt;` source on Github](https://github.com/bookemoji/bookemoji/blob/main/src/lib/components/v4/Story.svelte)
+- [`&lt;Controls&gt;` source on Github](https://github.com/bookemoji/bookemoji/blob/main/src/lib/components/v4/Controls.svelte)
+- [`&lt;StoryList&gt;` source on Github](https://github.com/bookemoji/bookemoji/blob/main/src/lib/components/v4/StoryList.svelte)
+- [`&lt;Variant&gt;` source on Github](https://github.com/bookemoji/bookemoji/blob/main/src/lib/components/v4/Variant.svelte)
+
+## Styling within `+layout.svelte`
+
+You can style bookemoji directly within the `<style>` tags of `+layout.svelte` files, too. Though, you may need to rely on `:global( ... )` selector more often.
