@@ -19,14 +19,14 @@
   ready to be shaped specifically for you and your team.
 </p>
 
-<p style="color: var(--green-6);">**Explore the stories** section to see what the initial installation experience looks like before any customizations.</p>
+<p style="color: var(--green-6);">Explore the stories to see what the initial installation experience looks like before any customizations.</p>
 
 <hr />
 
 <h3>Next Steps</h3>
 <p>
-  Once you've installed bookemoji in your project, dive into the **documentation** to learn how to style, enhance, and fully integrate it to meet your specific
-  needs.
+  Once you've installed bookemoji in your project, dive into the [documentation](/docs) to learn how to style, enhance, and fully integrate it to meet your
+  specific needs.
 </p>
 
 <h3>Issues?</h3>
