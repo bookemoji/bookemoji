@@ -48,10 +48,8 @@
   <div class="about-bookemoji">
     <h3>About</h3>
     <p>
-      📕 Bookemoji is a place to showcase, collaborate, and develop the technical aspects of user interfaces using <a
-        href="https://svelte.dev/docs/kit/introduction#What-is-Svelte"
-        target="_blank">svelte</a
-      >
+      <span class="embellish">📚 bookemoji</span> is a tool to showcase, collaborate, and develop the technical aspects of user interfaces using
+      <a href="https://svelte.dev/docs/kit/introduction#What-is-Svelte" target="_blank">svelte</a>
       and
       <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>.
     </p>
@@ -112,6 +110,7 @@
 
   .book-list {
     padding: 0 0 0 1rem;
+    line-height: var(--font-lineheight-4);
   }
 
   .npm-command {
@@ -171,5 +170,13 @@
     padding-block: var(--size-3);
     border-radius: var(--radius-2);
     box-shadow: var(--shadow-2);
+  }
+
+  .embellish {
+    padding: var(--size-1) var(--size-2);
+    border-radius: 12px;
+    border: 1px solid var(--brand);
+    line-height: var(--font-lineheight-4);
+    color: var(--brand);
   }
 </style>
