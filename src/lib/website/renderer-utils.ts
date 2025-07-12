@@ -4,6 +4,10 @@ export const wait = (duration: number): Promise<void> => {
   });
 };
 
+export const nextFrame = () => {
+  return new Promise<void>((resolve) => globalThis.requestAnimationFrame(() => resolve()));
+};
+
 export const decay = (t: number, value: number): number => {
   return Math.max(0, value - Math.random() * 4);
 };

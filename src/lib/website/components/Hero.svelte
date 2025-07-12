@@ -2,7 +2,7 @@
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
   import { createRenderer, type TimeInfo } from "./renderer.js";
-  import { decay, wait } from "../renderer-utils.js";
+  import { decay, nextFrame, wait } from "../renderer-utils.js";
   import Icon from "../icons/Icon.svelte";
 
   export let size: number = 32;
@@ -87,11 +87,11 @@
             }
           }
 
-          for (let i = 0; i < Math.min(size, neighbors.length); i++) {
-            const idx = Math.floor(Math.random() * neighbors.length);
+          for (let i = 0; i < Math.min(size, neighbors.length - 1); i++) {
+            const idx = Math.floor(Math.random() * neighbors.length - 1);
             const [nr, nc] = neighbors.splice(idx, 1)[0];
             if (datagrid[nr][nc] === 0) {
-              datagrid[nr][nc] = Math.random() * 2000;
+              datagrid[nr][nc] = Math.random() * 3000;
             }
           }
         }
@@ -181,7 +181,7 @@
         for (const index in bezierPath1) {
           paintPath(bezierPath1[index], Math.floor(rand(3)));
           paintPath(bezierPath2[index], Math.floor(rand(3)));
-          await wait(0.5);
+          await wait(1);
         }
       },
       render,
@@ -223,6 +223,7 @@
       const subCTAButton = document.querySelector<HTMLButtonElement>("button.copy-btn");
 
       ctaButton?.addEventListener("mouseover", app.cta);
+      ctaButton?.addEventListener("mouseout", app.cta);
       subCTAButton?.addEventListener("click", app.cta);
 
       const unsubResize = renderer.onResize((w, h) => {
@@ -252,6 +253,7 @@
         unsubResize();
         unsub();
         ctaButton?.removeEventListener("mouseover", app.cta);
+        ctaButton?.removeEventListener("mouseout", app.cta);
         subCTAButton?.removeEventListener("click", app.cta);
         document.querySelector<HTMLButtonElement>("button#toggle-pause")?.removeEventListener("click", toggle);
       };
