@@ -14,18 +14,22 @@
 
   const meta = getMeta<typeof of>(of, name);
 
-  onMount(() => {
-    // CASE: IF we have defined `args` on our story, we want to apply them to our meta
-    //       otherwise, we defer to the defaults from our defineMeta
-    if (Object.keys(args).length > 0) {
-      $meta.args = args;
-    }
-  });
-
   $: finalArgs = {
     ...$meta.args,
     ...args,
   };
+
+  // i'm not sure why or if this code needs to be within onMount
+  onMount(() => {
+    // CASE: IF we have defined `args` on our story, we want to apply them to our meta
+    //       otherwise, we defer to the defaults from our defineMeta
+    $meta.initialArgs = { ...$meta.args, ...args };
+    if (Object.keys(args).length > 0) {
+      $meta.args = args;
+    }
+
+    $meta.ready = true;
+  });
 </script>
 
 <Isolate {name}>

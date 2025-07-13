@@ -1,12 +1,13 @@
 import { browser } from "$app/environment";
 import { getContext, type SvelteComponent, type Component, type ComponentType } from "svelte";
 
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
 import { parse } from "node-html-parser";
 import { base, loadStories } from "virtual:bookemoji";
 import type { ComponentMeta, ComponentMetaStore, MetaOptions } from "./meta.js";
+import { page } from "$app/stores";
 
 export type * from "./meta.js";
 /**
@@ -50,7 +51,6 @@ export const createStoryUrl = (base: string, storyName: string) => {
 export const createVariantUrl = (base: string, storyName: string, variantName: string) => {
   const { story } = createStoryUrl(base, storyName);
   const variantParam: string = nameToId(variantName.toLowerCase());
-  console.log("Creating variant url for", variantName, "as", variantParam);
 
   return {
     /**
@@ -133,10 +133,18 @@ export const findStoryFiles = async () => {
   return bookList;
 };
 
+const SSR_ComponentMetaStore: ComponentMetaStore = writable({
+  args: {},
+  initialArgs: {},
+  argTypes: {},
+  ready: false,
+}) as ComponentMetaStore;
+
 export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(definition: MetaOptions<Comp>) {
   if (!browser) {
     return;
   }
+
   const meta = getContext<Map<SvelteComponent | Component<any, any>, Required<ComponentMeta>>>("bookemoji.meta");
 
   if (!meta) {
@@ -147,6 +155,8 @@ export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(d
 
   const argData: Required<ComponentMeta> = {
     key: "initial",
+    ready: false,
+    initialArgs: structuredClone(componentArgs.args ?? {}),
     args: componentArgs.args ?? {},
     argTypes: componentArgs.argTypes ?? {},
   };
@@ -157,10 +167,7 @@ export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(d
 
 export function getMeta<T extends Component | ComponentType<SvelteComponent>>(component: T, variant: string): ComponentMetaStore {
   if (!browser) {
-    return writable({
-      args: {},
-      argTypes: {},
-    }) as ComponentMetaStore;
+    return SSR_ComponentMetaStore;
   }
 
   const meta = getContext<Map<any, Required<ComponentMeta>>>("bookemoji.meta");
