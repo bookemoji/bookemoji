@@ -51,7 +51,8 @@
       <span class="embellish">📚 bookemoji</span> is a tool to showcase, collaborate, and develop the technical aspects of user interfaces using
       <a href="https://svelte.dev/docs/kit/introduction#What-is-Svelte" target="_blank">svelte</a>
       and
-      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>.
+      <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>. Like a headless alternative to storybookjs or
+      histoire.
     </p>
   </div>
 
