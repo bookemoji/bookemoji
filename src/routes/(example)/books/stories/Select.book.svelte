@@ -10,42 +10,41 @@
     component: Select,
     argTypes: {
       value: { type: "select", options },
-      multiple: { type: "boolean" },
+      multiple: { type: "boolean", disabled: true },
       disabled: { type: "boolean" },
     },
     args: {
-      value: null,
+      value: "",
     },
   });
 </script>
 
-<Story of={Select} name="Basic" args={{ variant: "primary", size: "medium" }} let:args>
+<Story of={Select} name="Basic" let:args>
   <Select {...args}>
-    <option disabled selected value={null}>Select an Option</option>
+    <option disabled selected value={""}>Select an Option</option>
     <option value="Option 1">Option 1</option>
     <option value="Option 2">Option 2</option>
     <option value="Option 3">Option 3</option>
   </Select>
 </Story>
-
 <Controls of={Select} story="Basic" />
-
-<Story of={Select} name="Multiple" args={{ multiple: true }} let:args>
-  <Select {...args}>
-    <option disabled selected value={null}>Select an Option</option>
-    <option value="Option 1">Option 1</option>
-    <option value="Option 2">Option 2</option>
-    <option value="Option 3">Option 3</option>
-  </Select>
-</Story>
-<Controls of={Select} story="Multiple" />
 
 <Story of={Select} name="Disabled" args={{ disabled: true }} let:args>
   <Select {...args}>
-    <option disabled selected value={null}>Select an Option</option>
+    <option disabled selected value={""}>Select an Option</option>
     <option value="Option 1">Option 1</option>
     <option value="Option 2">Option 2</option>
     <option value="Option 3">Option 3</option>
   </Select>
 </Story>
 <Controls of={Select} story="Disabled" />
+
+<Story of={Select} name="Multiple" args={{ multiple: true, value: [] }} let:args>
+  <Select {...args}>
+    <option disabled selected value={""}>Select an Option</option>
+    <option value="Option 1">Option 1</option>
+    <option value="Option 2">Option 2</option>
+    <option value="Option 3">Option 3</option>
+  </Select>
+</Story>
+<Controls of={Select} story="Multiple" argTypes={{ value: { type: "multiselect", options } }} />
