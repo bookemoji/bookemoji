@@ -2,9 +2,7 @@ import type * as Kit from "@sveltejs/kit";
 import { error, json } from "@sveltejs/kit";
 import { findStoryFiles, type BookEndpointResponse } from "./book-emoji.js";
 import "./bookemoji-module.d.ts";
-import { stories } from "virtual:bookemoji";
-// import { base, stories } from "virtual:bookemoji";
-const base = "/books";
+import { stories, base } from "virtual:bookemoji";
 
 import type {
   StoryLayoutParams,

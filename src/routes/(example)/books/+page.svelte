@@ -31,4 +31,4 @@
 
 <h3>Issues?</h3>
 
-[Get involved with us on Github](https://github.com/bookemoji/bookemoji)
+<a href="https://github.com/bookemoji/bookemoji">Get involved with us on Github</a>

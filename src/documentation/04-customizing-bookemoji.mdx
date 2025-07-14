@@ -1,6 +1,7 @@
 # Customizing bookemoji
 
 Re-iterating the core idea, `bookemoji` is a library within your sveltekit application.
+The visual style can be rewritten to match your brand, and there are plenty of locations to alter the functionality.
 
 ## Base Styles
 
@@ -69,3 +70,52 @@ Reference the source files for the various `bookemoji` components' html and css.
 ## Styling within `+layout.svelte`
 
 You can style bookemoji directly within the `<style>` tags of `+layout.svelte` files, too. Though, you may need to rely on `:global( ... )` selector more often.
+
+
+## Creating groupings of stories
+
+You can render your stories however you please within your `books/+layout.svelte` file. <br> The `<StoryList>` component is provided as a easy default for listing components,  but you can write your own very easily.
+
+Here is an example of rewriting it with a `<Collapsible>` component around each story name, hiding its variants.
+```svelte
+<script lang="ts">
+    export let data: LayoutData;
+</script>
+
+<div class="sidebar">
+    {#each data.books as book}
+        <div class="book-item">
+            <Collapsible open>
+            <svelte:fragment slot="header">
+                <a class="book-title" href={book.route} class:active={$page.url.pathname === book.route}>{book.name}</a>
+            </svelte:fragment>
+
+            {#each Object.entries(book.variants) as [path, variant]}
+                <div class="variant-item">
+                <a class="variant-title" href={variant.route} class:active={$page.url.pathname === variant.route}>{variant.name}</a>
+                </div>
+            {/each}
+            </Collapsible>
+        </div>
+    {/each}
+</div>
+
+<slot />
+```
+
+
+## Sorting Stories
+
+You can sort stories at many places within bookemoji.
+Simplest way is you can sort or re-organize `data.books` within `+layout.svelte`'s within your bookemoji, or within `books.json/+server.ts`.
+
+```svelte
+<script lang="ts">
+    export let data: LayoutData;
+    const books = data.books.sort((a, b) => a.name.localeCompare(b.name));
+</script>
+
+{#each books as book}
+...
+{/each}
+```
