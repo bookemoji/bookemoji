@@ -1,5 +1,6 @@
 <script lang="ts">
   import { base } from "$app/paths";
+  import { createCopyAction } from "$lib/utils.js";
   import Hero from "$lib/website/components/Hero.svelte";
   import Icon from "$lib/website/icons/Icon.svelte";
   import { wait } from "$lib/website/renderer-utils.js";
@@ -9,24 +10,7 @@
   // export let data: PageData;
   import { MetaTags } from "svelte-meta-tags";
 
-  let copied: boolean = false;
-  let lastClicked: number = Date.now();
-  async function copy() {
-    lastClicked = Date.now();
-    await navigator.clipboard.writeText(document.querySelector(".npm-command")?.textContent?.trim() ?? "");
-    if ("vibrate" in navigator) {
-      await navigator.vibrate(50);
-    }
-
-    if (!copied) {
-      copied = true;
-    }
-    await wait(1200);
-
-    if (Date.now() - lastClicked > 1000) {
-      copied = false;
-    }
-  }
+  const { copy, copied } = createCopyAction(() => document.querySelector(".npm-command")?.textContent?.trim() ?? "", 1000);
 </script>
 
 <MetaTags title="bookemoji" />
@@ -38,7 +22,7 @@
     <h4 class="copy-cmd">
       <code class="npm-command">npm create bookemoji@latest</code>
       <button type="button" on:click={copy} class="copy-btn" data-rybbit-event="copy_npm_create_cmd">
-        <Icon name={copied ? "check" : "content_copy"} size={"1.75rem"} color={copied ? "var(--teal-5)" : "currentColor"} />
+        <Icon name={$copied ? "check" : "content_copy"} size={"1.75rem"} color={$copied ? "var(--teal-5)" : "currentColor"} />
       </button>
     </h4>
   </div>
