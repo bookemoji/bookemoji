@@ -69,8 +69,12 @@ export const createVariantUrl = (base: string, storyName: string, variantName: s
 export const discoverVariants = (name: string, component: Component): string[] => {
   let html: string;
   if (component instanceof Function) {
-    const result = render(component, { context: new Map([["bookemoji.meta", {}]]) });
-    html = result.body;
+    try {
+      const result = render(component, { context: new Map([["bookemoji.meta", {}]]) });
+      html = result.body;
+    } catch (ex: unknown) {
+      console.log(`Failed to SSR "${name}". Reason: "${(ex as Error).message}"`);
+    }
   } else {
     html = `<p>Component was not renderable</p><p>Component is of type "${typeof component}"`;
   }

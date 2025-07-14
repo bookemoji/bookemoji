@@ -48,21 +48,11 @@
   let hasChanged: boolean = false;
   let initialValue: Record<string, any> | undefined = undefined;
   let errors: Error[] = [];
+  let isIsolated: boolean;
 
   $: argTypeEntries = Object.entries({ ...$meta.argTypes, ...argTypes }).filter((kvp): kvp is [string, ArgTypeControl] => kvp[1] !== undefined);
   $: if ($meta.ready && initialValue === undefined) {
-    // in the case that the user provides argTypes, we require them to provide a matching `args` as well
-    if (argTypes !== undefined) {
-      for (let key in argTypes) {
-        if (typeof $meta.args[key] === "undefined") {
-          errors = [
-            ...errors,
-            new Error(`<Control story="${story}"> has an argType override for "${key}", but the <Story name="${story}"> does not have an arg.`),
-          ];
-        }
-      }
-    }
-    initialValue = { ...$meta.initialArgs, ...$meta.args };
+    onReady();
   }
 
   $: hasChanged = calcHasChanged(initialValue !== undefined, initialValue, $meta.args);
@@ -102,7 +92,7 @@
       }
     }
 
-    $meta.args = nextArgs;
+    $meta.args = { ...$meta.args, ...nextArgs };
   }
 
   // svelte 5.6+ has bind:value={get, set} pattern for this to be unnessecary
@@ -123,7 +113,7 @@
   }
 
   const onFieldChange: FormEventHandler<HTMLFieldSetElement> = (e) => {
-    if (syncToUrl && initialValue !== undefined) {
+    if (isIsolated && syncToUrl && initialValue !== undefined) {
       let search = new URLSearchParams("");
 
       const args = $meta.args;
@@ -132,17 +122,19 @@
         const value = args[key];
 
         const hasInitialValue = key in initialValue;
-        if (hasInitialValue && value !== initialValue[key]) {
-          if (Array.isArray(value) && value.length > 0) {
-            value.forEach((v) => search.append(`${key}`, `${v}`));
+        if (!hasInitialValue) {
+          // CASE: don't include falsy values that are not in our initialValues
+          if (value) {
+            search.set(key, `${value}`);
+          }
+        } else if (value !== initialValue[key]) {
+          if (Array.isArray(value)) {
+            console.log("array value:", value);
+            value.filter((v) => !(v === "" || v === undefined || v === null)).forEach((v) => search.append(`${key}`, `${v}`));
           } else if (value !== undefined && value !== "" && value !== null) {
-            search.set(`${key}`, `${value}`);
+            search.set(key, `${value}`);
           }
         }
-      }
-
-      if (search.size > 0) {
-        search.set("variant", story);
       }
 
       const searchString = `?${search.toString()}`;
@@ -155,29 +147,58 @@
 
   const onSubmit: FormEventHandler<HTMLFormElement> = () => {};
 
-  onMount(() => {
-    if (browser) {
-      const search = new URLSearchParams(window.location.search);
-      const variant = search.get("variant") ?? "";
-      tick().then(() => {
-        if (search.size > 0 && variant === story) {
-          search.delete("variant");
-
-          Array.from(search.entries()).forEach(([key, value]) => {
-            if ($meta.argTypes[key]) {
-              if ($meta.argTypes[key].type === "text") {
-                $meta.args[key] = value;
-              } else if ($meta.argTypes[key].type === "boolean") {
-                $meta.args[key] = value === "true";
-              } else if ($meta.argTypes[key].type === "number") {
-                $meta.args[key] = value.includes(".") ? parseFloat(value) : parseInt(value, 10);
-              }
-            }
-          });
+  /**
+   * things that would be within onMount if the required structures and data were ready at that time
+   */
+  async function onReady() {
+    // CASE: Enforce argTypes and args
+    // in the case that the user provides argTypes, we require them to provide a matching `args` as well
+    if (argTypes !== undefined) {
+      for (let key in argTypes) {
+        if (typeof $meta.args[key] === "undefined") {
+          errors = [
+            ...errors,
+            new Error(`<Control story="${story}"> has an argType override for "${key}", but the <Story name="${story}"> does not have an arg.`),
+          ];
         }
-      });
+      }
     }
-  });
+
+    // FEAT: set initialValue _after_ the component is ready
+    initialValue = { ...$meta.initialArgs, ...$meta.args };
+
+    await tick();
+
+    // FEAT: Set control args based on url params
+    if (browser && isIsolated) {
+      const search = new URLSearchParams(window.location.search);
+
+      if (search.size > 0) {
+        Array.from(search.entries()).forEach(([key, value]) => {
+          console.log("Attemptint to apply", key, "=", value);
+          const _argTypes = { ...$meta.argTypes, ...argTypes };
+          if (_argTypes[key]) {
+            const type = _argTypes[key].type;
+
+            if (type === "text") {
+              $meta.args[key] = value;
+            } else if (type === "boolean") {
+              $meta.args[key] = value === "true";
+            } else if (type === "number") {
+              $meta.args[key] = value.includes(".") ? parseFloat(value) : parseInt(value, 10);
+            } else if (type === "select") {
+              $meta.args[key] = value;
+            } else if (type === "multiselect") {
+              const values = search.getAll(key);
+              $meta.args[key] = values;
+            } else {
+              const _exhausted: never = type;
+            }
+          }
+        });
+      }
+    }
+  }
 </script>
 
 {#if errors.length > 0}
@@ -189,7 +210,7 @@
 {/if}
 
 {#if $meta.ready}
-  <Isolate name={story}>
+  <Isolate bind:isIsolated name={story}>
     <form class="controls-root" on:submit|preventDefault={onSubmit} bind:this={formRef}>
       <fieldset class="controls" on:change={onFieldChange}>
         <legend class="controls-title">Controls</legend>
