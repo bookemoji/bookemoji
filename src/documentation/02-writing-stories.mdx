@@ -1,4 +1,3 @@
-
 # Writing Stories
 
 After you've installed and configured bookemoji you'll need to know how to write a story.
@@ -8,12 +7,9 @@ Writing stories is intended to be fairly translatable to stories written in Stor
 ## What is a Story
 
 <details style="margin-bottom: 1rem;">
-    <summary>
-        Stories are simply svelte components
-    </summary>
-    Stories primarily allow a component to have its props rendered dynamically, and externally controlled.
+  <summary>Stories are simply svelte components</summary>
+  Stories primarily allow a component to have its props rendered dynamically, and externally controlled.
 </details>
-
 
 For bookemoji, a story must:
 
@@ -31,18 +27,15 @@ First,
 1. Run `npm run dev` if not already
 1. Create a new file within your stories directory, e.g. `Example.book.svelte`
 
-
-<p style="margin-top:1rem;">
-    Then, type or paste the below code sample into the file. 
-</p>
+<p style="margin-top:1rem;">Then, type or paste the below code sample into the file.</p>
 
 Replace the `MyComponent` reference with a real import of a component.
 
 ```svelte
 <script lang="ts">
-    import { Story, Controls, defineMeta } from "bookemoji/components/v4";
-    import MyComponent from "$lib/path/to/your/components/Component.svelte"; 
-    // if your components aren't in $lib, that's fine too!
+  import { Story, Controls, defineMeta } from "bookemoji/components/v4";
+  import MyComponent from "$lib/path/to/your/components/Component.svelte";
+  // if your components aren't in $lib, that's fine too!
 </script>
 
 <Story name="Default" of={MyComponent} />
@@ -52,15 +45,17 @@ Replace the `MyComponent` reference with a real import of a component.
     <summary>You can write stories with either svelte 4 or svelte 5</summary>
 
 Svelte 5 path
+
 ```ts
 import { ... } from "bookemoji/components";
 ```
 
+Svelte 4 path
 
-Svelte 4 path 
 ```ts
 import { ... } from "bookemoji/components/v4";
 ```
+
 </details>
 
 If your component requires more setup, you can use the slot of the `Story` to do so. See below as an example.
@@ -69,14 +64,14 @@ If your component requires more setup, you can use the slot of the `Story` to do
 ...
 
 <Story name="Default" of={Tab} let:args>
-    <Figure>
-        <Image {...args} />
-    </Figure>
+  <Figure>
+    <Image {...args} />
+  </Figure>
 </Story>
 ```
 
 ## Using `args`
- 
+
 `args` allow you to present variants distinctly.
 They generally are your props, but you can use them creatively to make better stories.
 
@@ -91,12 +86,11 @@ They generally are your props, but you can use them creatively to make better st
 </Story>
 ```
 
-
 ## Using `defineMeta`, `argTypes`, and `Controls`
 
 With the variants rendering, it'd be nice if you can present a component and manipulate it from the UI—a key feature of component workshops.
 
-That's where `argTypes` comes in. To establish `argTypes` we use the `defineMeta` function. 
+That's where `argTypes` comes in. To establish `argTypes` we use the `defineMeta` function.
 Here is the source of the [example Button](/books/Button) as an example
 
 ```svelte
@@ -131,7 +125,6 @@ Here is the source of the [example Button](/books/Button) as an example
 <Story of={Button} name="Tertiary" args={{ variant: "tertiary", size: "medium", text: "Tertiary Button" }} />
 
 <Controls of={Button} story="Tertiary" />
-
 ```
 
 In the sample, the `defineMeta` is what allows `Controls` to know the types of `args` of the components.

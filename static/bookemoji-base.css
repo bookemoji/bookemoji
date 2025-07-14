@@ -12,10 +12,9 @@ body {
 }
 
 /* When a story is right after a controls, give them space to breathe */
-.controls-root+.story-root {
+.controls-root + .story-root {
   margin-top: 8em;
 }
-
 
 .story {
   padding: 1rem;
@@ -37,7 +36,6 @@ body {
 }
 
 .story-root.minimal .story {
-
   padding: 0;
   border: none;
   border-radius: 0;
@@ -61,7 +59,7 @@ body {
   align-items: center;
 }
 
-.control>span {
+.control > span {
   cursor: pointer;
 }
 
