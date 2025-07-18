@@ -1,9 +1,8 @@
 <h1>Welcome to Your Customizable Component Library</h1>
 
 <p>
-  This page demonstrates the <strong>default "bookemoji" component workshop</strong>—showing how plain the initial install is. It currently uses the website's
+  This page demonstrates the <strong>default bookemoji component workshop</strong>—showing how plain the initial install is. It currently uses the website's
   default styling and has limited functionality.
-  <span style="color: var(--stone-6);">It's also not optimized for mobile devices—Sorry!.</span>
 </p>
 
 <p>
