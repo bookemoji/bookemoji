@@ -103,12 +103,18 @@
 </div>
 
 <style>
-  .book-layout {
-    display: grid;
-    grid-template-columns: 18rem 1fr;
-    min-height: 100vh;
-    overflow: hidden;
-    border-top: 1px solid var(--surface-2);
+  @media screen and (min-width: 60rem) {
+    .book-layout {
+      display: grid;
+      grid-template-columns: 18rem 1fr;
+      min-height: 100vh;
+      overflow: hidden;
+      border-top: 1px solid var(--surface-2);
+    }
+  }
+
+  :global(.story-list li) {
+    max-inline-size: 100%;
   }
 
   .sidebar {

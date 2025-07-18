@@ -62,6 +62,10 @@
     margin: 0;
   }
 
+  .hero {
+    padding: 0rem 5vw;
+  }
+
   .hero :where(h1) {
     font-size: var(--font-size-fluid-3);
   }
@@ -83,6 +87,10 @@
       padding: 1rem 2rem 2rem 2rem;
       justify-content: center;
       gap: 2rem;
+    }
+
+    .hero {
+      padding: 0rem 0;
     }
   }
 
@@ -121,6 +129,13 @@
 
   .copy-cmd {
     position: relative;
+    display: none;
+  }
+
+  @media screen and (min-width: 60rem) {
+    .copy-cmd {
+      display: initial;
+    }
   }
 
   .copy-btn {
@@ -132,6 +147,7 @@
     background: var(--surface-1);
     border-color: var(--surface-1);
   }
+
   .npm-command {
     display: block;
     padding: var(--size-3) var(--size-6);
