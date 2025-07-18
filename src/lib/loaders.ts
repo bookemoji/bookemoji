@@ -15,6 +15,8 @@ import type {
   VariantLayoutOutputData,
 } from "./sveltekit-runtime-types.js";
 import type { Component } from "svelte";
+import { read } from "$app/server";
+import { normalize, resolve } from "path";
 
 /**
  * Loads books via API endpoint
@@ -38,9 +40,34 @@ export const createServerGET = <T extends Kit.RequestHandler = Kit.RequestHandle
     // const config: BookEmojiConfig = bookEmojiModule.config;
     const books = await findStoryFiles();
 
+    console.log("getting sources?");
+    const sources = (
+      await Promise.allSettled(
+        books.map(async (book) => {
+          try {
+            const filePath = book.path.replace("./src", "/src");
+            console.log("book.name", book.name);
+            console.log("filepath:", filePath);
+
+            const sourceFile = await import(/* @vite-ignore */ filePath + "?raw");
+            console.log("sourceFile for ", book.name, sourceFile);
+            return sourceFile;
+            // const sourceText = await read(sourceFile);
+            // return sourceText.text();
+          } catch (ex: unknown) {
+            console.log(ex as Error);
+            console.log("Could not load", book.name);
+          }
+        }),
+      )
+    )
+      .map((a) => (a.status === "fulfilled" ? a.value : null))
+      .filter((a): a is string => a !== null);
+
     return json({
       base,
       books,
+      sources,
     });
   };
 
