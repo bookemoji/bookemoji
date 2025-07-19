@@ -45,11 +45,10 @@
     <ul class="book-list">
       <li>Flexible and strong integration with sveltekit</li>
       <li>Support for Svelte 4.x and 5.x</li>
-      <li>unstyled components, style freely 🐎</li>
+      <li>unstyled by default, style freely 🐎</li>
       <li>No JSX, no runtime React errors</li>
-      <li>Low Dependencies</li>
+      <li>Open Source, few dependencies</li>
       <li>Very little magic — enough for sorcerers to wield</li>
-      <li>Open Source</li>
     </ul>
   </div>
 </div>
