@@ -6,13 +6,13 @@ body {
   --font-system-ui: "Quicksand", "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   body {
     --brand: inherit;
     --link: inherit;
     --link-visited: inherit;
   }
-}
+} */
 
 a[href] {
   color: var(--link, var(--brand));
