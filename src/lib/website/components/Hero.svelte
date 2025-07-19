@@ -5,7 +5,7 @@
   import { decay, nextFrame, wait } from "../renderer-utils.js";
   import Icon from "../icons/Icon.svelte";
 
-  export let size: number = 32;
+  export let size: number = 14;
 
   let canvasRef: HTMLCanvasElement;
   let containerRef: HTMLDivElement;
@@ -26,7 +26,7 @@
 
   type RGBColor = readonly [r: number, g: number, b: number];
 
-  const peachColor: RGBColor = [250, 136, 107];
+  const peachColor: RGBColor = [130, 110, 120];
   const squareDarkMode: RGBColor = [30, 40, 50];
   const squareLightMode: RGBColor = [240, 250, 255];
   let squareGridColor: RGBColor =
