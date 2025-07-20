@@ -35,7 +35,7 @@ export const createCopyAction = (getText: () => string | Promise<string>, deboun
   let lastInteraction: number = Date.now();
 
   /**
-   * Copy functon which can be used as an event handler—like `on:click={copy}`, but also allow imperative usage —like `onCopy() { copy("text"); }`
+   * Copy function which can be used as an event handler—like `on:click={copy}`, but also allow imperative usage —like `onCopy() { copy("text"); }`
    */
   type CopyFunction = {
     (text?: string): Promise<void> | void;
