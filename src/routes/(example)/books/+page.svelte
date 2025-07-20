@@ -24,8 +24,7 @@
 
 <h3>Next Steps</h3>
 <p>
-  Once you've installed bookemoji in your project, dive into the [documentation](/docs) to learn how to style, enhance, and fully integrate it to meet your
-  specific needs.
+  Once you've installed bookemoji in your project, dive into the <a href="/docs">documentation</a> to continue learning how to style and perform common tasks.
 </p>
 
 <h3>Issues?</h3>
