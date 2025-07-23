@@ -135,8 +135,6 @@
 
   @media (prefers-color-scheme: dark) {
     .sidebar.sparkling {
-      filter: blur(0) saturate(4) brightness(2.5);
-      box-shadow: 0px 0px 40px var(--surface-3);
       transition: 0.8s ease-in all;
     }
   }

@@ -75,7 +75,7 @@
     $meta.key = `${Date.now()}`;
   }
 
-  // per svelte docs: use reset sparingyl — so we will instead reset based on data instead of form reset
+  // per svelte docs: use reset sparingly — so we will instead reset based on data instead of form reset
   function onReset() {
     // todo: build url so we can clear this "?"
     replaceState("?", {});
@@ -96,7 +96,7 @@
   }
 
   // svelte 5.6+ has bind:value={get, set} pattern for this to be unnessecary
-  function onNumberInput(key: string, control: NumberControl): FormEventHandler<HTMLInputElement> {
+  function createNumberInputHandler(key: string, control: NumberControl): FormEventHandler<HTMLInputElement> {
     return (event) => {
       if (control.required && event.currentTarget?.value === null) {
         event.currentTarget.value = `${control.min ?? 0}`;
@@ -175,7 +175,6 @@
 
       if (search.size > 0) {
         Array.from(search.entries()).forEach(([key, value]) => {
-          console.log("Attemptint to apply", key, "=", value);
           const _argTypes = { ...$meta.argTypes, ...argTypes };
           if (_argTypes[key]) {
             const type = _argTypes[key].type;
@@ -199,6 +198,14 @@
       }
     }
   }
+
+  function onSelectInput(key: string, target: HTMLSelectElement) {
+    $meta.args[key] = target.value;
+  }
+
+  function onInputInput(key: string, target: HTMLInputElement) {
+    $meta.args[key] = target.checked;
+  }
 </script>
 
 {#if errors.length > 0}
@@ -221,7 +228,13 @@
             <label class="control" class:disabled={"disabled" in control ? (control.disabled ?? false) : false}>
               <span>{key}</span>
               {#if control.type === "select"}
-                <select {id} bind:value={$meta.args[key]}>
+                <select
+                  {id}
+                  value={$meta.args[key]}
+                  on:input={(e) => {
+                    onSelectInput(key, e.currentTarget);
+                  }}
+                >
                   <option value="" selected>Not Set</option>
                   {#each control.options as option}
                     <option value={option}>{option}</option>
@@ -230,7 +243,7 @@
                   {/each}
                 </select>
               {:else if control.type === "multiselect"}
-                <select multiple {id} bind:value={$meta.args[key]}>
+                <select multiple {id} value={$meta.args[key]} on:input={(e) => onSelectInput(key, e.currentTarget)}>
                   <option value="" selected>Not Set</option>
                   {#each control.options as option}
                     <option value={option}>{option}</option>
@@ -241,9 +254,16 @@
               {:else if control.type === "text"}
                 <input {id} type="text" bind:value={$meta.args[key]} />
               {:else if control.type === "boolean"}
-                <input {id} disabled={control.disabled} type="checkbox" bind:checked={$meta.args[key]} class:disabled={control.disabled} />
+                <input
+                  {id}
+                  disabled={control.disabled}
+                  type="checkbox"
+                  bind:checked={$meta.args[key]}
+                  class:disabled={control.disabled}
+                  on:input={(e) => onInputInput(key, e.currentTarget)}
+                />
               {:else if control.type === "number"}
-                <input {id} {...control} bind:value={$meta.args[key]} on:input={onNumberInput(key, control)} />
+                <input {id} {...control} bind:value={$meta.args[key]} on:input={createNumberInputHandler(key, control)} />
               {/if}
             </label>
           </div>

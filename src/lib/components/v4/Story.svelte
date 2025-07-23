@@ -2,6 +2,7 @@
   import Isolate from "./Isolate.svelte";
   import { getMeta, nameToId } from "$lib/book-emoji.js";
   import { onMount, type SvelteComponent, type ComponentType } from "svelte";
+  import { browser } from "$app/environment";
 
   export let name: string;
   export let of: ComponentType<SvelteComponent<any, any, any>>;
@@ -14,21 +15,32 @@
 
   const meta = getMeta<typeof of>(of, name);
 
-  $: finalArgs = {
-    ...$meta.args,
-    ...args,
-  };
+  let finalArgs = {};
+
+  if (browser) {
+    $meta.initialArgs = { ...$meta.args, ...args };
+    if (Object.keys(args).length > 0) {
+      $meta.args = args;
+    }
+    $meta.ready = true;
+  }
+
+  $: if (browser) {
+    finalArgs = {
+      ...$meta.initialArgs,
+      ...$meta.args,
+      ...args,
+    };
+  }
 
   // i'm not sure why or if this code needs to be within onMount
   onMount(() => {
     // CASE: IF we have defined `args` on our story, we want to apply them to our meta
     //       otherwise, we defer to the defaults from our defineMeta
-    $meta.initialArgs = { ...$meta.args, ...args };
-    if (Object.keys(args).length > 0) {
-      $meta.args = args;
-    }
 
-    $meta.ready = true;
+    return () => {
+      $meta.ready = false;
+    };
   });
 </script>
 

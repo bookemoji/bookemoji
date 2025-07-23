@@ -2,6 +2,10 @@ body {
   margin: 0;
 }
 
+button {
+  font-weight: 400;
+}
+
 /* .book-root .story-name,
 .book-root .story-list {} */
 
@@ -12,7 +16,7 @@ body {
 }
 
 /* When a story is right after a controls, give them space to breathe */
-.controls-root + .story-root {
+.controls-root+.story-root {
   margin-top: 8em;
 }
 
@@ -59,7 +63,7 @@ body {
   align-items: center;
 }
 
-.control > span {
+.control>span {
   cursor: pointer;
 }
 
@@ -81,4 +85,59 @@ body {
 
 .controls .actions {
   margin-inline-start: auto;
+}
+
+.story-code {
+  display: grid;
+}
+
+.story-code .shiki {
+  display: block;
+  max-inline-size: 100%;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+}
+
+.story-code-wrapper {
+  order: -1;
+  grid-area: 1 / 1;
+  interpolate-size: allow-keywords;
+}
+
+.story-code-actions {
+  grid-area: 1 / 1;
+  order: 1;
+  align-self: start;
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  gap: 0.5em;
+}
+
+.story-code .cmd {
+  font-weight: 400;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.cmd.copy-code.copied {
+  color: var(--copy-text-color, var(--green-4, #484));
+}
+
+.story-code-toggler {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.story-code-toggler button {
+  --__bg: transparent;
+  background: transparent;
+  border: none;
+  padding: 0.25em 2em;
+  font-size: 0.8rem;
+  font-family: var(--font-monospace-code);
 }

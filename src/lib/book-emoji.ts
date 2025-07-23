@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { browser } from "$app/environment";
 import { getContext, type SvelteComponent, type Component, type ComponentType } from "svelte";
 
-import { get, writable } from "svelte/store";
+import { get, writable, type Readable } from "svelte/store";
 import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
 import { parse } from "node-html-parser";
 import { base, loadStories } from "virtual:bookemoji";
 import type { ComponentMeta, ComponentMetaStore, MetaOptions } from "./meta.js";
-import { page } from "$app/stores";
 
 export type * from "./meta.js";
 /**
@@ -150,9 +150,24 @@ export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(d
   }
 
   const meta = getContext<Map<SvelteComponent | Component<any, any>, Required<ComponentMeta>>>("bookemoji.meta");
+  const stories: Readable<BookDefinition[]> = getContext("bookemoji.stories");
 
   if (!meta) {
     throw new Error(`No "bookemoji.meta" context found. Make sure to set the context in your book component at the top level.`);
+  }
+
+  if (!stories) {
+    throw new Error(`No "bookemoji.stories" context found. Make sure to set the context in your book component at the top level.`);
+  }
+
+  // find the current component BookDefinition by finding the story or story variant that has the current route path.
+  const storyData = get(stories).find((b) => {
+    // console.log(b, window.location.pathname);
+    return b.route === window.location.pathname || Object.values(b.variants).find((v) => v.route === window.location.pathname) !== undefined;
+  });
+
+  if (storyData === undefined) {
+    throw new Error(`Unable to find Story Data for current page - ${window.location.pathname}`);
   }
 
   const { component, ...componentArgs } = definition;
@@ -163,6 +178,7 @@ export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(d
     initialArgs: structuredClone(componentArgs.args ?? {}),
     args: componentArgs.args ?? {},
     argTypes: componentArgs.argTypes ?? {},
+    definition: storyData,
   };
 
   // @ts-expect-error the type here ultimately doesn't matter so not bothering
@@ -176,6 +192,8 @@ export function getMeta<T extends Component | ComponentType<SvelteComponent>>(co
 
   const meta = getContext<Map<any, Required<ComponentMeta>>>("bookemoji.meta");
   const argData = getContext<KeyKeyMap<any, string, ComponentMetaStore>>("bookemoji.argTypes");
+  // not needed rn:
+  // const stories: Readable<BookDefinition[]> = getContext("bookemoji.stories");
 
   if (!argData || !meta) {
     throw new Error(`No "bookemoji.meta" context found. Make sure your Story, Control, etc is within a <Book>`);
@@ -191,6 +209,7 @@ export function getMeta<T extends Component | ComponentType<SvelteComponent>>(co
 
     // populate initial value
     argTypes = writable(structuredClone(defaultArgData));
+
     argData.set(component, variant, argTypes);
   }
 

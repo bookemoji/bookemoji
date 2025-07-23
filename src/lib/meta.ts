@@ -1,5 +1,6 @@
 import type { Component, ComponentProps, ComponentType, SvelteComponent } from "svelte";
 import type { Writable } from "svelte/store";
+import type { BookDefinition } from "./book-emoji.js";
 
 type OmittedComponentProps = "children" | "$$props" | "$$events" | "$$slots" | "$$rest" | "props";
 
@@ -76,6 +77,7 @@ export type ComponentMeta = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args?: Record<string, any>;
   initialArgs: Record<string, unknown>;
+  definition: BookDefinition;
 };
 
 export type ComponentMetaStore = Writable<Required<ComponentMeta>>;
