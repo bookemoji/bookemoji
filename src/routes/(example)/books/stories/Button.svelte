@@ -3,7 +3,8 @@
   export let size: "small" | "medium" | "large" = "medium";
   export let disabled: boolean = false;
   export let loading: boolean = false;
-  export let classes: string = "";
+  let classes: string = "";
+  export { classes as class };
   export let type: "button" | "submit" | "reset" = "button";
   export let ariaLabel: string = "";
   export let text: string = "";
