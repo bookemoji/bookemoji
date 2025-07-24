@@ -1,6 +1,6 @@
 <script lang="ts">
   import { type BookDefinition } from "$lib/book-emoji.js";
-  import { setContext } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { createKeyKeyMap } from "$lib/utils.js";
 
@@ -23,6 +23,3 @@
 <div class="book-root">
   {@render children?.()}
 </div>
-
-<style>
-</style>
