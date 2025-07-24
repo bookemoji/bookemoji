@@ -17,7 +17,7 @@
 
   /**
    * Whether to have the Code block collapsed initially. Because it is dynamically rendered there is a layout shift when the code renders
-   * To aboid it, the component is collapsed by default
+   * To avoid it, the component is collapsed by default
    */
   export let collapsed: boolean = true;
 
@@ -104,8 +104,6 @@
     return promise;
   }
 
-  function togglePropLevel() {}
-
   function toggle() {
     collapsed = !collapsed;
   }
@@ -124,7 +122,6 @@
         <slot name="actions">
           <div class="story-code-actions">
             <button class="cmd copy-code" class:copied={$copied} type="button" on:click={copy}>{$copied ? "copied" : "copy"}</button>
-            <button class="cmd toggle-prop-level" type="button" on:click={togglePropLevel}>minimal</button>
             <button class="cmd" type="button" on:click={toggle}>hide</button>
           </div>
         </slot>

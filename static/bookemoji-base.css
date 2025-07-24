@@ -16,7 +16,7 @@ button {
 }
 
 /* When a story is right after a controls, give them space to breathe */
-.controls-root+.story-root {
+.controls-root + .story-root {
   margin-top: 8em;
 }
 
@@ -63,7 +63,7 @@ button {
   align-items: center;
 }
 
-.control>span {
+.control > span {
   cursor: pointer;
 }
 

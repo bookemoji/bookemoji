@@ -128,11 +128,6 @@
     filter: blur(0) saturate(1) brightness(1);
   }
 
-  @media (prefers-color-scheme: light) {
-    .sidebar.sparkling {
-    }
-  }
-
   @media (prefers-color-scheme: dark) {
     .sidebar.sparkling {
       transition: 0.8s ease-in all;

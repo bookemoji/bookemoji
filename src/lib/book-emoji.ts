@@ -67,7 +67,7 @@ export const createVariantUrl = (base: string, storyName: string, variantName: s
 };
 
 export const discoverVariants = (name: string, component: Component): string[] => {
-  let html: string;
+  let html: string = "";
   if (component instanceof Function) {
     try {
       const result = render(component, { context: new Map([["bookemoji.meta", {}]]) });
