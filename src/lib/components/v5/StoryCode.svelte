@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from "svelte/legacy";
-
   import { type Component } from "svelte";
   import { getMeta } from "$lib/book-emoji.js";
   import Isolate from "./Isolate.svelte";
@@ -8,11 +6,11 @@
   import { codeToHtml } from "shiki";
   import { createCopyAction } from "$lib/utils.js";
 
-  interface Props {
+  interface Props<StoryComponent extends Component = any> {
     /**
      * The component which corresponds to this comp. Used internally to lookup the info described via `defineMeta`
      */
-    of: Component;
+    of: StoryComponent;
     /**
      * The name of the story — which should correspond to &lt;Story&gt;'s `name`
      */
@@ -24,14 +22,19 @@
     collapsed?: boolean;
     shikiOptions?: Parameters<typeof codeToHtml>[1];
     tab?: "  " | "\t";
+    /**
+     * whether this component is self closing, and thus should not render for children
+     */
+    selfClosing?: boolean;
     toggler?: import("svelte").Snippet;
     actions?: import("svelte").Snippet;
-    children?: import("svelte").Snippet<[any]>;
+    content?: string;
   }
 
   let {
     of,
     story,
+    selfClosing = false,
     collapsed = $bindable(true),
     shikiOptions = {
       lang: "svelte",
@@ -40,15 +43,23 @@
     tab = "  ",
     toggler,
     actions,
-    children,
+    content = "...",
   }: Props = $props();
 
   const meta = getMeta<Component>(of as Component, story);
 
-  let componentName: string = $state(browser ? $meta.definition.name : "");
-  let properties: Record<string, string> = $state($meta.args ?? {});
-  let startTag = "<";
-  let endTag = " />";
+  let componentName: string = $derived.by(() => {
+    if (browser) {
+      return $meta.definition.name;
+    }
+
+    return "";
+  });
+
+  let properties: Record<string, string> = $derived($meta.ready ? ($meta.args ?? {}) : {});
+  let startTag = "<" as const;
+  let selfClosingEndTag = " />" as const;
+  let closingEndTag = ">" as const;
 
   const asProp = (key: string, value: unknown) => {
     let val: string = "";
@@ -67,7 +78,11 @@
 
   const generateCode = (_props: unknown) => {
     if (Object.keys(properties).length === 0) {
-      return `${startTag}${componentName} ${endTag}`;
+      if (selfClosing) {
+        return `${startTag}${componentName} ${selfClosingEndTag}`;
+      } else {
+        return `${startTag}${componentName}${closingEndTag}${startTag}/${componentName}${closingEndTag}`;
+      }
     } else {
       let builder = `${startTag}${componentName}`;
 
@@ -87,43 +102,39 @@
         // builder += " ";
         builder += nextProp;
       });
-      builder += endTag;
+
+      if (selfClosing) {
+        builder += selfClosingEndTag;
+      } else {
+        builder += closingEndTag;
+        builder += `\n${tab}${content}\n`;
+        builder += `${startTag}/${componentName}${closingEndTag}`; // </Button>
+      }
 
       return builder;
     }
   };
 
-  let code = $state("");
-  let codeAreaHeight: string = $state("auto");
+  let code: string = $derived.by(() => generateCode(properties));
   let innerRef: HTMLElement | undefined = $state(undefined);
-  let { copy, copied } = createCopyAction(() => code, 800);
-
-  function rerenderShikiCodeToHTML(code: string) {
+  let codeAreaHeight: string = $derived.by(() => {
     // This ensures when shiki is re-rendering we don't get a flash of collapsed content
     if (innerRef === undefined) {
       // CASE: if the innerRef is not present, then its the first call
-      codeAreaHeight = "auto";
+      return "auto";
     } else {
-      codeAreaHeight = `${innerRef.clientHeight}px`;
+      return `${innerRef.clientHeight}px`;
     }
-    const promise = codeToHtml(code, shikiOptions);
 
-    return promise;
-  }
+    return "auto";
+  });
+  let shikiPromise = $derived.by(() => codeToHtml(code, shikiOptions));
+
+  let { copy, copied } = createCopyAction(() => code, 800);
 
   function toggle() {
     collapsed = !collapsed;
   }
-  run(() => {
-    if ($meta.ready) {
-      componentName = $meta.definition.name;
-      properties = $meta.args;
-    }
-  });
-  run(() => {
-    code = generateCode(properties);
-  });
-  let shikiPromise = $derived(rerenderShikiCodeToHTML(code));
 </script>
 
 {#if browser && $meta.ready}
@@ -145,11 +156,7 @@
         <div class="story-code-wrapper" style:min-height={codeAreaHeight}>
           {#await shikiPromise then codeHTML}
             <div bind:this={innerRef}>
-              {#if children}{@render children({ codeHTML, code, codeAreaHeight })}{:else if code}
-                {@html codeHTML}
-              {:else}
-                <p>Could not generate sample code</p>
-              {/if}
+              {@html codeHTML}
             </div>
           {/await}
         </div>
