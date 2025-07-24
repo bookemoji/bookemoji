@@ -3,7 +3,7 @@
 ## Book
 
 The `<Book>` component is the root of your `bookemoji` application.
-It receives a list of `books`, which is provided to other bookemoji components behind the scenes.
+It receives a list of `books`, which is provided to other bookemoji components via contexts.
 
 It also has an optional `base` prop, which defaults to `/books`.
 It is used for constructing urls.
@@ -24,6 +24,15 @@ It does not have any UI by default.
   <slot />
 </Book>
 ```
+
+#### Contexts
+
+The `<Book>` component sets these contexts, which you can utilize for your own needs:
+
+- `bookemoji.stories` - a list of the stories detected by bookemoji
+- `bookemoji.base` - the `base` route path set within `svelte.config.js`
+- `bookemoji.meta` - A `Map<Component, ComponentMeta>`, holding details about all component's "meta" (as set via `defineMeta`)
+- `bookemoji.argTypes` - A A key-key-map store of Component to Variant to the `argType` info, as used primarily by `<Controls>` and defined via `defineMeta`
 
 ## Story
 
@@ -70,3 +79,34 @@ Below, the `<Book>` sample has been modified to display as a sidebar layout [rea
   </div>
 </Book>
 ```
+
+## StoryCode
+
+The `<StoryCode>` component automatically generates the code representation of a story variant based on the selected props. It's designed to quickly allow developers to grab-and-go a component after tweaking it's props.
+
+### Key Features
+
+**Auto-generated Code**: It takes a component and story name, then automatically generates the corresponding Svelte component code based on the current args/props.
+
+**Syntax Highlighting**: Uses Shiki for beautiful syntax highlighting with customizable themes (defaults to "catppuccin-frappe").
+
+**Collapsible Interface**: Starts collapsed by default to avoid layout shift, with a toggle button (`</>`) to show/hide the code.
+
+**Copy Functionality**: Includes a copy button to easily copy the generated code to clipboard.
+
+### Usage
+
+```svelte
+<Story name="Primary Button" of={Button} />
+<StoryCode story="Primary Button" of={Button} />
+```
+
+### Props
+
+- `of`: The component this code represents
+- `story`: The story name (must match the corresponding `<Story>` name)
+- `collapsed`: Whether to start collapsed (default: `true`)
+- `shikiOptions`: Syntax highlighting configuration
+- `tab`: Indentation style (`"  "` or `"\t"`)
+
+The component intelligently handles different prop types - strings get quotes, other values get curly braces, and undefined/empty values are omitted entirely.

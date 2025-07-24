@@ -14,14 +14,17 @@ You can style bookemoji components by their classnames via a globally loaded css
 Copy the below CSS and use it as a kick-off point.
 
 ```css
-.book-root .story-name,
-.book-root .story-list {
+body {
 }
 
-.book-root :where(h1, h2, h3, h4, h5, h6) {
+button {
 }
 
 .controls {
+}
+
+/* When a story is right after a controls, give them space to breathe */
+.controls-root + .story-root {
 }
 
 .story {
@@ -30,22 +33,20 @@ Copy the below CSS and use it as a kick-off point.
 .story-root {
 }
 
-.story-root.minimal .story {
-}
-
 .story-name {
 }
 
+/* .controls relates to the <Controls> component */
 .controls {
 }
 
-.form-group {
+.controls .form-group {
 }
 
 .control > span {
 }
 
-.control {
+.controls .control {
 }
 
 .control label {
@@ -55,6 +56,32 @@ Copy the below CSS and use it as a kick-off point.
 }
 
 .controls .actions {
+}
+
+/* Story code relates to the <StoryCode> component */
+.story-code {
+}
+
+/* Code samples are in the .shiki class */
+.story-code .shiki {
+}
+
+.story-code-wrapper {
+}
+
+.story-code-actions {
+}
+
+.story-code .cmd {
+}
+
+.cmd.copy-code.copied {
+}
+
+.story-code-toggler {
+}
+
+.story-code-toggler button {
 }
 ```
 
