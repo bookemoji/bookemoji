@@ -21,6 +21,17 @@
    */
   export let collapsed: boolean = true;
 
+  /**
+   * whether this component is self closing, and thus should not render for children
+   */
+  export let selfClosing: boolean = false;
+
+  /**
+   * If you want to display children for this component, provide a value here
+   * If your component should not have children, set `<StoryCode selfClosing />`
+   */
+  export let children: string = "...";
+
   export let shikiOptions: Parameters<typeof codeToHtml>[1] = {
     lang: "svelte",
     theme: "catppuccin-frappe",
@@ -32,8 +43,9 @@
 
   let componentName: string = browser ? $meta.definition.name : "";
   let props: Record<string, string> = $meta.args ?? {};
-  let startTag = "<";
-  let endTag = " />";
+  let startTag = "<" as const;
+  let selfClosingEndTag = " />" as const;
+  let closingEndTag = ">" as const;
 
   $: if ($meta.ready) {
     componentName = $meta.definition.name;
@@ -57,7 +69,7 @@
 
   const generateCode = (_props: unknown) => {
     if (Object.keys(props).length === 0) {
-      return `${startTag}${componentName} ${endTag}`;
+      return `${startTag}${componentName} ${selfClosingEndTag}`;
     } else {
       let builder = `${startTag}${componentName}`;
 
@@ -77,7 +89,14 @@
         // builder += " ";
         builder += nextProp;
       });
-      builder += endTag;
+
+      if (selfClosing) {
+        builder += selfClosingEndTag;
+      } else {
+        builder += closingEndTag;
+        builder += `\n${tab}${children}\n`;
+        builder += `${startTag}/${componentName}${closingEndTag}`; // </Button>
+      }
 
       return builder;
     }
