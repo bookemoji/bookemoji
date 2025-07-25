@@ -26,7 +26,7 @@
 
   type RGBColor = readonly [r: number, g: number, b: number];
 
-  const peachColor: RGBColor = [130, 110, 120];
+  let peachColor: RGBColor = [130, 110, 120];
   const squareDarkMode: RGBColor = [30, 40, 50];
   const squareLightMode: RGBColor = [240, 250, 255];
   let squareGridColor: RGBColor =
@@ -169,20 +169,41 @@
         subPath2.forEach((el) => paintPath(el, 2));
       },
       cta: async (e: MouseEvent) => {
-        const bezierPath1 = randomBezierPath([e.screenX, e.screenY], [rand(width), Math.random() > 0.5 ? height : 0]);
-        const bezierPath2 = randomBezierPath([e.screenX, e.screenY], [rand(width), Math.random() > 0.5 ? height : 0]);
+        let paths: Coords[][] = [
+          randomBezierPath([e.clientX, e.clientY], [rand(width), Math.random() > 0.5 ? height : 0]),
+          randomBezierPath([e.clientX, e.clientY], [rand(width), Math.random() > 0.5 ? height : 0]),
+          randomBezierPath([e.clientX, e.clientY], [rand(width), Math.random() > 0.5 ? height : 0]),
+        ];
+
+        let p: Promise<void> = Promise.resolve();
+
+        if ((<HTMLElement>e.currentTarget).classList.contains("copy-btn")) {
+          p = interpolateRGB(peachColor, [40 + rand(160), 40 + rand(80), 40 + rand(160)], 800);
+        } else {
+          p = interpolateRGB(peachColor, [175, 55, 152], 200);
+        }
 
         for (let row = 0; row < datagrid.length; row++) {
           for (let col = 0; col < datagrid[row].length; col++) {
-            datagrid[row][col] = datagrid[row][col] / 2;
+            datagrid[row][col] = datagrid[row][col] * 0.5;
           }
         }
 
+        await wait(1);
+
+        const [bezierPath1, ...otherPaths] = paths;
+
         for (const index in bezierPath1) {
           paintPath(bezierPath1[index], Math.floor(rand(3)));
-          paintPath(bezierPath2[index], Math.floor(rand(3)));
+          for (let p of otherPaths) {
+            paintPath(p[index], Math.floor(rand(3)));
+          }
           await wait(1);
         }
+
+        await p;
+
+        // await interpolateRGB(peachColor, squareGridColor, 200);
       },
       render,
       update,
@@ -315,6 +336,23 @@
   }
 
   function onToggleRenderer() {}
+
+  function interpolateRGB(from: RGBColor, to: RGBColor, duration: number): Promise<void> {
+    return new Promise((resolve) => {
+      const start = performance.now();
+      function step(now: number) {
+        const t = Math.min(1, (now - start) / duration);
+        peachColor = [Math.round(from[0] + (to[0] - from[0]) * t), Math.round(from[1] + (to[1] - from[1]) * t), Math.round(from[2] + (to[2] - from[2]) * t)];
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          peachColor = to;
+          resolve();
+        }
+      }
+      requestAnimationFrame(step);
+    });
+  }
 </script>
 
 <svelte:window on:mousemove={onMouseMove} />

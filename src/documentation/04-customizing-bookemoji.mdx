@@ -7,11 +7,17 @@ The visual style can be rewritten to match your brand, and there are plenty of l
 
 `bookemoji` inherits css you have loaded globally via `app.html` or through vite imports within your `+layout.svelte`.
 
-## Styling `bookemoji` components globally
+## Styling `bookemoji` components
 
 You can style bookemoji components by their classnames via a globally loaded css file.
 
-Copy the below CSS and use it as a kick-off point.
+1. Copy the below CSS block into a new file (such as into `static/book-emoji.css`)
+2. Add the CSS file to your `src/app.html`
+   - e.g. `<link rel="stylesheet" href="/book-emoji.css" />`
+3. _Give it style_
+
+<details>
+<summary><code>book-emoji.css</code> Reference</summary>
 
 ```css
 body {
@@ -23,8 +29,8 @@ button {
 .controls {
 }
 
-/* When a story is right after a controls, give them space to breathe */
-.controls-root + .story-root {
+/_ When a story is right after a controls,
+give them space to breathe _/ .controls-root + .story-root {
 }
 
 .story {
@@ -36,8 +42,7 @@ button {
 .story-name {
 }
 
-/* .controls relates to the <Controls> component */
-.controls {
+/_ .controls relates to the <Controls > component _/ .controls {
 }
 
 .controls .form-group {
@@ -58,12 +63,10 @@ button {
 .controls .actions {
 }
 
-/* Story code relates to the <StoryCode> component */
-.story-code {
+/_ Story code relates to the <StoryCode > component _/ .story-code {
 }
 
-/* Code samples are in the .shiki class */
-.story-code .shiki {
+/_ Code samples are in the .shiki class _/ .story-code .shiki {
 }
 
 .story-code-wrapper {
@@ -84,6 +87,8 @@ button {
 .story-code-toggler button {
 }
 ```
+
+</details>
 
 ## Styling `bookemoji` components
 
