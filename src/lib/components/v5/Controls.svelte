@@ -123,7 +123,6 @@
           }
         } else if (value !== initialValue[key]) {
           if (Array.isArray(value)) {
-            console.log("array value:", value);
             value.filter((v) => !(v === "" || v === undefined || v === null)).forEach((v) => search.append(`${key}`, `${v}`));
           } else if (value !== undefined && value !== "" && value !== null) {
             search.set(key, `${value}`);

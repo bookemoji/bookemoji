@@ -4,6 +4,8 @@ body {
   --link: #de7f4c;
   --link-visited: #de7f4c;
   --font-system-ui: "Quicksand", "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+
+  --size-content-3: 80ch;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -77,7 +79,7 @@ body :where(li, dd, figcaption) {
   max-inline-size: var(--size-content-3);
 }
 
-.docs :where(ul) {
+.docs :where(ul, ol) {
   margin-bottom: 1em;
 }
 

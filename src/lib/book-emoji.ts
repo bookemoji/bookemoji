@@ -162,7 +162,6 @@ export function defineMeta<Comp extends SvelteComponent | Component<any, any>>(d
 
   // find the current component BookDefinition by finding the story or story variant that has the current route path.
   const storyData = get(stories).find((b) => {
-    // console.log(b, window.location.pathname);
     return (
       b.route === window.location.pathname.toLowerCase() ||
       Object.values(b.variants).find((v) => v.route === window.location.pathname.toLowerCase()) !== undefined

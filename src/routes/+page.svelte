@@ -17,7 +17,7 @@
 
 <Hero>
   <div class="hero">
-    <h1 class="brand-font brand-color">BookEmoji</h1>
+    <h1 class="brand-font brand-color negative-lh">BookEmoji</h1>
     <h2>a component workshop for SvelteKit</h2>
     <h4 class="copy-cmd">
       <code class="npm-command">npm create bookemoji@latest</code>
@@ -178,5 +178,9 @@
     border: 1px solid var(--brand);
     line-height: var(--font-lineheight-4);
     color: var(--brand);
+  }
+
+  .negative-lh {
+    margin-bottom: -0.5em;
   }
 </style>
