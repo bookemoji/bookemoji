@@ -1,6 +1,6 @@
 import { json, type RequestHandler } from "@sveltejs/kit";
 import { createServerGET } from "$lib/loaders.js";
-import { findStoryFiles, type BookEndpointResponse } from "$lib/book-emoji.js";
+import { type BookEndpointResponse } from "$lib/book-emoji.js";
 
 export const GET: RequestHandler = async (event) => {
   const bookRes = await createServerGET()(event);

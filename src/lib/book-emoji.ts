@@ -7,7 +7,7 @@ import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
 import { parse } from "node-html-parser";
 import { base, loadStories } from "virtual:bookemoji";
-import type { ComponentMeta, ComponentMetaStore, MetaOptions } from "./meta.js";
+import type { BookEmojiComponent, ComponentMeta, ComponentMetaStore, MetaOptions } from "./meta.js";
 
 export type * from "./meta.js";
 /**
@@ -102,14 +102,15 @@ export const findStoryFiles = async () => {
   //   eager: true,
   //   import: "default",
   // });
-  const books: Record<string, Component> = await loadStories();
+  const books: Record<string, BookEmojiComponent> = await loadStories();
 
   const bookList: BookDefinition[] = Object.entries(books).map(([localPath, mod]) => {
     const name = basename(localPath).replace(".book.svelte", "");
     const path = localPath;
     const bookUrl = createStoryUrl(base, name);
 
-    const variantNames = discoverVariants(name, mod);
+    console.log("discovering variants for Story:", name);
+    const variantNames = discoverVariants(name, mod.default);
 
     const variants: Record<string, VariantDefinition> = Object.fromEntries(
       variantNames.map((variant) => {

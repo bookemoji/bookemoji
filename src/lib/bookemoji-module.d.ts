@@ -12,9 +12,13 @@ type BookEmojiConfig = {
 /**
  */
 declare module "virtual:bookemoji" {
+  type ComponentModule = {
+    default: Component;
+    metadata: ComponentMetaData;
+  };
   export const base: BookEmojiConfig["base"];
 
-  export const stories: Record<string, Promise<{ default: unknown }>>;
+  export const stories: Record<string, Promise<ComponentModule>>;
 
-  export const loadStories: () => Promise<Record<string, Component>>;
+  export const loadStories: () => Promise<Record<string, ComponentModule>>;
 }
