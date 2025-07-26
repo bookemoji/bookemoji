@@ -2,6 +2,13 @@ import type { Component, ComponentProps, ComponentType, SvelteComponent } from "
 import type { Writable } from "svelte/store";
 import type { BookDefinition } from "./book-emoji.js";
 
+interface ComponentMetaData {}
+
+export type BookEmojiComponent = {
+  default: Component;
+  metadata?: ComponentMetaData;
+};
+
 type OmittedComponentProps = "children" | "$$props" | "$$events" | "$$slots" | "$$rest" | "props";
 
 // thanks, i hate these Infer_<Comp> types

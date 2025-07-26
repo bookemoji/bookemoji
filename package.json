@@ -51,7 +51,7 @@
   "dependencies": {
     "@sveltejs/kit": "^2.16.0",
     "node-html-parser": "^7.0.1",
-    "vite-plugin-bookemoji": "^1.2.0"
+    "vite-plugin-bookemoji": "^2.0.0"
   },
   "peerDependencies": {
     "svelte": "^4.0.0 || ^5.0.0"

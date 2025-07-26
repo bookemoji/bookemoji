@@ -7,7 +7,7 @@
     ["Docs", "/docs"],
     ["Roadmap", "/roadmap"],
     ["Blog", "/blog"],
-    ["Example", "/books"],
+    ["Example", "/example"],
   ];
 </script>
 
