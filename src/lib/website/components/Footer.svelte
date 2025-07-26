@@ -10,8 +10,10 @@
 <footer class="footer">
   <div class="brand-font">Built with 😻</div>
   <div class="link-list">
-    <a href="https://app.rybbit.io/1526/main" target="_blank">Public Analytics</a>
-    <div><a href="https://github.com/bookemoji/bookemoji" target="_blank">Github</a> / <a href="https://github.com/bookemoji" target="_blank">Org</a></div>
+    <a href="https://app.rybbit.io/1526/main" target="_blank">rybbit analytics</a>
+    <div>
+      <a href="https://github.com/bookemoji" target="_blank">bookemoji org</a>
+    </div>
   </div>
 </footer>
 
@@ -19,6 +21,8 @@
   .footer,
   .page-footer {
     display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
     border-top: 1px solid var(--surface-2);
     padding: 1rem;
     align-items: center;
