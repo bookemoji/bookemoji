@@ -21,7 +21,13 @@
         </li>
       {/each}
       <li>
-        <a href="https://github.com/bookemoji/bookemoji" target="_blank" aria-label="Github" data-rybbit-event="clicked_github_in_nav">
+        <a
+          class="nav-link nav-link--icon"
+          href="https://github.com/bookemoji/bookemoji"
+          target="_blank"
+          aria-label="Github"
+          data-rybbit-event="clicked_github_in_nav"
+        >
           <span class="visually-hidden">Github</span>
           <GithubLogo />
         </a>
@@ -46,7 +52,13 @@
     align-items: center;
   }
 
+  .nav-link.nav-link--icon {
+    padding: 0;
+    border: none;
+  }
+
   .nav-link {
+    color: var(--nav-link-color);
     padding: 0.5rem 1rem;
     border: 1px solid transparent;
   }

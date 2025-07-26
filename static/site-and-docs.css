@@ -4,17 +4,15 @@ body {
   --link: #de7f4c;
   --link-visited: #de7f4c;
   --font-system-ui: "Quicksand", "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
-
+  --nav-link-color: #000;
   --size-content-3: 80ch;
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   body {
-    --brand: inherit;
-    --link: inherit;
-    --link-visited: inherit;
+    --nav-link-color: #abb;
   }
-} */
+}
 
 a[href] {
   color: var(--link, var(--brand));
