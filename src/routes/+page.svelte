@@ -32,7 +32,7 @@
   <div class="about-bookemoji">
     <h3>About</h3>
     <p>
-      <span class="embellish">📚 bookemoji</span> is a tool to showcase, collaborate, and develop the technical aspects of user interfaces using
+      <span class="embellish">bookemoji</span> is a tool to showcase, collaborate, and develop the technical aspects of user interfaces using
       <a href="https://svelte.dev/docs/kit/introduction#What-is-Svelte" target="_blank">svelte</a>
       and
       <a href="https://svelte.dev/docs/kit/introduction#What-is-SvelteKit" target="_blank">sveltekit</a>. An alternative to StoryBook.js or Histoire in your
@@ -173,10 +173,6 @@
   }
 
   .embellish {
-    padding: var(--size-1) var(--size-2);
-    border-radius: 12px;
-    border: 1px solid var(--brand);
-    line-height: var(--font-lineheight-4);
     color: var(--brand);
   }
 
