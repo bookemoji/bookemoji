@@ -19,7 +19,7 @@
 
 <style>
   .footer,
-  .page-footer {
+  :global(.page-footer) {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;

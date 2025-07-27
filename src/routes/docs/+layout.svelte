@@ -1,5 +1,4 @@
 <script lang="ts">
-  import OpenProps from "open-props";
   import type { LayoutData } from "./$types.js";
   import TwoColumnLayout from "../TwoColumnLayout.svelte";
   import { base } from "$app/paths";
@@ -29,11 +28,19 @@
     <div class="doc-canvas">
       <slot />
     </div>
-    <svelte:fragment></svelte:fragment>
   </TwoColumnLayout>
+</div>
+<div class="page-footer docs-footer">
+  Is this page missing something? <a href="https://github.com/bookemoji/bookemoji/issues" target="_blank">Open an issue on GitHub</a>
 </div>
 
 <style>
+  .docs-footer {
+    justify-content: center;
+    gap: 2rem;
+    color: var(--stone-6);
+  }
+
   .nav-links {
     list-style: none;
     padding: 0;
@@ -48,6 +55,7 @@
     display: block;
     padding: 0.5rem 1rem;
     margin: 0 -1rem 0 -1rem;
+    border-bottom: 1px solid var(--surface-2);
   }
 
   .nav-links a.active {

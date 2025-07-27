@@ -26,7 +26,7 @@
     <ul class="nav-links">
       {#each urls as [name, url]}
         <li>
-          <a class="nav-link" class:active={$page.url.pathname === url} href={`${url}`}>{name}</a>
+          <a class="nav-link" class:active={$page.url.pathname === url || $page.url.pathname.startsWith(url)} href={`${url}`}>{name}</a>
         </li>
       {/each}
       <li>
