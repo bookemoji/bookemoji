@@ -1,0 +1,20 @@
+# Organizing Stories
+
+A common requirement of component workshops is the ability to place stories within groups.
+Groups can function as folders for organizing related concepts, or breaking out stories into broader architectural patterns.
+
+One detail before we start: all components have a group already. The default group is empty string (`""`).
+
+## Setting a Story's group.
+
+```svelte
+<script lang="ts" context="module">
+  import type { BookMeta } from "bookemoji";
+  export const metadata = {
+    group: "My Custom Group",
+  } satisfies BookMeta;
+</script>
+```
+
+The [example](/example) bookemoji has groups used to separate `Runes Mode` components and `Website` components.
+You can view [the source for those components](<https://github.com/bookemoji/bookemoji/blob/main/src/routes/(example)/example/stories/WebsiteHero.book.svelte>) to see for yourself.
