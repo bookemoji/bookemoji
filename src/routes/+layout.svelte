@@ -26,7 +26,6 @@
     const response = await fetch("https://registry.npmjs.org/bookemoji/latest");
     if (response.ok) {
       const data = await response.json();
-      console.log("bookemoji", data.version);
       version = `v${data.version}`;
     }
   };
