@@ -11,3 +11,9 @@ declare global {
 }
 
 export {};
+
+declare module "bookemoji" {
+  interface BookMeta {
+    group: string;
+  }
+}

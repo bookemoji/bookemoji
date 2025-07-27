@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+  import type { BookMeta } from "bookemoji";
+  export const metadata = {
+    group: "A Group",
+  } satisfies BookMeta;
+</script>
+
 <script lang="ts">
   import Story from "$lib/components/v4/Story.svelte";
   import Controls from "$lib/components/v4/Controls.svelte";

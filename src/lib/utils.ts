@@ -33,6 +33,7 @@ export const createKeyKeyMap = <Key1, Key2, Value>(): KeyKeyMap<Key1, Key2, Valu
 export const createCopyAction = (getText: () => string | Promise<string>, debounce: number = 300) => {
   const copied: Writable<boolean> = writable(false);
   let lastInteraction: number = Date.now();
+  let key = Symbol();
 
   /**
    * Copy function which can be used as an event handler—like `on:click={copy}`, but also allow imperative usage —like `onCopy() { copy("text"); }`
@@ -47,6 +48,8 @@ export const createCopyAction = (getText: () => string | Promise<string>, deboun
 
   async function copy(text?: string) {
     lastInteraction = Date.now();
+    const myKey = Symbol();
+    key = myKey;
 
     if (typeof text !== "string") {
       text = await getText();
@@ -69,7 +72,7 @@ export const createCopyAction = (getText: () => string | Promise<string>, deboun
 
     await wait(debounce);
 
-    if (Date.now() - lastInteraction > 100) {
+    if (Date.now() - lastInteraction > 100 && key === myKey) {
       copied.set(false);
     }
   }

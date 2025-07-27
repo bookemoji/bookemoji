@@ -2,11 +2,22 @@ import type { Component, ComponentProps, ComponentType, SvelteComponent } from "
 import type { Writable } from "svelte/store";
 import type { BookDefinition } from "./book-emoji.js";
 
-interface ComponentMetaData {}
+/**
+ * This is the type for the script *.book.svelte's module, as a way to define extra metadata about your book's story.
+ * @example
+ * ```svelte
+ * <script context="module">
+ *   export let metadata: BookMeta = { ... };
+ * </script>
+ * ```
+ */
+export interface BookMeta {
+  group: string;
+}
 
-export type BookEmojiComponent = {
+export type BookEmojiComponentFile = {
   default: Component;
-  metadata?: ComponentMetaData;
+  metadata?: BookMeta;
 };
 
 type OmittedComponentProps = "children" | "$$props" | "$$events" | "$$slots" | "$$rest" | "props";

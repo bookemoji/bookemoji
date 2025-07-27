@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+  import type { BookMeta } from "bookemoji";
+  export const metadata = {
+    group: "Website",
+  } satisfies BookMeta;
+</script>
+
 <script lang="ts">
   import Hero from "$lib/website/components/Hero.svelte";
   import { defineMeta } from "$lib/book-emoji.js";
@@ -23,6 +30,9 @@
       <p>It showcases emergent effects of a few systems</p>
       <p>Moving your mouse will "draw" a some particle-like squares near the mouse location.</p>
       <p>On-render it will create bezier-curve paths across the screen. Re-rendering will redraw the curves. Give it a try!</p>
+      <div style:margin={"1rem 0"} style:color={`var(--purple-3)`}>
+        It is also a good showcase of a component that needs fully re-rendering on prop changes within its <pre>Controls</pre>
+      </div>
     </Hero>
   </div>
 </Story>

@@ -1,9 +1,16 @@
+<script lang="ts" context="module">
+  export const metadata = {
+    group: "Runes Mode",
+  } satisfies BookMeta;
+</script>
+
 <script lang="ts">
   import Story from "$lib/components/v5/Story.svelte";
   import Controls from "$lib/components/v5/Controls.svelte";
   import Test from "./Test.svelte";
   import { defineMeta } from "$lib/book-emoji.js";
   import StoryCode from "$lib/components/v5/StoryCode.svelte";
+  import type { BookMeta } from "bookemoji";
 
   defineMeta<typeof Test>({
     component: Test,

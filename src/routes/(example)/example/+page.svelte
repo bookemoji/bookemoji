@@ -6,7 +6,7 @@
 </p>
 
 <p>
-  To see a preview of what's possible, <em>enable "Show Customization"</em>.
+  To preview the type of enhancements you can easily make to bookemoji, <em>enable "Show Customization"</em>.
   <label style="color: var(--link);" for="enable-customizations">Show Customization</label>
 </p>
 
