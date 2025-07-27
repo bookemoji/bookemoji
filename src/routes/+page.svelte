@@ -10,7 +10,7 @@
   // export let data: PageData;
   import { MetaTags } from "svelte-meta-tags";
 
-  const { copy, copied } = createCopyAction(() => document.querySelector(".npm-command")?.textContent?.trim() ?? "", 1000);
+  const { copy, copied } = createCopyAction(() => document.querySelector(".npm-command")?.textContent?.trim() ?? "", 1200);
 </script>
 
 <MetaTags title="bookemoji" />
@@ -21,8 +21,9 @@
     <h2>a component workshop for SvelteKit</h2>
     <h4 class="copy-cmd">
       <code class="npm-command">npm create bookemoji@latest</code>
-      <button type="button" on:click={copy} class="copy-btn" data-rybbit-event="copy_npm_create_cmd">
+      <button type="button" on:click={copy} class="copy-btn" class:active={$copied} data-rybbit-event="copy_npm_create_cmd">
         <Icon name={$copied ? "check" : "content_copy"} size={"1.75rem"} color={$copied ? "var(--teal-5)" : "currentColor"} />
+        {$copied ? "copied" : ""}
       </button>
     </h4>
   </div>
@@ -145,6 +146,15 @@
     align-self: stretch;
     background: var(--surface-1);
     border-color: var(--surface-1);
+    width: 6rem;
+    interpolate-size: allow-keywords;
+    transition: 0.15s ease-out width;
+    text-overflow: clip;
+    overflow: hidden;
+  }
+
+  .copy-btn.active {
+    width: min-content;
   }
 
   .npm-command {

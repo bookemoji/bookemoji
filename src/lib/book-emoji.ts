@@ -7,7 +7,7 @@ import type { KeyKeyMap } from "./utils.js";
 import { render } from "svelte/server";
 import { parse } from "node-html-parser";
 import { base, loadStories } from "virtual:bookemoji";
-import type { BookEmojiComponent, ComponentMeta, ComponentMetaStore, MetaOptions } from "./meta.js";
+import type { BookEmojiComponentFile, ComponentMeta, BookMeta as BookMeta, ComponentMetaStore, MetaOptions } from "./meta.js";
 
 export type * from "./meta.js";
 /**
@@ -18,6 +18,7 @@ export type BookDefinition = {
   slug: string;
   path: string;
   route: string;
+  metadata: BookMeta;
   variants: Record<string, VariantDefinition>;
 };
 
@@ -66,8 +67,10 @@ export const createVariantUrl = (base: string, storyName: string, variantName: s
   };
 };
 
-export const discoverVariants = (name: string, component: Component): string[] => {
+export const discoverVariants = (name: string, mod: BookEmojiComponentFile): string[] => {
   let html: string = "";
+  const component = mod.default;
+
   if (component instanceof Function) {
     try {
       const result = render(component, { context: new Map([["bookemoji.meta", {}]]) });
@@ -80,6 +83,7 @@ export const discoverVariants = (name: string, component: Component): string[] =
   }
   // and alternative way to do this is to use the svelte/compiler parse — which may also be more stable
   const dom = parse(html);
+
   const variantNames = Array.from(dom.querySelectorAll(".story-root")).map((rootEl) => rootEl.attrs["data-story"]);
 
   return variantNames;
@@ -102,15 +106,17 @@ export const findStoryFiles = async () => {
   //   eager: true,
   //   import: "default",
   // });
-  const books: Record<string, BookEmojiComponent> = await loadStories();
+  const books: Record<string, BookEmojiComponentFile> = await loadStories();
 
   const bookList: BookDefinition[] = Object.entries(books).map(([localPath, mod]) => {
     const name = basename(localPath).replace(".book.svelte", "");
     const path = localPath;
     const bookUrl = createStoryUrl(base, name);
+    const metadata = mod.metadata ?? {
+      group: "",
+    };
 
-    console.log("discovering variants for Story:", name);
-    const variantNames = discoverVariants(name, mod.default);
+    const variantNames = discoverVariants(name, mod);
 
     const variants: Record<string, VariantDefinition> = Object.fromEntries(
       variantNames.map((variant) => {
@@ -132,6 +138,7 @@ export const findStoryFiles = async () => {
       route: bookUrl.route,
       slug: bookUrl.story,
       variants,
+      metadata,
     } satisfies BookDefinition;
   });
 
