@@ -3,11 +3,6 @@
   import { createCopyAction } from "$lib/utils.js";
   import Hero from "$lib/website/components/Hero.svelte";
   import Icon from "$lib/website/icons/Icon.svelte";
-  import { wait } from "$lib/website/renderer-utils.js";
-
-  // import type { PageData } from "./$types.js";
-
-  // export let data: PageData;
   import { MetaTags } from "svelte-meta-tags";
 
   const { copy, copied } = createCopyAction(() => document.querySelector(".npm-command")?.textContent?.trim() ?? "", 1200);

@@ -12,17 +12,35 @@
   import { MetaTags } from "svelte-meta-tags";
   import { descriptionLookup, titlify } from "$lib/website/metatags.js";
   import { page } from "$app/stores";
+  import { onMount } from "svelte";
 
   export let data: LayoutData;
 
   $: title = titlify($page.url.pathname);
   $: titleTemplate = $page.url.pathname === "/" ? "" : "bookemoji › %s";
   $: description = descriptionLookup[$page.url.pathname] ?? "";
+
+  let version: string = ``;
+
+  const getVersion = async () => {
+    const response = await fetch("https://registry.npmjs.org/bookemoji/latest");
+    if (response.ok) {
+      const data = await response.json();
+      console.log("bookemoji", data.version);
+      version = `v${data.version}`;
+    }
+  };
+
+  onMount(() => {
+    window.requestIdleCallback(() => {
+      getVersion();
+    });
+  });
 </script>
 
 <MetaTags {titleTemplate} {title} {description} />
 
-<Header />
+<Header {version} />
 
 <div class="docs-root" class:main={data.hasHero}>
   <slot />
