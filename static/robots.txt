@@ -1,0 +1,10 @@
+# robots.txt for bookemoji.dev
+# This file provides guidelines to web crawlers and search engine bots.
+
+# User-agent: *
+# This directive applies to all web crawlers.
+
+# Allow crawling of all public content on the site.
+Allow: /
+
+Sitemap: https://bookemoji.dev/sitemap.xml
