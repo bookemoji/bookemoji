@@ -1,7 +1,7 @@
 import type { Component } from "svelte";
 import type { PageLoad } from "./$types.js";
 import { building, dev } from "$app/environment";
-import type { FrontMatterMetaData } from "./+page.server.js";
+import type { FrontMatterMetaData } from "$lib/server/articles.js";
 
 type RenderableArticle = {
   Content: Component;
@@ -17,7 +17,7 @@ export const load: PageLoad = async ({ data, ...event }) => {
   let page: RenderableArticle | undefined = undefined;
 
   if (data.slug) {
-    const mod = (await import(`../articles/${data.slug}.mdx`)) as { default: Component; metadata: FrontMatterMetaData };
+    const mod = (await import(`../../../articles/${data.slug}.mdx`)) as { default: Component; metadata: FrontMatterMetaData };
 
     page = {
       Content: mod.default,
