@@ -10,9 +10,12 @@
 <footer class="footer">
   <div class="brand-font">Built with 😻</div>
   <div class="link-list">
-    <a href="https://app.rybbit.io/1526/main" target="_blank">rybbit analytics</a>
+    <div><a href="https://app.rybbit.io/1526/main" target="_blank">rybbit analytics</a></div>
     <div>
       <a href="https://github.com/bookemoji" target="_blank">bookemoji org</a>
+    </div>
+    <div>
+      <a href="/llms.txt" target="_blank">llms.txt</a>
     </div>
   </div>
 </footer>

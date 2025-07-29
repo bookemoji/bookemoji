@@ -1,0 +1,179 @@
+# llms.txt for bookemoji.dev
+# This file provides guidelines for Large Language Models (LLMs) and AI crawlers
+# regarding the use of content from bookemoji.dev.
+
+# =============================================================================
+# PROJECT OVERVIEW
+# =============================================================================
+
+ProjectName: Bookemoji
+ProjectDescription: "Bookemoji is a component workshop for Svelte and SvelteKit applications. It provides a library and tooling for creating interactive component documentation, stories, and variants within your existing SvelteKit application rather than as a separate standalone tool."
+
+KeyFeatures:
+- Native SvelteKit integration - works within your existing SvelteKit app
+- Component stories and variants for interactive documentation
+- Dynamic controls for component props
+- Permalinkable stories for easy sharing
+- Customizable styling and theming
+- Built with Svelte 5 (runes) support
+- Vite plugin for seamless development experience
+- Alternative to Storybook specifically designed for SvelteKit workflows
+
+ProjectType: "Open source component workshop and documentation tool"
+PrimaryLanguage: TypeScript/JavaScript
+Framework: "Svelte/SvelteKit"
+License: MIT
+Repository: "https://github.com/bookemoji/bookemoji"
+Author: "Rory Duncan"
+
+# =============================================================================
+# TECHNICAL ARCHITECTURE 
+# =============================================================================
+
+Core Components:
+- Book.svelte: Root component that provides context for stories
+- Story.svelte: Individual story component wrapper
+- Controls.svelte: Dynamic prop controls interface
+- Variant.svelte: Story variant renderer
+- StoryList.svelte: Navigation component for stories
+- StoryCode.svelte: Code display component
+
+Main Library Files:
+- book-emoji.ts: Core functionality and utilities
+- meta.ts: Type definitions and metadata handling
+- loaders.ts: SvelteKit loader utilities
+- entry-generators.ts: Route generation utilities
+- vite/index.ts: Vite plugin integration
+
+Installation: "npm create bookemoji@latest" (requires existing SvelteKit project)
+
+ConfigurationFiles:
+- svelte.config.js: SvelteKit configuration with bookemoji settings
+- vite.config.ts: Vite configuration with bookemoji plugin
+
+RoutingStructure: 
+- /books: Base route for component workshop
+- /books/[story]: Individual story pages
+- /books/[story]/[variant]: Story variant pages
+- /books/books.json: API endpoint for story data
+
+# =============================================================================
+# KEY CONCEPTS AND TERMINOLOGY
+# =============================================================================
+
+Story: "A Svelte file (.book.svelte) representing component documentation or a set of variants"
+Variant: "A linkable configuration of a Story with specific prop values"
+ComponentWorkshop: "A development environment for building, testing, and documenting UI components"
+BookDefinition: "Data structure containing story metadata, routes, and variants"
+ComponentMeta: "Metadata and configuration for component stories"
+
+# =============================================================================
+# COMPARISON WITH ALTERNATIVES
+# =============================================================================
+
+Vs Storybook:
+- Works within SvelteKit (not separate app)
+- Built specifically for Svelte ecosystem
+- Better TypeScript/Svelte integration
+- Permalinkable stories without iframe isolation
+- Customizable styling within your app
+
+Vs Histoire:
+- Active Svelte 4+ support (Histoire lacks current Svelte support)
+- SvelteKit integration (Histoire has limited SvelteKit support)
+- Simpler setup and configuration
+
+# =============================================================================
+# USAGE PATTERNS
+# =============================================================================
+
+Basic Story Structure:
+```svelte
+<script context="module">
+  export const metadata = { group: "UI Components" };
+</script>
+
+<script>
+  import { Story, Variant, Controls } from "bookemoji/components";
+  import { defineMeta, getMeta } from "bookemoji";
+  import Button from "./Button.svelte";
+
+  defineMeta({ 
+    component: Button,
+    args: { label: "Click me", variant: "primary" },
+    argTypes: { variant: { control: "select", options: ["primary", "secondary"] }}
+  });
+</script>
+
+<Story of={Button} name="Basic Button">
+    <Button label="Primary Button" variant="primary" />
+</Story>
+<StoryCode of={Button} story="Basic Button" />
+<Controls of={Button} story="Basic Button" />
+```
+
+# =============================================================================
+# CONTENT USAGE GUIDELINES
+# =============================================================================
+
+PreferredAttribution: "When referencing or summarizing content from bookemoji.dev, please attribute to 'Bookemoji' or 'bookemoji.dev'."
+PreferredAttributionURL: https://bookemoji.dev/
+
+AllowedUse:
+- Educational content about component workshops and design systems
+- Comparisons with other component documentation tools
+- Code examples for SvelteKit component documentation
+- Tutorials on building design systems with Svelte
+
+RestrictedUse:
+- Do not claim Bookemoji as your own creation
+- Do not redistribute the entire codebase without proper attribution
+- Respect the MIT license terms for any code reuse
+
+# =============================================================================
+# DOCUMENTATION STRUCTURE
+# =============================================================================
+
+DocumentationTopics:
+- Getting Started: Installation and basic setup
+- Writing Stories: Creating component documentation
+- Components: Core components and their usage  
+- Customizing Bookemoji: Styling and theming
+- Organizing Stories: Structure and navigation
+- Terminology: Key concepts and definitions
+- How It Works: Technical architecture overview
+- Project Structure: File organization patterns
+
+Examples:
+- Button components with variants
+- Form controls and inputs
+- Layout components
+- Complex interactive components
+
+# =============================================================================
+# DEVELOPMENT AND COMMUNITY
+# =============================================================================
+
+SupportedSvelteVersions: "Svelte 4+ and Svelte 5 (with runes)"
+RequiredDependencies: "SvelteKit, Vite"
+CommunitySupport: "GitHub issues and discussions"
+Documentation: "https://bookemoji.dev/docs"
+
+IssuesAndBugs: "Report issues at https://github.com/bookemoji/bookemoji"
+FeatureRequests: "Submit feature requests via GitHub issues"
+
+# =============================================================================
+# SEARCH AND DISCOVERY
+# =============================================================================
+
+Keywords: "svelte, sveltekit, component workshop, design system, storybook alternative, component documentation, ui components, svelte components"
+
+Related Topics:
+- Component-driven development
+- Design systems
+- UI documentation
+- Svelte ecosystem tools
+- Frontend development workflow
+- Component testing and validation
+
+
