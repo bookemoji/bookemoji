@@ -2,12 +2,13 @@
   import { page } from "$app/stores";
   import { fade } from "svelte/transition";
   import GithubLogo from "../icons/GithubLogo.svelte";
+  import { base } from "$app/paths";
 
   export let version = "";
 
   const urls: (readonly [page: string, url: string])[] = [
     ["Docs", "/docs"],
-    ["Roadmap", "/roadmap"],
+    // ["Roadmap", "/roadmap"],
     ["Blog", "/blog"],
     ["Example", "/example"],
   ];
@@ -16,7 +17,10 @@
 <header class="header" class:sticky={$page.route.id === "/"}>
   <nav class="nav">
     <div class="group">
-      <a class="brand brand-font brand-color" href={`/`}>📚 BookEmoji</a>
+      <a class="brand brand-font brand-color" href={`/`}>
+        <img src={`${base}/img/logos/bookemoji_logo_solo.svg`} width="36px" alt="" />
+        BookEmoji</a
+      >
       {#if version !== ""}
         <span class="pkg-version" transition:fade={{ duration: 600 }}>
           {version}
@@ -88,6 +92,7 @@
 
   .brand {
     display: flex;
+    gap: 0.5rem;
     padding: 2rem 2rem;
     font-size: 1.5em;
     align-items: center;

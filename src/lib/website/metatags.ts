@@ -9,7 +9,7 @@ export const descriptionLookup: Record<string, string> = {
   "/blog": "A blog containing musings from the bookemoji team",
   "/blog/bookemoji-vs-storybook": "An article discussing the difference between bookemoji and StoryBook",
   "/blog/bookemoji-vs-histoire": "An article discussing the difference between bookemoji and histoire",
-  "/roadmap": "A development roadmap of bookemoji",
+  // "/roadmap": "A development roadmap of bookemoji",
 };
 
 export const capitalizeWord = (word: string) => {

@@ -78,7 +78,7 @@
   @media screen and (min-width: 62rem) {
     .side-by-side {
       display: grid;
-      grid-template-columns: max-content max-content;
+      grid-template-columns: auto auto;
       padding: 1rem 2rem 2rem 2rem;
       justify-content: center;
       gap: 2rem;

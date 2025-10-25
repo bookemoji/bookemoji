@@ -363,16 +363,6 @@
   </div>
   {#if browser}
     <canvas id="screen" {width} {height} aria-hidden="true" bind:this={canvasRef}></canvas>
-    <button
-      type="button"
-      id="toggle-pause"
-      role="switch"
-      aria-checked={isRunning ? "true" : "false"}
-      on:click={onToggleRenderer}
-      aria-label={isRunning ? "pause interactive visuals" : "play interractive visuals"}
-    >
-      <Icon name={isRunning ? "pause_circle" : "play_circle"} size="3rem" color={"var(--gray-6)"} />
-    </button>
   {/if}
 </div>
 
@@ -398,25 +388,5 @@
   .hero-content {
     display: grid;
     place-content: center;
-  }
-
-  #toggle-pause {
-    background: transparent;
-    border: none;
-    outline: none;
-    box-shadow: none;
-    position: absolute;
-    /* top: calc(85vh - 13rem); */
-    top: 0.5rem;
-    right: 0rem;
-    padding: 1rem;
-    font-weight: 400;
-    color: var(--stone-8);
-  }
-
-  @media screen and (min-width: 48rem) {
-    #toggle-pause {
-      top: 10vh;
-    }
   }
 </style>
